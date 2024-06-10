@@ -2,7 +2,7 @@ import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
 import axios, { AxiosResponse } from "axios";
 import { BigNumber, ethers } from "ethers";
-import { getAddress } from "ethers/lib/utils.js";
+import { formatUnits, getAddress, parseUnits } from "ethers/lib/utils.js";
 import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3ClaimsManager_abi } from "../abis";
 import {
   IPayoutData,
@@ -331,6 +331,23 @@ export const getAllPayoutsWithData = async (env: "all" | "testnet" | "mainnet" =
             }
           }
 
+          const getV3TotalPaidOut = () => {
+            const vault = payout.payoutData?.vault;
+
+            if (!vault) return undefined;
+            if (vault.version !== "v3") return undefined;
+            if (Number(payout.bountyPercentage) !== 10000) return undefined;
+
+            const realGovFee = Number(vault.governanceHatRewardSplit) / 100 / 100;
+            const realPaidPercentage = Number(payout.payoutData?.percentageToPay) / 100;
+
+            const paidOut = BigNumber.from(payout.hackerReward ?? "0").add(BigNumber.from(payout.hackerVestedReward ?? "0"));
+            const paidOutHackers =
+              Number(formatUnits(paidOut, vault.stakingTokenDecimals)) * realPaidPercentage * (1 - realGovFee);
+
+            return !!payout.approvedAt ? parseUnits(`${paidOutHackers}`, vault.stakingTokenDecimals).toString() : undefined;
+          };
+
           return {
             ...payout,
             payoutData,
@@ -338,7 +355,8 @@ export const getAllPayoutsWithData = async (env: "all" | "testnet" | "mainnet" =
             isApproved: !!payout.approvedAt,
             isDismissed: !!payout.dismissedAt,
             totalPaidOut: !!payout.approvedAt
-              ? BigNumber.from(payout.hackerReward ?? "0")
+              ? getV3TotalPaidOut() ??
+                BigNumber.from(payout.hackerReward ?? "0")
                   .add(BigNumber.from(payout.hackerVestedReward ?? "0"))
                   .toString()
               : undefined,
