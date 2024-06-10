@@ -25,7 +25,7 @@ import {
 } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
-import { fixVaultFees, overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
+import { fixPayoutVaultFees, fixVaultFees, overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 const MAX_CALLS_AT_ONCE = 200;
@@ -301,12 +301,13 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       );
 
     const allPayoutsData = await getPayoutsData(payoutsData);
+    const allPayoutsDataFixedFees = fixPayoutVaultFees(allPayoutsData);
 
-    const filteredByChain = allPayoutsData.filter((vault) => {
+    const filteredByChain = allPayoutsDataFixedFees.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
-    if (JSON.stringify(allPayouts) !== JSON.stringify(allPayoutsData)) setAllPayouts(allPayoutsData);
+    if (JSON.stringify(allPayouts) !== JSON.stringify(allPayoutsDataFixedFees)) setAllPayouts(allPayoutsDataFixedFees);
     if (JSON.stringify(allPayoutsOnEnv) !== JSON.stringify(filteredByChain)) setAllPayoutsOnEnv(filteredByChain);
   };
 
