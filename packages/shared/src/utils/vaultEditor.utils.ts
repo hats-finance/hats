@@ -112,7 +112,7 @@ export const getDefaultVaultParameters = (isAudit = false, version: IVault["vers
     committeePercentage: isAudit ? 0 : 0,
     immediatePercentage: isAudit ? 100 : 40,
     vestedPercentage: isAudit ? 0 : 60,
-    maxBountyPercentage: version === "v3" ? 100 : 90,
+    maxBountyPercentage: version === "v3" && isAudit ? 100 : 90,
   };
 };
 

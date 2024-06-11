@@ -76,6 +76,8 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
   const canEditFixed = isGov || isReviewer;
 
   const version = useWatch({ control: methodsToUse.control as Control<FormType>, name: "version" });
+  const vaultType = useWatch({ control: methodsToUse.control as Control<FormType>, name: "project-metadata.type" });
+  const isAudit = vaultType === "audit";
 
   const vestedPercentage =
     useWatch({ control: methodsToUse.control as Control<FormType>, name: "parameters.vestedPercentage" }) ?? 0;
@@ -129,7 +131,9 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
             <p className="section-title">{t("maxBounty")}</p>
             <div
               className="helper-text"
-              dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation", { max: version === "v3" ? "100" : "90" }) }}
+              dangerouslySetInnerHTML={{
+                __html: t("vaultEditorMaxBountyExplanation", { max: version === "v3" && isAudit ? "100" : "90" }),
+              }}
             />
 
             <div className="input">
@@ -137,9 +141,9 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                 {...methodsToUse.register(`parameters.maxBountyPercentage`, { valueAsNumber: true })}
                 disabled={(blockMaxBounty || disabled || !canEditFixed) && version === "v3"}
                 type="whole-number"
-                label={t("VaultEditor.vault-parameters.maxBountyPercentage", { max: version === "v3" ? "100" : "90" })}
+                label={t("VaultEditor.vault-parameters.maxBountyPercentage", { max: version === "v3" && isAudit ? "100" : "90" })}
                 placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder", {
-                  max: version === "v3" ? "100" : "90",
+                  max: version === "v3" && isAudit ? "100" : "90",
                 })}
                 colorable
               />
