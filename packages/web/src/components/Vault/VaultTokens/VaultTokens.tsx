@@ -21,7 +21,7 @@ export default function VaultTokens({ vault }: IProps) {
           overlay={`${formatWei(vault.honeyPotBalance, 1, vault.stakingTokenDecimals)}  ≈ $${millify(
             totalPrices[vault.stakingToken] ?? 0
           )}`}
-          overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+          overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE as any}
           placement="top"
         >
           <span className="token-symbol">{vault.stakingTokenSymbol}</span>

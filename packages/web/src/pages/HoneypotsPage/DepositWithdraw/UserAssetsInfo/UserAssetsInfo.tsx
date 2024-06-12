@@ -1,11 +1,11 @@
+import InfoIcon from "assets/icons/info.icon";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { IVault } from "types";
-import InfoIcon from "assets/icons/info.icon";
+import { WithdrawTimer } from "..";
 import { useVaultDepositWithdrawInfo } from "../useVaultDepositWithdrawInfo";
 import { StyledUserAssetsInfoTable } from "./styles";
-import { WithdrawTimer } from "..";
 
 interface IProps {
   vault: IVault;
@@ -47,8 +47,9 @@ export default function UserAssetsInfo({ vault }: IProps) {
               <span>APY</span>
               <Tooltip
                 overlayClassName="tooltip"
-                overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-                overlay={t("Shared.apy-explain")}>
+                overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE as any}
+                overlay={t("Shared.apy-explain")}
+              >
                 <div className="info-icon">
                   <InfoIcon fill={Colors.white} />
                 </div>

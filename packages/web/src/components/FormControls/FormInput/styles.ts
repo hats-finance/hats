@@ -139,7 +139,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
       ${withPrefixIcon &&
       css`
-        padding-left: ${getSpacing(5.5)};
+        padding-left: ${getSpacing(6.5)};
       `}
 
       ${isCheckOrRadio &&

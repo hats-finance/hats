@@ -35,8 +35,9 @@ export const SelectButton = styled.div<{
   disabled: boolean;
   readOnly: boolean;
   noLabel: boolean;
+  smallPadding: boolean;
 }>(
-  ({ isDirty, isOpen, hasError, isFilled, disabled, readOnly, noLabel }) => css`
+  ({ isDirty, isOpen, hasError, isFilled, disabled, readOnly, noLabel, smallPadding }) => css`
     position: relative;
     width: 100%;
     display: flex;
@@ -48,7 +49,12 @@ export const SelectButton = styled.div<{
 
     ${noLabel &&
     css`
-      padding: ${getSpacing(1.5)} ${getSpacing(1.5)} ${getSpacing(1.5)};
+      padding: ${getSpacing(1.5)};
+    `}
+
+    ${smallPadding &&
+    css`
+      padding: ${getSpacing(1)} ${getSpacing(1.5)};
     `}
 
     &:hover {

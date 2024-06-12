@@ -47,7 +47,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
     hackersNFTContract: "0x10C483158B8aF7e91CE7068bA45eb5446789851D",
     chain: wagmiChains.mainnet,
-    subgraph: "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
     coingeckoId: "ethereum",
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -64,7 +65,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x96E93876eB2314901ee9967488C650D77A50c705",
     hackersNFTContract: "0x2Ff0509D0e9a78Bf58815D768f4487f0645824F0",
     chain: wagmiChains.sepolia,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_sepolia",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/6q8vE8znoVRd2AqdGcgaF7j99Gtrrki4HwYDVMK8qaCf",
     coingeckoId: undefined,
     govMultisig: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -154,5 +156,20 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
     provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
+  },
+};
+
+export type AirdropFactoryConfig = { chain: wagmiChains.Chain; address: string };
+export const AirdropFactoriesChainConfig: {
+  test: { airdrop: AirdropFactoryConfig[]; pointdrop: AirdropFactoryConfig[] };
+  prod: { airdrop: AirdropFactoryConfig[]; pointdrop: AirdropFactoryConfig[] };
+} = {
+  test: {
+    airdrop: [{ address: "0x50E10f3A32a9d3B4B04144400a74300D9D9885Fa", chain: wagmiChains.sepolia }],
+    pointdrop: [{ address: "0xCE94b023259E6a49EB37339aCaA3F8e711b88e04", chain: wagmiChains.sepolia }],
+  },
+  prod: {
+    airdrop: [],
+    pointdrop: [],
   },
 };

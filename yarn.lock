@@ -1871,7 +1871,7 @@
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
 "@hats.finance/shared@^1.1.39", "@hats.finance/shared@file:/Users/fonstack/Documents/Programming/Work/hats/hats/packages/shared":
-  version "1.1.93"
+  version "1.1.94"
   resolved "file:packages/shared"
   dependencies:
     "@safe-global/protocol-kit" "^1.0.1"
@@ -9025,7 +9025,7 @@ hastscript@^7.0.0:
     "@safe-global/protocol-kit" "^1.0.1"
     "@safe-global/safe-core-sdk-types" "^2.0.0"
     "@tanstack/react-query" "^4.28.0"
-    "@walletconnect/modal" "^2.5.8"
+    "@walletconnect/modal" "^2.6.2"
     csvtojson "^2.0.10"
     dompurify "^3.0.1"
     encrypt-storage "^2.12.15"

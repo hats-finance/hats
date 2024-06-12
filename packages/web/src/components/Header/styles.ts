@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { getSpacing } from "styles";
+import { getPrimaryGradientVariant, getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledHeader = styled.header`
@@ -69,6 +69,13 @@ export const StyledHeader = styled.header`
           span {
             font-size: var(--small);
           }
+        }
+      }
+
+      .airdrop-button {
+        button {
+          background: ${getPrimaryGradientVariant()};
+          font-family: "IBM Plex Mono", monospace;
         }
       }
     }

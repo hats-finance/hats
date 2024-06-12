@@ -1,13 +1,15 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledCollapsableTextContent = styled.div<{ isOpen: boolean; noContentPadding: boolean }>(
-  ({ isOpen, noContentPadding }) => css`
+export const StyledCollapsableTextContent = styled.div<{ isOpen: boolean; noContentPadding: boolean; inverseArrow: boolean }>(
+  ({ isOpen, noContentPadding, inverseArrow }) => css`
     .title-container {
       display: flex;
+      flex-direction: ${inverseArrow ? "row-reverse" : "row"};
       gap: ${getSpacing(1)};
       color: var(--secondary-light);
       cursor: pointer;
+      width: fit-content;
 
       &:hover {
         color: var(--secondary);

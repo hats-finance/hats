@@ -14,6 +14,7 @@ type ConfirmDialogProps = {
   description?: string;
   titleIcon?: string | React.ReactElement;
   bodyComponent?: React.ReactElement;
+  noCancel?: boolean;
   confirmTextInput?: {
     label: string;
     placeholder: string;
@@ -32,6 +33,7 @@ function ConfirmDialog({
   titleIcon,
   bodyComponent,
   confirmTextInput,
+  noCancel = false,
 }: ConfirmDialogProps) {
   const { t } = useTranslation();
 
@@ -74,9 +76,11 @@ function ConfirmDialog({
         </div>
 
         <div className="button-container">
-          <Button expanded onClick={onCancel} styleType="outlined">
-            {cancelText ?? t("cancel")}
-          </Button>
+          {!noCancel && (
+            <Button expanded onClick={onCancel} styleType="outlined">
+              {cancelText ?? t("cancel")}
+            </Button>
+          )}
           <Button
             expanded
             onClick={handleConfirm}
