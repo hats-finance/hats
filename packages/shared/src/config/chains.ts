@@ -14,6 +14,7 @@ export const ALL_CHAINS = {
   [wagmiChains.pulsechain.id]: wagmiChains.pulsechain,
   [wagmiChains.cronos.id]: wagmiChains.cronos,
   [wagmiChains.zkSync.id]: wagmiChains.zkSync,
+  [wagmiChains.base.id]: wagmiChains.base,
   [meter.id]: meter,
   [oasis.id]: oasis,
 };
