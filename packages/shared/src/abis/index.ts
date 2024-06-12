@@ -12,4 +12,5 @@ export { HATVaultsNFT_abi } from "./HATVaultsNFT_abi";
 export { RewardController_abi } from "./RewardController_abi";
 export { HATTimelockController_abi } from "./HATTimelockController_abi";
 export { HATPaymentSplitter_abi } from "./HATPaymentSplitter_abi";
+export { HATAirdropFactory_abi } from "./HATAirdropFactory_abi";
 export { erc20_abi } from "./erc20_abi";

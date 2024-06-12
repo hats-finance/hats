@@ -2,18 +2,32 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
+const getBackground = (fundingProtocolVault: boolean, isContinuousAudit: boolean) => {
+  if (fundingProtocolVault) return "var(--background)";
+  if (isContinuousAudit) return "var(--background-2-darker)";
+  return "var(--background-2)";
+};
+
 export const StyledVaultCard = styled.div<{
   isAudit: boolean;
   isContinuousAudit?: boolean;
   reducedStyles: boolean;
   hasActiveClaim: boolean;
   showIntendedAmount: boolean;
+  fundingProtocolVault?: boolean;
 }>(
-  ({ isAudit, isContinuousAudit, reducedStyles, hasActiveClaim, showIntendedAmount }) => css`
+  ({
+    isAudit,
+    isContinuousAudit = false,
+    reducedStyles,
+    hasActiveClaim,
+    showIntendedAmount,
+    fundingProtocolVault = false,
+  }) => css`
     position: relative;
     display: flex;
     flex-direction: column;
-    background: ${isContinuousAudit ? "var(--background-2-darker)" : "var(--background-2)"};
+    background: ${getBackground(fundingProtocolVault, isContinuousAudit)};
     border: 1px solid var(--primary-light);
     padding: ${getSpacing(3)} ${getSpacing(4)};
 
@@ -77,7 +91,7 @@ export const StyledVaultCard = styled.div<{
     .vault-info {
       display: grid;
       gap: ${getSpacing(2)};
-      grid-template-columns: ${reducedStyles ? "2fr 3fr" : "5fr 5fr"};
+      grid-template-columns: ${fundingProtocolVault ? "7fr 2fr" : reducedStyles ? "2fr 3fr" : "5fr 5fr"};
       align-items: center;
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
@@ -111,8 +125,8 @@ export const StyledVaultCard = styled.div<{
           .description {
             overflow: hidden;
             display: -webkit-box;
-            line-clamp: 3;
-            -webkit-line-clamp: 3;
+            line-clamp: ${fundingProtocolVault ? 8 : 3};
+            -webkit-line-clamp: ${fundingProtocolVault ? 8 : 3};
             -webkit-box-orient: vertical;
           }
         }
@@ -127,7 +141,7 @@ export const StyledVaultCard = styled.div<{
       .stats {
         display: grid;
         /* grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"}; */
-        grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr"};
+        grid-template-columns: ${fundingProtocolVault ? "1fr" : isAudit ? "1fr 1fr" : "1fr 1fr"};
         gap: ${getSpacing(1)};
         align-items: center;
 

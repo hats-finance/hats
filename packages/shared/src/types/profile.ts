@@ -9,4 +9,8 @@ export interface IHackerProfile {
   github_username?: string;
   updatedAt: Date;
   createdAt: Date;
+  oauth?: {
+    twitter?: { id: string; name: string; username: string };
+    github?: { id: string; name: string; username: string };
+  };
 }
