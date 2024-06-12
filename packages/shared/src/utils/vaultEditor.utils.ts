@@ -239,8 +239,8 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
       emails: withDefaultData ? [{ address: "", status: "unverified" as IEditedCommunicationEmail["status"] }] : [],
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-    assets: defaultDescription.assets,
-    parameters: defaultDescription.parameters,
+    assets: (vaultDescription as any).assets ?? defaultDescription.assets,
+    parameters: (vaultDescription as any).parameters ?? defaultDescription.parameters,
     severitiesOptions,
     includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
   };
