@@ -766,7 +766,11 @@
       "cannotUnlinkLastAddress": "You can't unlink your last address from your profile.",
       "allTime": "All time",
       "streakExplanationTitle": "<p><strong>Introducing</strong> <i>Streak</i></p>",
-      "streakExplanationDescription": "<p>Build Your Streak with Consistent Engagement</p><br/><p><strong>Start Your Streak:</strong> Initiate a streak by submitting valid findings.</p><br/><p><strong>Reflect Your Dedication:</strong> Your streak is a testament to your consistent engagement in the community.</p><br/><p><strong>Maintain Your Momentum:</strong> Keep your streak alive by submitting at least one valid finding each month.</p>"
+      "streakExplanationDescription": "<p>Build Your Streak with Consistent Engagement</p><br/><p><strong>Start Your Streak:</strong> Initiate a streak by submitting valid findings.</p><br/><p><strong>Reflect Your Dedication:</strong> Your streak is a testament to your consistent engagement in the community.</p><br/><p><strong>Maintain Your Momentum:</strong> Keep your streak alive by submitting at least one valid finding each month.</p>",
+      "connectOauthAccount": "Connect {{oauth}}",
+      "unlinkOAuth": "Unlink {{oauth}}",
+      "unlinkOAuthExplanation": "Are you sure you want to unlink your account from your profile?",
+      "linkYourAccount": "Link your {{oauth}} account"
     },
     "PGPTool": {
       "title": "PGP tool",

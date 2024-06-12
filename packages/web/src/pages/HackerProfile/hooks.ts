@@ -8,7 +8,9 @@ import {
   getProfileByUsername,
   isUsernameAvailable,
   linkNewAddress,
+  linkOAuthToProfile,
   removeAddress,
+  unlinkOAuthFromProfile,
   upsertProfile,
 } from "./profilesService";
 
@@ -93,5 +95,33 @@ export const useUnlinkAddress = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: ({ username, addressToRemove }) => removeAddress(username, addressToRemove),
+  });
+};
+
+/**
+ * Links an OAuth account to a profile
+ */
+export const useLinkOAuth = (): UseMutationResult<
+  IUpsertedProfileResult | undefined,
+  string,
+  { username: string; oauth: string; oauthParams: any },
+  unknown
+> => {
+  return useMutation({
+    mutationFn: ({ username, oauth, oauthParams }) => linkOAuthToProfile(username, oauth, oauthParams),
+  });
+};
+
+/**
+ * removed the OAuth account from a profile
+ */
+export const useUnlinkOAuth = (): UseMutationResult<
+  IUpsertedProfileResult | undefined,
+  string,
+  { username: string; oauth: string },
+  unknown
+> => {
+  return useMutation({
+    mutationFn: ({ username, oauth }) => unlinkOAuthFromProfile(username, oauth),
   });
 };
