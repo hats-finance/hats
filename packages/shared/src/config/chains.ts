@@ -159,18 +159,17 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
   },
   [oasis.id]: {
-    // vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4", v2
-    vaultsCreatorContract: "0x0000000000000000000000000000000000000000",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    vaultsCreatorContract: "0x07368F6a959Ef3096230a258dd0af692699c3a4c",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x0000000000000000000000000000000000000000",
     hackersNFTContract: "0x0000000000000000000000000000000000000000",
     chain: oasis,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
     coingeckoId: "oasis-sapphire",
-    govMultisig: "0x0000000000000000000000000000000000000000",
+    govMultisig: "0xf2935671015c896D5E1fE4c97caF111F5eEe2b3c",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
-    paymentSplitterFactory: "0x0000000000000000000000000000000000000000",
+    paymentSplitterFactory: "0xe198CBb727758b9Ad38a12E1ad475a843e5e730F",
     provider: "",
   },
 };
