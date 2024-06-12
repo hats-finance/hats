@@ -1,4 +1,4 @@
-import { formatUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import { IMaster, IPayoutData, IPayoutGraph, IUserNft, IVault, IVaultDescription, IVaultV2 } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
@@ -124,7 +124,7 @@ export const parsePayouts = (payouts: IPayoutGraph[], chainId: number) => {
     isActive: !payout.dismissedAt && !payout.approvedAt,
     isApproved: !!payout.approvedAt,
     isDismissed: !!payout.dismissedAt,
-    totalPaidOut: !!payout.approvedAt
+    totalPaidOut: !!payout.approvedAt // This is fixed later on `fixPayoutVaultFees()`
       ? BigNumber.from(payout.hackerReward ?? "0")
           .add(BigNumber.from(payout.hackerVestedReward ?? "0"))
           .toString()
@@ -210,6 +210,30 @@ export const fixVaultFees = (vaults: IVault[]): IVault[] => {
     return {
       ...vault,
       governanceHatRewardSplit: newGovFee,
+    };
+  });
+};
+
+// This function is used to set the correct governance fee for v3 vaults
+// On v3 vaults, on-chain hats fee is 0%. The real fee is set on the description.
+// Here we set the correct fee on the vault object.
+export const fixPayoutVaultFees = (payouts: IPayoutGraph[]): IPayoutGraph[] => {
+  return payouts.map((payout) => {
+    const vault = payout.payoutData?.vault;
+    if (!vault) return payout;
+
+    if (vault.version !== "v3") return payout;
+    if (Number(payout.bountyPercentage) !== 10000) return payout;
+
+    const realGovFee = Number(vault.governanceHatRewardSplit) / 100 / 100;
+    const realPaidPercentage = Number(payout.payoutData?.percentageToPay) / 100;
+
+    const paidOut = BigNumber.from(payout.hackerReward ?? "0").add(BigNumber.from(payout.hackerVestedReward ?? "0"));
+    const paidOutHackers = Number(formatUnits(paidOut, vault.stakingTokenDecimals)) * realPaidPercentage * (1 - realGovFee);
+
+    return {
+      ...payout,
+      totalPaidOut: !!payout.approvedAt ? parseUnits(`${paidOutHackers}`, vault.stakingTokenDecimals).toString() : undefined,
     };
   });
 };
