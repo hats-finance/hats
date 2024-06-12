@@ -165,7 +165,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x0000000000000000000000000000000000000000",
     hackersNFTContract: "0x0000000000000000000000000000000000000000",
     chain: oasis,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
+    subgraph: "https://api.goldsky.com/api/public/project_clx0j1z1v44iz01wb4qol83tv/subgraphs/hats_oasis/0.0.1/gn",
     coingeckoId: "oasis-sapphire",
     govMultisig: "0xf2935671015c896D5E1fE4c97caF111F5eEe2b3c",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
