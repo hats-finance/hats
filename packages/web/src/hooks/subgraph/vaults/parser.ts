@@ -179,9 +179,10 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
                 tokens: +vault.description?.["project-metadata"].intendedCompetitionAmount,
                 usd: +vault.description?.["project-metadata"].intendedCompetitionAmount * tokenPrice,
               },
+              // For `competitionIntendedAmount` we dont need `maxRewardFactor` because the intended amount is the max reward
               maxReward: {
-                tokens: +vault.description?.["project-metadata"].intendedCompetitionAmount * maxRewardFactor,
-                usd: +vault.description?.["project-metadata"].intendedCompetitionAmount * tokenPrice * maxRewardFactor,
+                tokens: +vault.description?.["project-metadata"].intendedCompetitionAmount,
+                usd: +vault.description?.["project-metadata"].intendedCompetitionAmount * tokenPrice,
               },
             }
           : undefined,
