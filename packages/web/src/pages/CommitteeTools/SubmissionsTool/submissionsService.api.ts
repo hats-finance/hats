@@ -24,12 +24,10 @@ export const extractSubmissionData = (
     ?.replace("(", "")
     .replace(")", "");
 
-  const submissionVault = allVaults.find(
-    (vault) =>
-      projectId &&
-      (vault.id.toLowerCase() === projectId?.toLowerCase() ||
-        vault.description?.["project-metadata"].name.toLowerCase() === projectName?.toLowerCase())
-  );
+  // Searh first for the vault id, if not found, search for the project name
+  const submissionVault =
+    allVaults.find((vault) => projectId && vault.id.toLowerCase() === projectId?.toLowerCase()) ??
+    allVaults.find((vault) => vault.description?.["project-metadata"].name.toLowerCase() === projectName?.toLowerCase());
 
   const submissions: ISubmittedSubmission[] = [];
 
