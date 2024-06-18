@@ -6,6 +6,8 @@ export { TotalSharesPerVaultContract } from "./read/TotalSharesPerVault";
 export { UserSharesAndBalancePerVaultContract } from "./read/UserSharesAndBalancePerVault";
 export { UserSharesPerVaultContract } from "./read/UserSharesPerVault";
 export { SharesToBalancePerVaultContract } from "./read/SharesToBalancePerVault";
+export { ReleasablePaymentSplitter } from "./read/ReleasablePaymentSplitter";
+export { ReleasedPaymentSplitter } from "./read/ReleasedPaymentSplitter";
 export { WithdrawRequestInfoContract } from "./read/WithdrawRequestInfo";
 export { ClaimRewardContract } from "./write/ClaimReward";
 export { CommitteeCheckInContract } from "./write/CommitteeCheckIn";
