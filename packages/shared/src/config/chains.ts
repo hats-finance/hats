@@ -145,13 +145,14 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.bsc.id]: {
     // vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4", v2
-    vaultsCreatorContract: "0x58958226fb12DDfC407a7766d51baB2a88d08BF1",
+    vaultsCreatorContract: "0xABB34AB93589b0d026a192b6aaCAF8149db05c99",
     arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xcBe0b90bfe99f827B8BCB5C5Ac4b17107caEA814",
     hackersNFTContract: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
     chain: wagmiChains.bsc,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/4TWs2Y9gCpUPh1vMSogFuRbBqsUzE4FXgYFAoJmcx9Fc",
     coingeckoId: "binance-smart-chain",
     govMultisig: "0xbFBC2Ab80bD0A12258db952739238e403Be01ece",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
