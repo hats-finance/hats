@@ -15,7 +15,7 @@
     "@hookform/resolvers": "^2.9.10",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.4",
-    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/dompurify": "^3.0.1",
     "@types/downloadjs": "^1.4.2",
     "@types/humanize-duration": "^3.27.1",
