@@ -10,9 +10,10 @@ import { StyledVaultAssetsPillsList } from "./styles";
 type VaultAssetsPillsListProps = {
   vaultData?: IVault;
   auditPayout?: IPayoutGraph;
+  ecosystemFunding?: boolean;
 };
 
-export const VaultAssetsPillsList = ({ vaultData, auditPayout }: VaultAssetsPillsListProps) => {
+export const VaultAssetsPillsList = ({ vaultData, auditPayout, ecosystemFunding = false }: VaultAssetsPillsListProps) => {
   const { t } = useTranslation();
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
 
@@ -42,14 +43,20 @@ export const VaultAssetsPillsList = ({ vaultData, auditPayout }: VaultAssetsPill
 
   const amountToShowInTokens = auditPayout ? totalPaidOutOnAudit?.tokens : vault.amountsInfo?.depositedAmount.tokens;
 
+  const getTooltipText = () => {
+    if (ecosystemFunding) {
+      return `~${formatNumber(amountToShowInTokens ?? 0, 4)} ${token}`;
+    }
+
+    return `${vault.version} | ${auditPayout ? t("paid") : t("deposited")} ~${formatNumber(
+      amountToShowInTokens ?? 0,
+      4
+    )} ${token}`;
+  };
+
   return (
     <StyledVaultAssetsPillsList>
-      <WithTooltip
-        text={`${vault.version} | ${auditPayout ? t("paid") : t("deposited")} ~${formatNumber(
-          amountToShowInTokens ?? 0,
-          4
-        )} ${token}`}
-      >
+      <WithTooltip text={getTooltipText()}>
         <div className="token" onClick={goToTokenInformation}>
           <div className="images">
             <img className="logo" src={ipfsTransformUri(tokenIcon)} alt="token" />

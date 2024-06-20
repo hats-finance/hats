@@ -1,5 +1,5 @@
 import * as wagmiChains from "@wagmi/chains";
-import { meter } from "./custom_chains";
+import { meter, oasis } from "./custom_chains";
 
 export const ALL_CHAINS = {
   [wagmiChains.mainnet.id]: wagmiChains.mainnet,
@@ -14,7 +14,9 @@ export const ALL_CHAINS = {
   [wagmiChains.pulsechain.id]: wagmiChains.pulsechain,
   [wagmiChains.cronos.id]: wagmiChains.cronos,
   [wagmiChains.zkSync.id]: wagmiChains.zkSync,
+  [wagmiChains.base.id]: wagmiChains.base,
   [meter.id]: meter,
+  [oasis.id]: oasis,
 };
 
 export interface IChainConfiguration {
@@ -47,7 +49,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
     hackersNFTContract: "0x10C483158B8aF7e91CE7068bA45eb5446789851D",
     chain: wagmiChains.mainnet,
-    subgraph: "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
     coingeckoId: "ethereum",
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -142,18 +145,33 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.bsc.id]: {
     // vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4", v2
-    vaultsCreatorContract: "0x58958226fb12DDfC407a7766d51baB2a88d08BF1",
+    vaultsCreatorContract: "0xABB34AB93589b0d026a192b6aaCAF8149db05c99",
     arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xcBe0b90bfe99f827B8BCB5C5Ac4b17107caEA814",
     hackersNFTContract: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
     chain: wagmiChains.bsc,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/4TWs2Y9gCpUPh1vMSogFuRbBqsUzE4FXgYFAoJmcx9Fc",
     coingeckoId: "binance-smart-chain",
     govMultisig: "0xbFBC2Ab80bD0A12258db952739238e403Be01ece",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
     provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
+  },
+  [oasis.id]: {
+    vaultsCreatorContract: "0x07368F6a959Ef3096230a258dd0af692699c3a4c",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+    rewardController: "0x0000000000000000000000000000000000000000",
+    vaultsNFTContract: "0x0000000000000000000000000000000000000000",
+    hackersNFTContract: "0x0000000000000000000000000000000000000000",
+    chain: oasis,
+    subgraph: "https://api.goldsky.com/api/public/project_clx0j1z1v44iz01wb4qol83tv/subgraphs/hats_oasis/0.0.1/gn",
+    coingeckoId: "oasis-sapphire",
+    govMultisig: "0xf2935671015c896D5E1fE4c97caF111F5eEe2b3c",
+    whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
+    paymentSplitterFactory: "0xe198CBb727758b9Ad38a12E1ad475a843e5e730F",
+    provider: "",
   },
 };
 

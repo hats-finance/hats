@@ -1,5 +1,6 @@
-import { IEditedSessionResponse, IPayoutGraph } from "@hats.finance/shared";
+import { IEditedSessionResponse, IPayoutGraph, oasis } from "@hats.finance/shared";
 import { useQuery } from "@tanstack/react-query";
+import { FundingProtocolVault } from "components/VaultCard/VaultFundingProtocol";
 import { axiosClient } from "config/axiosClient";
 import { useExcludedFinishedCompetitions } from "hooks/globalSettings/useExcludedFinishedCompetitions";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -8,7 +9,7 @@ import { useIsGovMember } from "hooks/useIsGovMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import { useEffect, useMemo } from "react";
 import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
-import { useNetwork } from "wagmi";
+import { mainnet, useNetwork } from "wagmi";
 import * as auditDraftsService from "./auditDraftsService";
 
 /**
@@ -162,4 +163,42 @@ export const useDraftAuditCompetitions = (): (IEditedSessionResponse & { dateSta
   return data.filter((audit) =>
     showTestnets ? appChains[audit.chainId].chain.testnet : !appChains[audit.chainId].chain.testnet
   );
+};
+
+/**
+ * Returns all the funding protocol vaults
+ */
+export const getFundingProtocolVaults = (): FundingProtocolVault[] => {
+  return [
+    {
+      name: "Oasis",
+      logo: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
+      description:
+        "The Oasis Network is a Layer 1 decentralized blockchain network, renowned for its scalability, privacy-first approach, and versatility. To enhance security and reliability across projects, the Oasis Network has introduced Ecosystem Audit Grants. These grants aim to minimize misuse, ensure project integrity, and cultivate a developer community well-versed in the Confidential EVM.",
+      chain: oasis.id,
+      address: "0x6f980cF50c8592fd93219f3291dD727218B21442",
+      website: "https://oasisprotocol.org/",
+      token: {
+        address: undefined,
+        icon: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
+        decimals: "18",
+        symbol: "ROSE",
+      },
+    },
+    // {
+    //   name: "Tezos & Etherlink",
+    //   logo: "ipfs://Qmcz1hVyhpia7pFWGx7e9mvzKKgXQ1X1uq5iTtWB9TRZ2v",
+    //   description:
+    //     "Tezos is a self-upgradable and energy-efficient Proof of Stake blockchain, aligned with Etherlink, which is built upon the secure foundation of Tezos layer 1 and delivers a fast, fair, and (nearly) free experience. Together, Tezos and Etherlink have established an Ecosystem Audit Grants pool to enhance the security of projects and products on their network, representing a security-focused narrative approach.",
+    //   chain: mainnet.id,
+    //   address: "0x6f980cF50c8592fd93219f3291dD727218B21442",
+    //   website: "https://tezos.com/",
+    //   token: {
+    //     address: undefined,
+    //     icon: "ipfs://QmTBHBZchoxncW1LXCvptTbvRzuZDN8yzze3xXrRsh2WZz",
+    //     decimals: "18",
+    //     symbol: "USDC",
+    //   },
+    // },
+  ];
 };

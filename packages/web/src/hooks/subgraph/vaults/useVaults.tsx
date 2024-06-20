@@ -13,6 +13,7 @@ import { OFAC_Sanctioned_Digital_Currency_Addresses } from "data/OFACSanctionedA
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { INFTTokenMetadata } from "hooks/nft/types";
+import { getFundingProtocolVaults } from "pages/Honeypots/VaultsPage/hooks";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { IS_PROD, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
@@ -25,7 +26,7 @@ import {
 } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
-import { fixVaultFees, overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
+import { fixPayoutVaultFees, fixVaultFees, overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 const MAX_CALLS_AT_ONCE = 200;
@@ -99,7 +100,12 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       })
       .flat();
 
-    const tokenToSearch = [...stakingTokens, ...rewardControllersTokens];
+    const fundingProtocolsTokens = getFundingProtocolVaults().map((vault) => ({
+      address: vault.token.address ?? "",
+      chainId: vault.chain,
+    }));
+
+    const tokenToSearch = [...stakingTokens, ...rewardControllersTokens, ...fundingProtocolsTokens];
 
     const foundTokenPrices = [] as number[];
 
@@ -139,6 +145,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     // Get prices from CoinGecko
     try {
       const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
+      console.log(tokensLeft);
       const coingeckoTokenPrices = await getCoingeckoTokensPrices(tokensLeft);
 
       if (coingeckoTokenPrices) {
@@ -301,12 +308,13 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       );
 
     const allPayoutsData = await getPayoutsData(payoutsData);
+    const allPayoutsDataFixedFees = fixPayoutVaultFees(allPayoutsData);
 
-    const filteredByChain = allPayoutsData.filter((vault) => {
+    const filteredByChain = allPayoutsDataFixedFees.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
-    if (JSON.stringify(allPayouts) !== JSON.stringify(allPayoutsData)) setAllPayouts(allPayoutsData);
+    if (JSON.stringify(allPayouts) !== JSON.stringify(allPayoutsDataFixedFees)) setAllPayouts(allPayoutsDataFixedFees);
     if (JSON.stringify(allPayoutsOnEnv) !== JSON.stringify(filteredByChain)) setAllPayoutsOnEnv(filteredByChain);
   };
 

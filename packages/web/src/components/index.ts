@@ -29,6 +29,7 @@ export { VaultInfoCard } from "./VaultInfoCard/VaultInfoCard";
 export { VaultCard } from "./VaultCard/VaultCard";
 export { VaultCardSkeleton } from "./VaultCard/VaultCardSkeleton";
 export { VaultAuditDraftCard } from "./VaultCard/VaultAuditDraftCard";
+export { VaultFundingProtocol } from "./VaultCard/VaultFundingProtocol";
 export { VaultNftRewardCard } from "./VaultNftRewardCard/VaultNftRewardCard";
 export { Spinner } from "./Spinner/Spinner";
 export { Seo } from "./Seo/Seo";

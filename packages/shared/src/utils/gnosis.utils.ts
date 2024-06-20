@@ -1,7 +1,7 @@
 import { arbitrum, avalanche, bsc, gnosis, goerli, mainnet, optimism, polygon, sepolia } from "@wagmi/chains";
 import axios from "axios";
 import { utils } from "ethers";
-import { meter } from "../config";
+import { meter, oasis } from "../config";
 import { isServer } from "./general.utils";
 
 export type IGnosisSafeInfoResponse = { isSafeAddress: boolean; owners: string[]; threshold: number };
@@ -60,6 +60,7 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
 
 export const getGnosisSafeTxServiceBaseUrl = (chainId: number): string => {
   if (chainId === meter.id) return `https://safe-gateway.meter.io/txs`;
+  if (chainId === oasis.id) return `https://transaction.safe.oasis.io/`;
   return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global`;
 };
 
