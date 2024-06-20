@@ -20,7 +20,7 @@ export const AirdropRedeemCompleted = () => {
 
       <div className="mt-5">
         <strong>{t("Airdrop.claimSuccessfulExplanation")}</strong>
-        <p>
+        <p className="mb-4 mt-2">
           {t("Airdrop.linearlyReleasedExplanation", {
             daysLocked: moment(airdropData.lockEndDate).fromNow(true),
           })}

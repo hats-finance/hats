@@ -7,30 +7,33 @@ export const StyledAidropCard = styled.div`
   flex-direction: column;
 
   .preview {
-    background: var(--background-clear-blue);
+    background: var(--background-clear-blue-2);
     padding: ${getSpacing(3.5)} ${getSpacing(4.5)};
     border-radius: ${getSpacing(1.5)};
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 
-    .info {
-      .name {
+    .section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .info {
+        .name {
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(1.5)};
+          font-size: var(--xsmall);
+          font-family: "IBM Plex Sans", sans-serif !important;
+          font-weight: 500;
+        }
+      }
+
+      .amount {
         display: flex;
         align-items: center;
         gap: ${getSpacing(1.5)};
-        font-size: var(--xsmall);
-        font-family: "IBM Plex Sans", sans-serif !important;
-        font-weight: 500;
+        font-size: var(--moderate-big);
+        font-weight: 700;
       }
-    }
-
-    .amount {
-      display: flex;
-      align-items: center;
-      gap: ${getSpacing(1.5)};
-      font-size: var(--moderate-big);
-      font-weight: 700;
     }
   }
 

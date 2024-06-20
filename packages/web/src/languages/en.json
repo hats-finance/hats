@@ -728,7 +728,7 @@
       "coder": "\"Super coder\" NFT holders",
       "early_contributor": "Hats early supporters",
       "linearlyReleased": "Linearly released",
-      "linearlyReleasedExplanation": "Your linearly released will be available to claim during the next {{daysLocked}}. To claim please use “My Hats” on Hats dapp main page.",
+      "linearlyReleasedExplanation": "Your linearly released will be available to claim during the next {{daysLocked}}. To claim please go to 'Airdrop' section and you will see all the information about the linear release.",
       "claimingAirdrop": "Claiming airdrop",
       "claimSuccessful": "Claim successful",
       "claimSuccessfulExplanation": "Your token has been added to your wallet, and your delegate selection has been recorded.",
@@ -755,7 +755,7 @@
       "liveAirdrops": "Live airdrops",
       "pastAirdrops": "Past airdrops",
       "loadingAirdrops": "Loading airdrops",
-      "linearRelease": "Linear release",
+      "linearRelease": "Linear release ({{date}})",
       "live": "Live",
       "past": "Past",
       "lostAirdrop": "Lost airdrop :(",
@@ -771,7 +771,13 @@
       "hatsUtilityContent-3": "Users who stake $HAT can participate in DAO governance and shape the future of Hats Finance. \n\n Users who stake $HAT can also gain access to personal wallet recovery solutions.",
       "hatsAllocation": "$HAT allocation",
       "hatsDistribution": "$HAT distribution",
-      "wrongAddressConnectedError": "Wrong address connected. Please connect the address that is elegible to this airdrop. ({{wallet}})"
+      "wrongAddressConnectedError": "Wrong address connected. Please connect the address that is elegible to this airdrop. ({{wallet}})",
+      "released": "Released",
+      "releasable": "Releasable",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "releaseTokens": "Release {{tokens}}",
+      "noTokensToRelease": "No tokens to release"
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",

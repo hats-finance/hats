@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { Amount } from "utils/amounts.utils";
+import { LinearReleaseAirdropControls } from "./LinearReleaseAirdropControls/LinearReleaseAirdropControls";
 import { StyledAidropCard, StyledElegibilityBreakdown } from "./styles";
 
 type AirdropCardProps = {
@@ -49,7 +50,9 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
         description: elegibilityData?.eligible ? t("Airdrop.congratsContent") : t("Airdrop.sorryContent"),
         pills: (
           <>
-            {airdropData && airdropData.isLocked && <Pill text={t("Airdrop.linearRelease")} />}
+            {airdropData && airdropData.isLocked && (
+              <Pill text={t("Airdrop.linearRelease", { date: moment(airdropData.lockEndDate).format("MMM Do YY'") })} />
+            )}
             <Pill text={t("Airdrop.live")} />
           </>
         ),
@@ -76,26 +79,34 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
   return (
     <StyledAidropCard>
       <div className="preview">
-        <div className="info">
-          <div className="name">
-            {airdropData.descriptionData.name} {shortenIfAddress(airdropData.address)} {getStatusInfo().pills}
-          </div>
-          <p className="blurb">{airdropData.descriptionData.description}</p>
+        <div className="section">
+          <div className="info">
+            <div className="name">
+              {airdropData.descriptionData.name} {shortenIfAddress(airdropData.address)} {getStatusInfo().pills}
+            </div>
+            <p className="blurb">{airdropData.descriptionData.description}</p>
 
-          {isLoading ? (
-            <p>{`${t("Airdrop.loadingAirdropData")}...`}</p>
-          ) : (
-            <>
-              <h2 className="mt-3">{getStatusInfo().text}</h2>
-              <p>{getStatusInfo().description}</p>
-            </>
+            {isLoading ? (
+              <p>{`${t("Airdrop.loadingAirdropData")}...`}</p>
+            ) : (
+              <>
+                <h2 className="mt-3">{getStatusInfo().text}</h2>
+                <p>{getStatusInfo().description}</p>
+              </>
+            )}
+          </div>
+
+          {!isLoading && elegibilityData?.eligible && (
+            <div className="amount">
+              <img src={HatsTokenIcon} alt="$HAT token" width={40} height={40} className="mt-1" />
+              <p>{new Amount(BigNumber.from(elegibilityData.total), 18, "$HAT").formatted()}</p>
+            </div>
           )}
         </div>
-        {!isLoading && elegibilityData?.eligible && (
-          <div className="amount">
-            <img src={HatsTokenIcon} alt="$HAT token" width={40} height={40} className="mt-1" />
-            <p>{new Amount(BigNumber.from(elegibilityData.total), 18, "$HAT").formatted()}</p>
-          </div>
+
+        {/* Linearly released airdrop controls */}
+        {!isLoading && redeemedData && airdropData.isLocked && (
+          <LinearReleaseAirdropControls airdropData={airdropData} redeemedData={redeemedData} addressToCheck={addressToCheck} />
         )}
       </div>
 
@@ -141,7 +152,7 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
             </Button>
           )}
 
-          {redeemedData && !redeemedData?.delegator && <Button onClick={onOpenDelegateModal}>t("Airdrop.delegate")</Button>}
+          {redeemedData && !redeemedData?.delegator && <Button onClick={onOpenDelegateModal}>{t("Airdrop.delegate")}</Button>}
         </div>
       )}
 
