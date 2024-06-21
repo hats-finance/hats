@@ -1,15 +1,19 @@
 import { IPayoutGraph, IVault, parseSeverityName } from "@hats.finance/shared";
 import { Alert, Button, HackerProfileImage, Loading, Pill, WithTooltip } from "components";
-import { ReleasePaymentSplitContract } from "contracts";
+import { ReleasablePaymentSplitter, ReleasePaymentSplitContract, ReleasedPaymentSplitter } from "contracts";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
+import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsReviewer } from "hooks/useIsReviewer";
 import millify from "millify";
 import { RoutePaths } from "navigation";
 import { useCachedProfile } from "pages/HackerProfile/useCachedProfile";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
 import { NavLink } from "react-router-dom";
+import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { useAccount } from "wagmi";
+import { Amount } from "utils/amounts.utils";
+import { useAccount, useNetwork } from "wagmi";
 import { IAuditPayoutLeaderboardData, useAuditPayoutLeaderboardData } from "./hooks";
 import { StyledLeaderboardSection } from "./styles";
 
@@ -23,7 +27,29 @@ type VaultLeaderboardSectionProps = {
 export const VaultLeaderboardSection = ({ vault, auditPayout, hideClaimRewardsAction = false }: VaultLeaderboardSectionProps) => {
   const { t } = useTranslation();
   const { address } = useAccount();
+  const { chain } = useNetwork();
+
+  const isGovMember = useIsGovMember();
+  const isReviewer = useIsReviewer();
   const leaderboardData = useAuditPayoutLeaderboardData(vault, auditPayout);
+
+  const chainId = Number(chain?.id);
+  const govMultisig = appChains[Number(chainId)]?.govMultisig;
+
+  const isGov = isGovMember || isReviewer;
+  const isDepositor =
+    auditPayout?.payoutData?.depositors?.find((depositor) => depositor.address.toLowerCase() === address?.toLowerCase()) &&
+    vault.version === "v3" &&
+    vault.description?.["project-metadata"].type === "audit";
+  const isWinnerAddress = leaderboardData?.find(
+    (leaderboardEntry) => leaderboardEntry.beneficiary?.toLowerCase() === address?.toLowerCase()
+  );
+
+  // IF gov member, use the gov multisig as the account to release the funds
+  const releasable = ReleasablePaymentSplitter.hook(vault, auditPayout?.beneficiary, isGov ? govMultisig : address);
+  const releasableAmount = new Amount(releasable, vault.stakingTokenDecimals, vault.stakingTokenSymbol);
+  const released = ReleasedPaymentSplitter.hook(vault, auditPayout?.beneficiary, isGov ? govMultisig : address);
+  const releasedAmount = new Amount(released, vault.stakingTokenDecimals, vault.stakingTokenSymbol);
 
   const severitiesInVault = vault.description?.severities.map((severity) => parseSeverityName(severity.name)) ?? [];
   const severitiesInPayout = [
@@ -36,16 +62,22 @@ export const VaultLeaderboardSection = ({ vault, auditPayout, hideClaimRewardsAc
   ];
 
   const severityColors = getSeveritiesColorsArray(undefined, severitiesToShow.length);
-  const isWinnerAddress = leaderboardData?.find(
-    (leaderboardEntry) => leaderboardEntry.beneficiary?.toLowerCase() === address?.toLowerCase()
-  );
 
   const releasePayment = ReleasePaymentSplitContract.hook(vault, auditPayout?.beneficiary);
 
   if (!auditPayout) return null;
 
   const executeRelease = () => {
-    releasePayment.send();
+    if (!address || !chain) return;
+
+    releasePayment.send(isGov ? govMultisig : address);
+  };
+
+  const getRole = () => {
+    if (isGov) return "governance!";
+    if (isDepositor) return "depositor!";
+    if (isWinnerAddress) return "winner. Congrats!";
+    return "";
   };
 
   return (
@@ -76,8 +108,19 @@ export const VaultLeaderboardSection = ({ vault, auditPayout, hideClaimRewardsAc
           <br />
           <div className="mt-5">
             <p className="mb-4">{t("Leaderboard.ifYouAreAWinner")}</p>
-            {!isWinnerAddress && <span className="error mb-1">{t("Leaderboard.needToBeConnectedWithAWinnerAddress")}</span>}
-            <Button disabled={!isWinnerAddress} onClick={isWinnerAddress ? executeRelease : undefined}>
+            {!isWinnerAddress && !isDepositor && !isGov && (
+              <span className="error mb-1">{t("Leaderboard.needToBeConnectedWithAWinnerAddress")}</span>
+            )}
+
+            {(isWinnerAddress || isDepositor || isGov) && (
+              <>
+                <p className="mb-1">Hey, {getRole()}</p>
+                <p className="mb-4">You can release: {releasableAmount.formatted()}</p>
+                {releasedAmount.number > 0 && <p className="mb-4">You have released release: {releasedAmount.formatted()}</p>}
+              </>
+            )}
+
+            <Button disabled={releasableAmount.number <= 0} onClick={executeRelease}>
               {t("Leaderboard.claimBounty")}
             </Button>
 

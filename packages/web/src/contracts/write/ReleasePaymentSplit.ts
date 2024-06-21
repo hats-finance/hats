@@ -1,7 +1,7 @@
 import { HATPaymentSplitter_abi } from "@hats.finance/shared";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { useAccount, useContractWrite, useNetwork } from "wagmi";
+import { useContractWrite, useNetwork } from "wagmi";
 
 export class ReleasePaymentSplitContract {
   /**
@@ -12,7 +12,6 @@ export class ReleasePaymentSplitContract {
    */
   static hook = (vault: IVault, splitContractAddress: string | undefined) => {
     const { chain } = useNetwork();
-    const { address } = useAccount();
 
     const payoutRelease = useContractWrite({
       mode: "recklesslyUnprepared",
@@ -24,13 +23,15 @@ export class ReleasePaymentSplitContract {
 
     return {
       ...payoutRelease,
-      send: async () => {
-        if (!vault.stakingToken || !address) return;
+      send: async (account: string | undefined) => {
+        if (!vault.stakingToken || !account) return;
 
         await switchNetworkAndValidate(chain!.id, vault?.chainId);
 
         // [params]: token, account
-        return payoutRelease.write!({ recklesslySetUnpreparedArgs: [vault?.stakingToken as `0x${string}`, address] });
+        return payoutRelease.write!({
+          recklesslySetUnpreparedArgs: [vault?.stakingToken as `0x${string}`, account as `0x${string}`],
+        });
       },
     };
   };
