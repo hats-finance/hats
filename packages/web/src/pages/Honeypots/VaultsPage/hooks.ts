@@ -9,7 +9,7 @@ import { useIsGovMember } from "hooks/useIsGovMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import { useEffect, useMemo } from "react";
 import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
-import { mainnet, useNetwork } from "wagmi";
+import { useNetwork } from "wagmi";
 import * as auditDraftsService from "./auditDraftsService";
 
 /**
