@@ -182,6 +182,7 @@ export const AirdropFactoriesChainConfig: {
 } = {
   test: {
     airdrop: [{ address: "0x50E10f3A32a9d3B4B04144400a74300D9D9885Fa", chain: wagmiChains.sepolia }],
+    // airdrop: [{ address: "0xcBd1763C9CD705DDf0b7aEbB7f36A7b00E890729", chain: wagmiChains.sepolia }],
   },
   prod: {
     airdrop: [],
