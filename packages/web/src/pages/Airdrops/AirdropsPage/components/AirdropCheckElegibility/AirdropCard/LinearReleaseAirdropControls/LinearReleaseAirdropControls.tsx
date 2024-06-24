@@ -1,9 +1,14 @@
 import { NextArrowIcon } from "assets/icons/next-arrow";
-import { Button, Loading } from "components";
+import { Button, Loading, Modal } from "components";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
+import useModal from "hooks/useModal";
 import moment from "moment";
+import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
 import { ReleaseTokenLockContract } from "pages/Airdrops/contracts/ReleaseTokenLockContract";
 import { AirdropData } from "pages/Airdrops/types";
 import { AirdropRedeemData } from "pages/Airdrops/utils/getAirdropRedeemedData";
+import { VaultDepositWithdrawModal } from "pages/Honeypots/VaultDetailsPage/Sections/VaultDepositsSection/components";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useWaitForTransaction } from "wagmi";
 import { useLinearReleaseAidropInfo } from "./hooks";
@@ -21,6 +26,10 @@ export const LinearReleaseAirdropControls = ({
   addressToCheck,
 }: LinearReleaseAirdropControlsProps) => {
   const { t } = useTranslation();
+  const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
+
+  const { allVaults } = useVaults();
+  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT);
 
   const { data, isLoading } = useLinearReleaseAidropInfo(addressToCheck, redeemedData.tokenLock?.address, airdropData.chainId);
   const areTokensToRelease = (data?.releasable.number ?? 0) > 0;
@@ -56,9 +65,7 @@ export const LinearReleaseAirdropControls = ({
   const waitingReleaseTokensCall = useWaitForTransaction({
     hash: releaseTokensCall.data?.hash as `0x${string}`,
     confirmations: 2,
-    onSuccess: async () => {
-      // Show deposit modal
-    },
+    onSuccess: async () => showDepositModal(),
   });
 
   if (isLoading) return null;
@@ -113,10 +120,21 @@ export const LinearReleaseAirdropControls = ({
             t("Airdrop.noTokensToRelease")
           )}
         </Button>
+        <button onClick={showDepositModal}>open</button>
       </div>
 
       {releaseTokensCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
       {waitingReleaseTokensCall.isLoading && <Loading fixed extraText={`${t("redeemingYourAirdrop")}...`} />}
+
+      {vaultToDeposit && (
+        <Modal
+          title={t("depositToken", { token: vaultToDeposit.stakingTokenSymbol })}
+          isShowing={isShowingDepositModal}
+          onHide={hideDepositModal}
+        >
+          <VaultDepositWithdrawModal action="DEPOSIT" vault={vaultToDeposit} closeModal={hideDepositModal} fromReleaseTokens />
+        </Modal>
+      )}
     </StyledLinearReleaseAirdropControls>
   );
 };

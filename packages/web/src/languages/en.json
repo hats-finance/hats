@@ -703,6 +703,9 @@
     "openNow": "Open now",
     "availableFunding": "Available for funding",
     "availableFundingExplanation": "This is the available funding for the protocols to open an audit competition in Hats.",
+    "depositBountyWarning": "<strong>Please note:</strong><br/> Depositing into a Hats bug bounty vault involves a potential risk of fund lockup during the processing of claims, a {{maxBounty}}% maximum risk of being part of the payout, and {{withdrawPeriod}} withdrawal delay.",
+    "depositAndEarnAPYDescription": "Deposit to {{name}} and earn APY.",
+    "percentageToDeposit": "Percentage to deposit:",
     "Airdrop": {
       "checkElegibility": "Check elegibility",
       "addressToCheck": "Address to check",

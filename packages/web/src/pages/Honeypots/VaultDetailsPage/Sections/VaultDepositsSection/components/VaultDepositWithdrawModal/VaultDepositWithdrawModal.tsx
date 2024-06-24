@@ -1,14 +1,18 @@
 import { parseUnits } from "@ethersproject/units";
 import { IVault } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Alert, Button, Loading, Modal } from "components";
+import { Alert, Button, FormSliderInput, Loading, Modal } from "components";
+import { ApyPill } from "components/VaultCard/styles";
 import { DepositContract, TokenApproveAllowanceContract, WithdrawAndClaimContract } from "contracts";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useModal from "hooks/useModal";
+import { useVaultApy } from "hooks/vaults/useVaultApy";
 import millify from "millify";
+import moment from "moment";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { numberWithThousandSeparator } from "utils/amounts.utils";
 import { useWaitForTransaction } from "wagmi";
 import { SuccessActionModal } from "..";
 import { useVaultDepositWithdrawInfo } from "../../useVaultDepositWithdrawInfo";
@@ -20,9 +24,10 @@ type VaultDepositWithdrawModalProps = {
   vault: IVault;
   action: "DEPOSIT" | "WITHDRAW";
   closeModal: () => void;
+  fromReleaseTokens?: boolean;
 };
 
-export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDepositWithdrawModalProps) => {
+export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromReleaseTokens }: VaultDepositWithdrawModalProps) => {
   const { t } = useTranslation();
 
   const { isShowing: isShowingSuccessModal, show: showSuccessModal } = useModal();
@@ -31,6 +36,7 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
   const { withdrawSafetyPeriod } = useVaults();
   const { availableBalanceToWithdraw, tokenBalance, isUserInTimeToWithdraw, isUserInQueueToWithdraw, tokenAllowance } =
     useVaultDepositWithdrawInfo(vault);
+  const vaultApy = useVaultApy(vault);
 
   const {
     register,
@@ -111,9 +117,32 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
     }
   };
 
+  console.log(vault);
+
   return (
     <>
       <StyledVaultDepositWithdrawModal>
+        {fromReleaseTokens && vaultApy && vaultApy.length > 0 && (
+          <>
+            <p className="mb-4">
+              {t("depositAndEarnAPYDescription", {
+                name: `${vault.description?.["project-metadata"].name} ${
+                  vault.description?.["project-metadata"].type === "normal" ? t("bugBounty") : t("auditCompetition")
+                }`,
+              })}
+            </p>
+
+            <div className="mb-5">
+              <ApyPill>
+                <div className="content">
+                  {t("apy")} <span>{`${numberWithThousandSeparator(vaultApy[0]?.apy)}%`}</span>
+                </div>
+                <div className="bg" />
+              </ApyPill>
+            </div>
+          </>
+        )}
+
         <div className="balance">
           <p>
             {t("balance")}: {(action === "DEPOSIT" ? tokenBalance : availableBalanceToWithdraw).formatted()}
@@ -137,6 +166,37 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
           </div>
         </div>
         {errors.amount ? <span className="error">{errors.amount.message}</span> : <span className="error">&nbsp;</span>}
+
+        {fromReleaseTokens && (
+          <>
+            <div className="mb-4 mt-4">
+              <p className="mb-4">{t("percentageToDeposit")}</p>
+              <FormSliderInput
+                onChange={(val) => {
+                  if (val === 100) {
+                    const value = action === "DEPOSIT" ? tokenBalance.string : availableBalanceToWithdraw.string;
+                    setValue("amount", value, {
+                      shouldValidate: true,
+                    });
+                  } else {
+                    setValue("amount", (tokenBalance.number * (val / 100)).toFixed(2), {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+            </div>
+            <div
+              className="warning-text"
+              dangerouslySetInnerHTML={{
+                __html: t("depositBountyWarning", {
+                  maxBounty: +(vault.maxBounty ?? 0) / 100,
+                  withdrawPeriod: moment.duration(vault.master.withdrawPeriod, "seconds").humanize(),
+                }),
+              }}
+            />
+          </>
+        )}
 
         {action === "DEPOSIT" && (isUserInTimeToWithdraw || isUserInQueueToWithdraw) && (
           <Alert className="mt-4" type="warning">
