@@ -8,7 +8,6 @@ import { ReleaseTokenLockContract } from "pages/Airdrops/contracts/ReleaseTokenL
 import { AirdropData } from "pages/Airdrops/types";
 import { AirdropRedeemData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { VaultDepositWithdrawModal } from "pages/Honeypots/VaultDetailsPage/Sections/VaultDepositsSection/components";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useWaitForTransaction } from "wagmi";
 import { useLinearReleaseAidropInfo } from "./hooks";
