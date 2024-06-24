@@ -171,6 +171,6 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     govMultisig: "0xf2935671015c896D5E1fE4c97caF111F5eEe2b3c",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0xe198CBb727758b9Ad38a12E1ad475a843e5e730F",
-    provider: "",
+    provider: "https://sapphire.oasis.io",
   },
 };

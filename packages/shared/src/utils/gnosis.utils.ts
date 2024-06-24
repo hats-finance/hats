@@ -26,6 +26,8 @@ export const getGnosisChainNameByChainId = (chainId: number): string => {
       return "gnosis-chain";
     case sepolia.id:
       return "sepolia";
+    case oasis.id:
+      return "oasis";
     default:
       throw new Error(`Gnosis doesn't support chainId:${chainId} yet`);
   }
@@ -53,14 +55,15 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
       return "gno";
     case sepolia.id:
       return "sep";
+    case oasis.id:
+      return "sapphire";
     default:
       throw new Error(`Gnosis doesn't support chainId:${chainId} yet`);
   }
 };
 
 export const getGnosisSafeTxServiceBaseUrl = (chainId: number): string => {
-  if (chainId === meter.id) return `https://safe-gateway.meter.io/txs`;
-  if (chainId === oasis.id) return `https://transaction.safe.oasis.io/`;
+  if (chainId === oasis.id) return `https://transaction.safe.oasis.io`;
   return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global`;
 };
 
@@ -75,6 +78,9 @@ export const getSafeDashboardLink = (address: string, chainId: number): string |
   try {
     if (!chainId) return "";
     const checksummedSafeAddress = utils.getAddress(address);
+
+    if (chainId === oasis.id)
+      return `https://safe.oasis.io/apps/open?safe=${getGnosisChainPrefixByChainId(chainId)}:${checksummedSafeAddress}`;
     return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(chainId)}:${checksummedSafeAddress}`;
   } catch (error) {
     return undefined;
@@ -85,6 +91,9 @@ export const getSafeHomeLink = (address: string, chainId: number): string | unde
   try {
     if (!chainId) return "";
     const checksummedSafeAddress = utils.getAddress(address);
+
+    if (chainId === oasis.id)
+      return `https://safe.oasis.io/home?safe=${getGnosisChainPrefixByChainId(chainId)}:${checksummedSafeAddress}`;
     return `https://app.safe.global/home?safe=${getGnosisChainPrefixByChainId(chainId)}:${checksummedSafeAddress}`;
   } catch (error) {
     return undefined;
