@@ -86,7 +86,7 @@ const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo }) => {
       selected={selectedDelegatee === delegatee.address}
     >
       <div className="icon">{getDelegateeIcon()}</div>
-      {!isLoading && <div className="votes">{new Amount(delegateeVotes, 18).formatted()} votes</div>}
+      {!isLoading && <div className="votes">{new Amount(delegateeVotes, 18).number.toFixed(2)} votes</div>}
       <div className="address">{shortenIfAddress(delegatee.address)}</div>
       <div className="name">
         <span>{delegatee.name}</span>
