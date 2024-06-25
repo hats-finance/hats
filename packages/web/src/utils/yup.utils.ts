@@ -153,11 +153,12 @@ export const getTestCommitteeMultisigForVault = (intl) => {
       const isAdd = isAddress(value ?? "");
       const isEmpty = value === "" || value === undefined;
       const { chainId } = ctx.parent;
+      const isAudit = (ctx as any).from[1].value["project-metadata"].type === "audit";
 
       if (!chainId) return ctx.createError({ message: intl("required") });
       const isTesnet = appChains[chainId].chain.testnet;
-      const MIN_COMMITTEE_MEMBERS = isTesnet ? 1 : 3;
-      const MIN_SIGNERS = isTesnet ? 1 : 2;
+      const MIN_COMMITTEE_MEMBERS = isTesnet || isAudit ? 1 : 3;
+      const MIN_SIGNERS = isTesnet || isAudit ? 1 : 2;
 
       if (isEmpty) return true;
       if (!isAdd) return ctx.createError({ message: intl("invalid-address") });
