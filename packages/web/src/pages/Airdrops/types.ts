@@ -18,10 +18,13 @@ export type AirdropDescriptionData = {
 export type AirdropData = {
   address: string;
   chainId: number;
+  factory: string;
   isLocked: boolean;
   lockEndDate: Date;
   isLive: boolean;
   deadlineDate: Date;
   token: string;
+  redeemedBy: string[];
+  eligibleFor: string[];
   descriptionData: AirdropDescriptionData;
 };

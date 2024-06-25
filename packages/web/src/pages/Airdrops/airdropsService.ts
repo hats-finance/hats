@@ -110,12 +110,13 @@ export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): P
     const airdropCreatedEvents = await airdropFactoryContract.queryFilter("HATAirdropCreated", 0);
     const airdropsAddresses = airdropCreatedEvents
       .map((event) => (event?.args as AirdropCreatedEventArgs | undefined)?._hatAirdrop)
-      .filter((address) => address !== undefined) as string[];
+      .filter((address) => address !== undefined)
+      .map((address) => (address as string).toLowerCase());
 
     const airdropsData = (
       await Promise.all(
         airdropsAddresses.map(async (address) => {
-          const airdropData = await getGeneralAirdropData(address, factory.chain.id);
+          const airdropData = await getGeneralAirdropData(address, factory.chain.id, factory.address);
           return airdropData;
         })
       )
