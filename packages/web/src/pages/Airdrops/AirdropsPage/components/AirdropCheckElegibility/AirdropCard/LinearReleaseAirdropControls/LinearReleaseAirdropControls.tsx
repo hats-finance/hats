@@ -119,6 +119,7 @@ export const LinearReleaseAirdropControls = ({
             t("Airdrop.noTokensToRelease")
           )}
         </Button>
+        {/* <button onClick={showDepositModal}>open</button> */}
       </div>
 
       {releaseTokensCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}

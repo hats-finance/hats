@@ -1,17 +1,12 @@
 import { Button } from "components";
 import { SocialLinks } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
-import moment from "moment";
-import { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { AirdropRedeemModalContext } from "../store";
 
 const UTILITY_GUIDE_URL = "#";
 
 export const AirdropRedeemCompleted = () => {
   const { t } = useTranslation();
-
-  const { airdropData } = useContext(AirdropRedeemModalContext);
 
   return (
     <div className="content-modal">
@@ -20,11 +15,11 @@ export const AirdropRedeemCompleted = () => {
 
       <div className="mt-5">
         <strong>{t("Airdrop.claimSuccessfulExplanation")}</strong>
-        <p className="mb-4 mt-2">
+        {/* <p className="mb-4 mt-2">
           {t("Airdrop.linearlyReleasedExplanation", {
             daysLocked: moment(airdropData.lockEndDate).fromNow(true),
           })}
-        </p>
+        </p> */}
 
         <strong>{t("Airdrop.whatsNext")}</strong>
         <div dangerouslySetInnerHTML={{ __html: t("Airdrop.whatsNextContent") }} />

@@ -134,7 +134,7 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
 
             <div className="mb-5">
               <ApyPill>
-                <div className="content">
+                <div className="content-apy">
                   {t("apy")} <span>{`${numberWithThousandSeparator(vaultApy[0]?.apy)}%`}</span>
                 </div>
                 <div className="bg" />

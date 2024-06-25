@@ -1,6 +1,5 @@
 import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
-import { NextArrowIcon } from "assets/icons/next-arrow";
-import { Button, Pill } from "components";
+import { Pill } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
 import { AirdropData } from "pages/Airdrops/types";
@@ -138,7 +137,7 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
         </StyledElegibilityBreakdown>
       )}
 
-      {!isLoading && (
+      {/* {!isLoading && (
         <div className="buttons">
           {isLive && elegibilityData?.eligible && (
             <Button styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
@@ -154,7 +153,7 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
 
           {redeemedData && !redeemedData?.delegator && <Button onClick={onOpenDelegateModal}>{t("Airdrop.delegate")}</Button>}
         </div>
-      )}
+      )} */}
 
       {/* <h4>{airdrop.address}</h4>
       <p>{airdrop.chain.name}</p>
