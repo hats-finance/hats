@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { IS_PROD } from "settings";
 import { useAccount, useNetwork } from "wagmi";
 import { AirdropCard } from "./AirdropCard/AirdropCard";
-import { AirdropDelegateModal } from "./AirdropDelegateModal/AirdropDelegateModal";
 import { AirdropRedeemModal } from "./AirdropRedeemModal/AirdropRedeemModal";
 import { StyledAirdropCheckElegibility } from "./styles";
 
@@ -21,13 +20,24 @@ export const AirdropCheckElegibility = () => {
 
   const [showPastAidrops, setShowPastAidrops] = useState<boolean>(false);
   const [addressToCheck, setAddressToCheck] = useState<string>("");
-  const [airdropToClaim, setAirdropToClaim] = useState<AirdropData>();
-  const [airdropToDelegate, setAirdropToDelegate] = useState<AirdropData>();
+  const [airdropsToClaim, setAirdropsToClaim] = useState<AirdropData[]>([]);
+  // const [airdropToDelegate, setAirdropToDelegate] = useState<AirdropData>();
   const [checkElegibility, setCheckElegibility] = useState<boolean>();
 
   const isTestnet = !IS_PROD && connectedChain?.testnet;
   const env = isTestnet ? "test" : "prod";
   const { data: airdropsData, isLoading } = useAirdropsByFactories(AirdropFactoriesChainConfig[env].airdrop);
+
+  const isEligibleForSomeAirdrop =
+    airdropsData?.some((airdrop) => airdrop.isLive && airdrop.eligibleFor?.includes(addressToCheck.toLowerCase())) ?? false;
+
+  const redeemableAirdrops = airdropsData?.filter(
+    (airdrop) =>
+      airdrop.isLive &&
+      airdrop.eligibleFor?.includes(addressToCheck.toLowerCase()) &&
+      !airdrop.redeemedBy?.includes(addressToCheck.toLowerCase())
+  );
+  const areRedeemableAirdrops = (redeemableAirdrops?.length ?? 0) > 0 ?? false;
 
   if (isLoading) {
     return (
@@ -76,6 +86,29 @@ export const AirdropCheckElegibility = () => {
         )}
       </div>
 
+      {liveAirdrops.length > 0 && checkElegibility && isEligibleForSomeAirdrop && (
+        <div className="buttons mt-5">
+          <Button
+            disabled={!areRedeemableAirdrops}
+            onClick={() => {
+              // Get all airdrops that are redeemable and are on the same factory
+              const redeemable = liveAirdrops.filter(
+                (airdrop) =>
+                  airdrop.eligibleFor?.includes(addressToCheck.toLowerCase()) &&
+                  !airdrop.redeemedBy?.includes(addressToCheck.toLowerCase())
+              );
+              const sameFactoryAirdrops = redeemable.filter((airdrop) => airdrop.factory === redeemable[0].factory);
+              setAirdropsToClaim(sameFactoryAirdrops);
+            }}
+          >
+            {areRedeemableAirdrops
+              ? t("Airdrop.redeemAllAirdropsQuantity", { quantity: redeemableAirdrops?.length })
+              : t("Airdrop.allAirdropsRedeemed")}
+            <NextArrowIcon className="ml-2" />
+          </Button>
+        </div>
+      )}
+
       {checkElegibility && addressToCheck && (
         <div className="mt-5">
           <h2 className="underline">{t("Airdrop.liveAirdrops")}</h2>
@@ -84,8 +117,9 @@ export const AirdropCheckElegibility = () => {
               key={airdropData.address}
               addressToCheck={addressToCheck}
               airdropData={airdropData}
-              onOpenClaimModal={() => setAirdropToClaim(airdropData)}
-              onOpenDelegateModal={() => setAirdropToDelegate(airdropData)}
+              onOpenClaimModal={() => setAirdropsToClaim([airdropData])}
+              onOpenDelegateModal={() => {}}
+              // onOpenDelegateModal={() => setAirdropToDelegate(airdropData)}
             />
           ))}
         </div>
@@ -102,24 +136,26 @@ export const AirdropCheckElegibility = () => {
                 key={airdropData.address}
                 addressToCheck={addressToCheck}
                 airdropData={airdropData}
-                onOpenClaimModal={() => setAirdropToClaim(airdropData)}
-                onOpenDelegateModal={() => setAirdropToDelegate(airdropData)}
+                onOpenClaimModal={() => setAirdropsToClaim([airdropData])}
+                onOpenDelegateModal={() => {}}
+                // onOpenDelegateModal={() => setAirdropToDelegate(airdropData)}
               />
             ))}
         </div>
       )}
 
-      {airdropToClaim && addressToCheck && (
-        <Modal isShowing={!!airdropToClaim} onHide={() => setAirdropToClaim(undefined)} disableOnOverlayClose>
+      {airdropsToClaim.length > 0 && addressToCheck && (
+        <Modal isShowing={!!airdropsToClaim} onHide={() => setAirdropsToClaim([])} disableOnOverlayClose>
           <AirdropRedeemModal
+            chainId={airdropsToClaim[0].chainId}
+            airdropFactory={airdropsToClaim[0].factory}
             addressToCheck={addressToCheck}
-            airdropData={airdropToClaim}
-            closeModal={() => setAirdropToClaim(undefined)}
+            airdropsData={airdropsToClaim}
           />
         </Modal>
       )}
 
-      {airdropToDelegate && addressToCheck && (
+      {/* {airdropToDelegate && addressToCheck && (
         <Modal isShowing={!!airdropToDelegate} onHide={() => setAirdropToDelegate(undefined)} disableOnOverlayClose>
           <AirdropDelegateModal
             addressToCheck={addressToCheck}
@@ -127,7 +163,7 @@ export const AirdropCheckElegibility = () => {
             closeModal={() => setAirdropToDelegate(undefined)}
           />
         </Modal>
-      )}
+      )} */}
     </StyledAirdropCheckElegibility>
   );
 };

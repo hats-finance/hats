@@ -3,7 +3,11 @@ import { getContract, getProvider } from "wagmi/actions";
 import { AirdropData } from "../types";
 import { getAirdropDescriptionJSON } from "./getAirdropDescriptionJSON";
 
-export const getGeneralAirdropData = async (address: string, chainId: number): Promise<AirdropData | undefined> => {
+export const getGeneralAirdropData = async (
+  address: string,
+  chainId: number,
+  factory: string
+): Promise<AirdropData | undefined> => {
   try {
     const airdropDescription = await getAirdropDescriptionJSON({ address, chainId });
 
@@ -26,6 +30,14 @@ export const getGeneralAirdropData = async (address: string, chainId: number): P
     const isLocked = lockEndDate.getTime() > Date.now();
     const isLive = deadlineDate.getTime() > Date.now();
 
+    const tokensRedeemedEvents = await airdropContract.queryFilter("TokensRedeemed", 0);
+    const redeemedBy = tokensRedeemedEvents
+      .map((event) => event.args?._account as string | undefined)
+      .filter((address) => !!address)
+      .map((address) => (address as string).toLowerCase());
+
+    const eligibleFor = Object.keys(airdropDescription.merkeltree).map((key) => key.toLowerCase());
+
     return {
       address,
       chainId,
@@ -34,6 +46,9 @@ export const getGeneralAirdropData = async (address: string, chainId: number): P
       deadlineDate,
       isLive,
       token,
+      redeemedBy,
+      eligibleFor,
+      factory,
       descriptionData: airdropDescription,
     };
   } catch (error) {

@@ -156,6 +156,24 @@ export const StyledAirdropRedeemModal = styled.div`
       }
     }
 
+    .deposit-amount {
+      .top-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .amount-to-deposit {
+        width: 100%;
+        padding: ${getSpacing(3)} ${getSpacing(2)};
+        border: 1px solid var(--primary);
+        background: var(--background);
+        font-weight: 700;
+        margin-top: ${getSpacing(2)};
+        margin-bottom: ${getSpacing(3)};
+      }
+    }
+
     .buttons {
       display: flex;
       justify-content: space-between;

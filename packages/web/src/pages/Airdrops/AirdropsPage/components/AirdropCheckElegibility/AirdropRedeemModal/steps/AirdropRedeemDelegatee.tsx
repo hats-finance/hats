@@ -66,14 +66,14 @@ export const AirdropRedeemDelegatee = () => {
 };
 
 const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo }) => {
-  const { selectedDelegatee, setSelectedDelegatee, airdropData } = useContext(AirdropRedeemModalContext);
+  const { selectedDelegatee, setSelectedDelegatee, airdropsData } = useContext(AirdropRedeemModalContext);
 
   const { data: delegateeVotes, isLoading } = useContractRead({
-    address: airdropData ? (airdropData.token as `0x${string}`) : undefined,
+    address: airdropsData[0] ? (airdropsData[0].token as `0x${string}`) : undefined,
     abi: HATToken_abi,
     functionName: "getVotes",
     args: [delegatee.address as `0x${string}`],
-    chainId: airdropData.chainId,
+    chainId: airdropsData[0].chainId,
   });
 
   const getDelegateeIcon = () => {
@@ -88,7 +88,7 @@ const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo }) => {
       selected={selectedDelegatee === delegatee.address}
     >
       <div className="icon">{getDelegateeIcon()}</div>
-      {!isLoading && <div className="votes">{new Amount(delegateeVotes, 18).formatted()} votes</div>}
+      {!isLoading && <div className="votes">{new Amount(delegateeVotes, 18).formatted(2)} votes</div>}
       <div className="address">{shortenIfAddress(delegatee.address)}</div>
       <div className="name">
         <span>{delegatee.name}</span>

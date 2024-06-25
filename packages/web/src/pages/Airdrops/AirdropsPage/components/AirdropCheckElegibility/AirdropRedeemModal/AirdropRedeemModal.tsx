@@ -1,10 +1,10 @@
 import { HatSpinner, Loading } from "components";
+import { DelegateAirdropContract } from "pages/Airdrops/contracts/DelegateAirdropContract";
+import { RedeemMultipleAirdropsContract } from "pages/Airdrops/contracts/RedeemMultipleAirdropsContract";
 import { AirdropData } from "pages/Airdrops/types";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNetwork, useWaitForTransaction } from "wagmi";
-import { DelegateAirdropContract } from "../../../../contracts/DelegateAirdropContract";
-import { RedeemAirdropContract } from "../../../../contracts/RedeemAirdropContract";
 import { AirdropElegibility, getAirdropElegibility } from "../../../../utils/getAirdropElegibility";
 import { AirdropRedeemData, getAirdropRedeemedData } from "../../../../utils/getAirdropRedeemedData";
 import { AirdropRedeemCompleted } from "./steps/AirdropRedeemCompleted";
@@ -16,64 +16,85 @@ import { AirdropRedeemModalContext, IAirdropRedeemModalContext } from "./store";
 import { StyledAirdropRedeemModal } from "./styles";
 
 type AirdropRedeemModalProps = {
-  airdropData: AirdropData;
+  airdropsData: AirdropData[];
+  airdropFactory: string;
   addressToCheck: string;
-  closeModal: () => void;
+  chainId: number;
 };
 
-const redeemSteps = [
-  { element: <AirdropRedeemStart /> },
-  { element: <AirdropRedeemQuestionnaire /> },
-  { element: <AirdropRedeemDelegatee /> },
-  { element: <AirdropRedeemReview /> },
-  { element: <AirdropRedeemCompleted /> },
-];
+const redeemSteps = {
+  all: [
+    { element: <AirdropRedeemStart /> },
+    { element: <AirdropRedeemQuestionnaire /> },
+    { element: <AirdropRedeemDelegatee /> },
+    { element: <AirdropRedeemReview /> },
+    { element: <AirdropRedeemCompleted /> },
+  ],
+  tokenLock: [
+    { element: <AirdropRedeemStart /> },
+    { element: <AirdropRedeemQuestionnaire /> },
+    { element: <AirdropRedeemReview /> },
+    { element: <AirdropRedeemCompleted /> },
+  ],
+};
 
-export const AirdropRedeemModal = ({ airdropData: aidropData, addressToCheck, closeModal }: AirdropRedeemModalProps) => {
+export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactory, chainId }: AirdropRedeemModalProps) => {
   const { t } = useTranslation();
   const { chain: connectedChain } = useNetwork();
 
-  const [airdropElegibility, setAirdropElegibility] = useState<AirdropElegibility | false>();
-  const [redeemData, setRedeemData] = useState<AirdropRedeemData>();
+  const [airdropsElegibility, setAirdropsElegibility] = useState<(AirdropElegibility | undefined)[]>([]);
+  const [airdropsRedeemData, setAidropsRedeemData] = useState<(AirdropRedeemData | undefined)[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDelegating, setIsDelegating] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedDelegatee, setSelectedDelegatee] = useState<string>();
 
+  const onlyTokenLocks = airdropsData.every((airdrop) => airdrop.isLocked);
+  const stepsType = onlyTokenLocks ? "tokenLock" : "all";
+
   const nextStep = async () => {
-    setCurrentStep((prev) => (prev === redeemSteps.length - 1 ? prev : prev + 1));
+    setCurrentStep((prev) => (prev === redeemSteps[stepsType].length - 1 ? prev : prev + 1));
   };
 
   const prevStep = async () => {
     setCurrentStep((prev) => (prev === 0 ? prev : prev - 1));
   };
 
-  const updateAirdropElegibility = useCallback(async () => {
-    if (!addressToCheck) return;
-    const elegibility = await getAirdropElegibility(addressToCheck, aidropData.descriptionData);
-    setAirdropElegibility(elegibility);
-    return elegibility;
-  }, [addressToCheck, aidropData]);
+  const updateAirdropsElegibility = useCallback(async () => {
+    if (!addressToCheck) return [];
 
-  const updateAirdropRedeemedData = useCallback(async () => {
-    if (!addressToCheck) return;
-    const redeemed = await getAirdropRedeemedData(addressToCheck, aidropData);
-    setRedeemData(redeemed);
+    const elegibilities = await Promise.all(
+      airdropsData.map((airdrop) => getAirdropElegibility(addressToCheck, airdrop.descriptionData))
+    );
+    setAirdropsElegibility(elegibilities);
+    return elegibilities;
+  }, [addressToCheck, airdropsData]);
+
+  const updateAirdropsRedeemedData = useCallback(async () => {
+    if (!addressToCheck) return [];
+
+    const redeemed = await Promise.all(airdropsData.map((airdrop) => getAirdropRedeemedData(addressToCheck, airdrop)));
+    setAidropsRedeemData(redeemed);
     return redeemed;
-  }, [addressToCheck, aidropData]);
+  }, [addressToCheck, airdropsData]);
 
-  const redeemAirdropCall = RedeemAirdropContract.hook(aidropData, airdropElegibility);
-  const waitingRedeemAirdropCall = useWaitForTransaction({
-    hash: redeemAirdropCall.data?.hash as `0x${string}`,
+  const redeemAirdropsCall = RedeemMultipleAirdropsContract.hook(airdropsData, airdropsElegibility, airdropFactory, chainId);
+  const waitingRedeemAirdropsCall = useWaitForTransaction({
+    hash: redeemAirdropsCall.data?.hash as `0x${string}`,
     confirmations: 2,
     onSuccess: async () => {
       if (!selectedDelegatee) return;
       try {
         setIsDelegating(true);
-        updateAirdropElegibility();
-        const newRedeemData = await updateAirdropRedeemedData();
-        const txResult = await DelegateAirdropContract.send(aidropData, newRedeemData, selectedDelegatee);
-        await txResult?.wait();
+        updateAirdropsElegibility();
+        const newRedeemsData = await updateAirdropsRedeemedData();
+
+        for (const [idx, redeemData] of newRedeemsData.entries()) {
+          if (!redeemData) continue;
+          const txResult = await DelegateAirdropContract.send(airdropsData[idx], redeemData, selectedDelegatee);
+          await txResult?.wait();
+        }
+
         setIsDelegating(false);
       } catch (error) {
         console.log(error);
@@ -82,42 +103,42 @@ export const AirdropRedeemModal = ({ airdropData: aidropData, addressToCheck, cl
     },
   });
 
-  useEffect(() => setAirdropElegibility(undefined), [addressToCheck, connectedChain]);
+  useEffect(() => setAirdropsElegibility([]), [addressToCheck, connectedChain]);
   useEffect(() => {
     const init = async () => {
       setIsLoading(true);
-      await updateAirdropElegibility();
-      await updateAirdropRedeemedData();
+      await updateAirdropsElegibility();
+      await updateAirdropsRedeemedData();
       setIsLoading(false);
     };
     init();
-  }, [updateAirdropElegibility, updateAirdropRedeemedData]);
+  }, [updateAirdropsElegibility, updateAirdropsRedeemedData]);
 
   useEffect(() => {
-    if (!isLoading && redeemData) setCurrentStep(redeemSteps.length - 1);
-  }, [isLoading, redeemData]);
+    if (!isLoading && airdropsRedeemData.some((air) => !!air)) setCurrentStep(redeemSteps[stepsType].length - 1);
+  }, [isLoading, airdropsRedeemData, stepsType]);
 
-  const handleClaimAirdrop = async () => {
-    return redeemAirdropCall.send();
+  const handleClaimAirdrops = async (percentageToDeposit: number | undefined, vaultToDeposit: string | undefined) => {
+    return redeemAirdropsCall.send(percentageToDeposit, vaultToDeposit);
   };
 
   const airdropRedeemModalContext = {
-    airdropData: aidropData,
+    airdropsData,
     addressToCheck,
-    airdropElegibility,
+    airdropsElegibility,
     nextStep,
     prevStep,
-    redeemData,
-    updateAirdropElegibility,
-    updateAirdropRedeemedData,
+    airdropsRedeemData,
+    updateAirdropsElegibility,
+    updateAirdropsRedeemedData,
     selectedDelegatee,
     setSelectedDelegatee,
-    isDelegating,
-    handleClaimAirdrop,
+    handleClaimAirdrops,
+    onlyTokenLocks,
   } satisfies IAirdropRedeemModalContext;
 
   // If the user is not eligible or already redeemed, we don't show the modal
-  if (!isLoading && airdropElegibility === false) return null;
+  if (!isLoading && airdropsElegibility.some((elegibility) => !elegibility)) return null;
 
   return (
     <StyledAirdropRedeemModal>
@@ -125,13 +146,13 @@ export const AirdropRedeemModal = ({ airdropData: aidropData, addressToCheck, cl
       {!isLoading && (
         <>
           <AirdropRedeemModalContext.Provider value={airdropRedeemModalContext}>
-            {redeemSteps[currentStep].element}
+            {redeemSteps[stepsType][currentStep].element}
           </AirdropRedeemModalContext.Provider>
         </>
       )}
 
-      {redeemAirdropCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
-      {waitingRedeemAirdropCall.isLoading && <Loading fixed extraText={`${t("redeemingYourAirdrop")}...`} />}
+      {redeemAirdropsCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
+      {waitingRedeemAirdropsCall.isLoading && <Loading fixed extraText={`${t("redeemingYourAirdrop")}...`} />}
       {isDelegating && <Loading fixed extraText={`${t("Airdrop.delegatingTokens")}...`} />}
     </StyledAirdropRedeemModal>
   );
