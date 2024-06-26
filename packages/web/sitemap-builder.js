@@ -19,12 +19,11 @@ query {
 }
 `;
 const subgraphs = [
-  "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
-  "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism",
-  // "https://api.thegraph.com/subgraphs/name/hats-finance/hats_goerli",
-  // "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
-  "https://api.thegraph.com/subgraphs/name/hats-finance/hats_arbitrum",
-  "https://api.thegraph.com/subgraphs/name/hats-finance/hats_polygon",
+  "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV", // Mainnet
+  "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/vMkoKYXdwa5dww7FD6ra9EdLgA2E3hmz2Q3BxF8DEAW", // Optimism
+  "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/GXUgxLXF1Ad2dmmxF5J24JUGKj6ko22t6esPkdLhKAz4", // Arbitrum
+  "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/GH7Cv6XKuWYTMUrXcAfcqRmJRERPxFThyHtz1AeNCZQa", // Polygon
+  "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/4TWs2Y9gCpUPh1vMSogFuRbBqsUzE4FXgYFAoJmcx9Fc", // BSC
 ];
 const buildPath = "./build/sitemap.xml";
 const publicUrl = "https://app.hats.finance";

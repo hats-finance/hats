@@ -67,7 +67,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x96E93876eB2314901ee9967488C650D77A50c705",
     hackersNFTContract: "0x2Ff0509D0e9a78Bf58815D768f4487f0645824F0",
     chain: wagmiChains.sepolia,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_sepolia",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/6q8vE8znoVRd2AqdGcgaF7j99Gtrrki4HwYDVMK8qaCf",
     coingeckoId: undefined,
     govMultisig: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -84,7 +85,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
     hackersNFTContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
     chain: wagmiChains.optimism,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/vMkoKYXdwa5dww7FD6ra9EdLgA2E3hmz2Q3BxF8DEAW",
     coingeckoId: "optimistic-ethereum",
     govMultisig: "0x5A6910528b047d3371970dF764ba4046b7DfAd6a",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -101,7 +103,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
     hackersNFTContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
     chain: wagmiChains.arbitrum,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_arbitrum",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/GXUgxLXF1Ad2dmmxF5J24JUGKj6ko22t6esPkdLhKAz4",
     coingeckoId: "arbitrum-one",
     govMultisig: "0x022B95b4c02bbA85604506E6114485615b0aD09A",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -118,7 +121,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x878Cab06E6f4a85D90E5f236d326a41Ef6f44F9f",
     hackersNFTContract: "0x312917812e76d78C5B1139C28d5C1D3A272d171d",
     chain: wagmiChains.polygon,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_polygon",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/GH7Cv6XKuWYTMUrXcAfcqRmJRERPxFThyHtz1AeNCZQa",
     coingeckoId: "polygon-pos",
     govMultisig: "0xa5c6d757ca69c92eea05b22924d9774658e10c62",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -135,7 +139,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x07368F6a959Ef3096230a258dd0af692699c3a4c",
     hackersNFTContract: "0xe198CBb727758b9Ad38a12E1ad475a843e5e730F",
     chain: wagmiChains.gnosis,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_gnosis",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/HPwWDxud8fSarSK8XfwSxcTkyKMQf7RwFmS7kPmTX9dD",
     coingeckoId: "xdai",
     govMultisig: "0xE650ba24115AE0260d8f723F89603DaF63b496cA",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
