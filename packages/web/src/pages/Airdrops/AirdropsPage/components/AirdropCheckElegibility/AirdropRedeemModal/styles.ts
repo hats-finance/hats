@@ -265,5 +265,14 @@ export const StyledDelegateeCard = styled.div<{ selected: boolean }>(
         }
       }
     }
+
+    .delegate-self {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      height: 100%;
+      font-weight: 700;
+    }
   `
 );

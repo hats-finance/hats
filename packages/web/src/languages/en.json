@@ -792,7 +792,8 @@
       "lastStepDesc": "Claim Now Or Claim & Deposit to Earn APY",
       "immediatelyReleased": "Immediately released",
       "claimAndDeposit": "Claim & Deposit",
-      "claim": "Claim"
+      "claim": "Claim",
+      "delegateSelf": "Delegate self"
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",

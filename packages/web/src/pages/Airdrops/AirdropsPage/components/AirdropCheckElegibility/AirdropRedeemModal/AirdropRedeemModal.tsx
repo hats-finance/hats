@@ -47,7 +47,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
   const [isLoading, setIsLoading] = useState(false);
   const [isDelegating, setIsDelegating] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedDelegatee, setSelectedDelegatee] = useState<string>();
+  const [selectedDelegatee, setSelectedDelegatee] = useState<string | "self">();
 
   const onlyTokenLocks = airdropsData.every((airdrop) => airdrop.isLocked);
   const stepsType = onlyTokenLocks ? "tokenLock" : "all";
@@ -83,7 +83,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
     hash: redeemAirdropsCall.data?.hash as `0x${string}`,
     confirmations: 2,
     onSuccess: async () => {
-      if (!selectedDelegatee) return;
+      if (!selectedDelegatee || selectedDelegatee === "self") return;
       try {
         setIsDelegating(true);
         updateAirdropsElegibility();

@@ -1,4 +1,3 @@
-import { HATToken_abi } from "@hats.finance/shared";
 import { BackArrowIcon } from "assets/icons/back-arrow";
 import { NextArrowIcon } from "assets/icons/next-arrow";
 import TwitterIcon from "assets/icons/social/twitter.icon";
@@ -21,10 +20,11 @@ export const AirdropRedeemDelegatee = () => {
   const { nextStep, selectedDelegatee, airdropsData } = useContext(AirdropRedeemModalContext);
 
   const { data: delegatees, isLoading } = useDelegatees(airdropsData[0].token, airdropsData[0].chainId);
+  const delegateesToUse = delegatees ? [...delegatees, "self"] : [];
   const [page, setPage] = useState(0);
 
-  const delegateesToShow = delegatees?.slice(page * DELEGATEES_PER_PAGE, (page + 1) * DELEGATEES_PER_PAGE);
-  const totalPages = delegatees ? Math.ceil(delegatees?.length / DELEGATEES_PER_PAGE) : 1;
+  const delegateesToShow = delegateesToUse?.slice(page * DELEGATEES_PER_PAGE, (page + 1) * DELEGATEES_PER_PAGE);
+  const totalPages = delegateesToUse ? Math.ceil(delegateesToUse?.length / DELEGATEES_PER_PAGE) : 1;
 
   return (
     <div className="content-modal">
@@ -32,7 +32,11 @@ export const AirdropRedeemDelegatee = () => {
       <h2>{t("Airdrop.chooseDelegatee")}</h2>
 
       <div className="delegatees-list">
-        {isLoading ? <div>Loading...</div> : delegateesToShow?.map((delegatee) => <DelegateeCard delegatee={delegatee} />)}
+        {!isLoading && delegateesToShow && delegateesToShow?.length > 0 ? (
+          delegateesToShow?.map((delegatee) => <DelegateeCard delegatee={delegatee as IDelegateeInfo | "self"} />)
+        ) : (
+          <div>Loading...</div>
+        )}
       </div>
 
       <div className={`buttons ${totalPages === 1 ? "center" : ""}`}>
@@ -63,33 +67,42 @@ export const AirdropRedeemDelegatee = () => {
   );
 };
 
-const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo }) => {
-  const { selectedDelegatee, setSelectedDelegatee, airdropsData } = useContext(AirdropRedeemModalContext);
+const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo | "self" }) => {
+  const { t } = useTranslation();
+  const { selectedDelegatee, setSelectedDelegatee } = useContext(AirdropRedeemModalContext);
 
   const getDelegateeIcon = () => {
-    if (!delegatee) return null;
+    if (!delegatee || delegatee === "self") return null;
     if (delegatee.icon) return <img src={ipfsTransformUri(delegatee.icon, { isPinned: true })} alt="avatar" />;
     return <Identicon string={delegatee.address} bg="#fff" size={50} />;
   };
 
   return (
     <StyledDelegateeCard
-      onClick={() => setSelectedDelegatee(delegatee.address)}
-      selected={selectedDelegatee === delegatee.address}
+      onClick={() => setSelectedDelegatee(delegatee === "self" ? "self" : delegatee.address)}
+      selected={delegatee === "self" ? selectedDelegatee === "self" : selectedDelegatee === delegatee.address}
     >
-      <div className="icon">{getDelegateeIcon()}</div>
-      <div className="votes">{delegatee.votes ?? 0} votes</div>
-      <div className="address">{shortenIfAddress(delegatee.address)}</div>
-      <div className="name">
-        <span>{delegatee.name}</span>
-        {delegatee.twitterProfile && (
-          <a {...defaultAnchorProps} href={`https://twitter.com/${delegatee.twitterProfile}`}>
-            <TwitterIcon />
-          </a>
-        )}
-      </div>
+      {delegatee === "self" ? (
+        <div className="delegate-self">
+          <p>{t("Airdrop.delegateSelf")}</p>
+        </div>
+      ) : (
+        <>
+          <div className="icon">{getDelegateeIcon()}</div>
+          <div className="votes">{delegatee.votes ?? 0} votes</div>
+          <div className="address">{shortenIfAddress(delegatee.address)}</div>
+          <div className="name">
+            <span>{delegatee.name}</span>
+            {delegatee.twitterProfile && (
+              <a {...defaultAnchorProps} href={`https://twitter.com/${delegatee.twitterProfile}`}>
+                <TwitterIcon />
+              </a>
+            )}
+          </div>
 
-      <div className="description" dangerouslySetInnerHTML={{ __html: delegatee.description }} />
+          <div className="description" dangerouslySetInnerHTML={{ __html: delegatee.description }} />
+        </>
+      )}
     </StyledDelegateeCard>
   );
 };

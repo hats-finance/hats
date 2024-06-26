@@ -10,7 +10,7 @@ export interface IAirdropRedeemModalContext {
   airdropsRedeemData: (AirdropRedeemData | undefined)[];
   selectedDelegatee: string | undefined;
   onlyTokenLocks: boolean;
-  setSelectedDelegatee: (delegatee: string) => void;
+  setSelectedDelegatee: (delegatee: string | "self") => void;
   updateAirdropsRedeemedData: () => Promise<(AirdropRedeemData | undefined)[]>;
   updateAirdropsElegibility: () => Promise<(false | AirdropElegibility | undefined)[]>;
   nextStep: () => Promise<void>;
