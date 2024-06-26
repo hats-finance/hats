@@ -21,7 +21,6 @@ export const AirdropCheckElegibility = () => {
   const [showPastAidrops, setShowPastAidrops] = useState<boolean>(false);
   const [addressToCheck, setAddressToCheck] = useState<string>("");
   const [airdropsToClaim, setAirdropsToClaim] = useState<AirdropData[]>([]);
-  // const [airdropToDelegate, setAirdropToDelegate] = useState<AirdropData>();
   const [checkElegibility, setCheckElegibility] = useState<boolean>();
 
   const isTestnet = !IS_PROD && connectedChain?.testnet;
@@ -119,7 +118,6 @@ export const AirdropCheckElegibility = () => {
               airdropData={airdropData}
               onOpenClaimModal={() => setAirdropsToClaim([airdropData])}
               onOpenDelegateModal={() => {}}
-              // onOpenDelegateModal={() => setAirdropToDelegate(airdropData)}
             />
           ))}
         </div>
@@ -138,7 +136,6 @@ export const AirdropCheckElegibility = () => {
                 airdropData={airdropData}
                 onOpenClaimModal={() => setAirdropsToClaim([airdropData])}
                 onOpenDelegateModal={() => {}}
-                // onOpenDelegateModal={() => setAirdropToDelegate(airdropData)}
               />
             ))}
         </div>
@@ -154,16 +151,6 @@ export const AirdropCheckElegibility = () => {
           />
         </Modal>
       )}
-
-      {/* {airdropToDelegate && addressToCheck && (
-        <Modal isShowing={!!airdropToDelegate} onHide={() => setAirdropToDelegate(undefined)} disableOnOverlayClose>
-          <AirdropDelegateModal
-            addressToCheck={addressToCheck}
-            airdropData={airdropToDelegate}
-            closeModal={() => setAirdropToDelegate(undefined)}
-          />
-        </Modal>
-      )} */}
     </StyledAirdropCheckElegibility>
   );
 };

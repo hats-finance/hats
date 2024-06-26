@@ -87,7 +87,7 @@ export const AirdropsPage = () => {
 
   return (
     <StyledAirdropsPage className="content-wrapper">
-      <button onClick={createAirdropHelper}>Test</button>
+      {/* <button onClick={createAirdropHelper}>Test</button> */}
       <div className="hero">
         <video id="airdrop-video" autoPlay muted playsInline>
           <source src={AirdropVideo} type="video/mp4" />
