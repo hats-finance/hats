@@ -5,10 +5,10 @@ import { getAirdropsDataByFactory, getDelegatees } from "./airdropsService";
 /**
  * Gets the delegatees
  */
-export const useDelegatees = () => {
+export const useDelegatees = (token: string, chainId: number) => {
   return useQuery({
     queryKey: ["delegatees"],
-    queryFn: () => getDelegatees(),
+    queryFn: () => getDelegatees(token, chainId),
   });
 };
 

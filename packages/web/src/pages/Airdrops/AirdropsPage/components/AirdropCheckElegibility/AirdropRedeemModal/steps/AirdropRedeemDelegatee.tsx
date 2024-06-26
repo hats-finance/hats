@@ -11,8 +11,6 @@ import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
 import { ipfsTransformUri } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { Amount } from "utils/amounts.utils";
-import { useContractRead } from "wagmi";
 import { AirdropRedeemModalContext } from "../store";
 import { StyledDelegateeCard } from "../styles";
 
@@ -20,9 +18,9 @@ const DELEGATEES_PER_PAGE = 4;
 
 export const AirdropRedeemDelegatee = () => {
   const { t } = useTranslation();
-  const { nextStep, selectedDelegatee } = useContext(AirdropRedeemModalContext);
+  const { nextStep, selectedDelegatee, airdropsData } = useContext(AirdropRedeemModalContext);
 
-  const { data: delegatees, isLoading } = useDelegatees();
+  const { data: delegatees, isLoading } = useDelegatees(airdropsData[0].token, airdropsData[0].chainId);
   const [page, setPage] = useState(0);
 
   const delegateesToShow = delegatees?.slice(page * DELEGATEES_PER_PAGE, (page + 1) * DELEGATEES_PER_PAGE);
@@ -68,14 +66,6 @@ export const AirdropRedeemDelegatee = () => {
 const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo }) => {
   const { selectedDelegatee, setSelectedDelegatee, airdropsData } = useContext(AirdropRedeemModalContext);
 
-  const { data: delegateeVotes, isLoading } = useContractRead({
-    address: airdropsData[0] ? (airdropsData[0].token as `0x${string}`) : undefined,
-    abi: HATToken_abi,
-    functionName: "getVotes",
-    args: [delegatee.address as `0x${string}`],
-    chainId: airdropsData[0].chainId,
-  });
-
   const getDelegateeIcon = () => {
     if (!delegatee) return null;
     if (delegatee.icon) return <img src={ipfsTransformUri(delegatee.icon, { isPinned: true })} alt="avatar" />;
@@ -88,7 +78,7 @@ const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo }) => {
       selected={selectedDelegatee === delegatee.address}
     >
       <div className="icon">{getDelegateeIcon()}</div>
-      {!isLoading && <div className="votes">{new Amount(delegateeVotes, 18).formatted(2)} votes</div>}
+      <div className="votes">{delegatee.votes ?? 0} votes</div>
       <div className="address">{shortenIfAddress(delegatee.address)}</div>
       <div className="name">
         <span>{delegatee.name}</span>

@@ -1,5 +1,6 @@
-import { AirdropFactoryConfig, HATAirdropFactory_abi } from "@hats.finance/shared";
-import { getContract, getProvider } from "wagmi/actions";
+import { AirdropFactoryConfig, HATAirdropFactory_abi, HATToken_abi } from "@hats.finance/shared";
+import { Amount } from "utils/amounts.utils";
+import { getContract, getProvider, readContract } from "wagmi/actions";
 import { AirdropData } from "./types";
 import { getGeneralAirdropData } from "./utils/getGeneralAirdropData";
 
@@ -9,14 +10,15 @@ export type IDelegateeInfo = {
   name: string;
   twitterProfile: string;
   description: string;
+  votes?: number;
 };
 
 /**
  * Gets the delegatees
  */
-export async function getDelegatees(): Promise<IDelegateeInfo[]> {
+export async function getDelegatees(token: string, chainId: number): Promise<IDelegateeInfo[]> {
   try {
-    return [
+    const delegatees = [
       {
         address: "0xCC5BD779A1EACeEFA704315A1F504446B6D25a1F",
         name: "Chapeu #1",
@@ -88,6 +90,26 @@ export async function getDelegatees(): Promise<IDelegateeInfo[]> {
         `,
       },
     ];
+
+    const withVotingPower = await Promise.all(
+      delegatees.map(async (delegatee) => {
+        try {
+          const votes = await readContract({
+            address: token as `0x${string}`,
+            abi: HATToken_abi,
+            functionName: "getVotes",
+            args: [delegatee.address as `0x${string}`],
+            chainId,
+          });
+          return { ...delegatee, votes: +new Amount(votes, 18).number.toFixed(2) };
+        } catch (error) {
+          return { ...delegatee, votes: 0 };
+        }
+      })
+    );
+
+    withVotingPower.sort((a, b) => b.votes - a.votes);
+    return withVotingPower;
   } catch (error) {
     console.log(error);
     return [];
