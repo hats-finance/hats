@@ -1,9 +1,9 @@
+import { getBaseSafeAppUrl, getGnosisChainPrefixByChainId } from "@hats.finance/shared";
+import HatsHat from "assets/icons/hats-hat.svg";
+import { Button } from "components";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { getGnosisChainPrefixByChainId } from "@hats.finance/shared";
-import { Button } from "components";
 import { StyledVaultReadyModal } from "./styles";
-import HatsHat from "assets/icons/hats-hat.svg";
 
 type VaultReadyModalProps = {
   closeModal: () => void;
@@ -21,7 +21,7 @@ export const VaultReadyModal = ({ closeModal }: VaultReadyModalProps) => {
 
     const chainPrefix = getGnosisChainPrefixByChainId(+chainId);
 
-    window.open(`https://app.safe.global/${chainPrefix}:${mulsitigAddress}/home`, "_blank");
+    window.open(`${getBaseSafeAppUrl(+chainId)}/${chainPrefix}:${mulsitigAddress}/home`, "_blank");
   };
 
   return (
