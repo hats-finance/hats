@@ -67,6 +67,11 @@ export const getGnosisSafeTxServiceBaseUrl = (chainId: number): string => {
   return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global`;
 };
 
+export const getBaseSafeAppUrl = (chainId: number): string => {
+  if (chainId === oasis.id) return `https://safe.oasis.io`;
+  return `https://app.safe.global`;
+};
+
 export const getSafeWalletConnectLink = (address: string, chainId: number): string | undefined => {
   const safeDashboardLink = getSafeDashboardLink(address, chainId);
   if (!safeDashboardLink) return undefined;

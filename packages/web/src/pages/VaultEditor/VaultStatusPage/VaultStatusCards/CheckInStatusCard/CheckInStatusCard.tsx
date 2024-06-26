@@ -1,4 +1,4 @@
-import { getGnosisChainPrefixByChainId } from "@hats.finance/shared";
+import { getBaseSafeAppUrl, getGnosisChainPrefixByChainId } from "@hats.finance/shared";
 import SyncIcon from "@mui/icons-material/Sync";
 import { Alert, Button, Loading, Pill } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
@@ -37,7 +37,9 @@ export const CheckInStatusCard = () => {
   const goToSafeApp = () => {
     if (!vault) return;
     window.open(
-      `https://app.safe.global/transactions/queue?safe=${getGnosisChainPrefixByChainId(vault.chainId)}:${vault.committee}`,
+      `${getBaseSafeAppUrl(vault.chainId)}/transactions/queue?safe=${getGnosisChainPrefixByChainId(vault.chainId)}:${
+        vault.committee
+      }`,
       "_blank"
     );
   };

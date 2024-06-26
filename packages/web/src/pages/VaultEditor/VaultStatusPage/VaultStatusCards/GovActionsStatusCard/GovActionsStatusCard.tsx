@@ -1,4 +1,4 @@
-import { IEditedSessionResponse, getGnosisChainPrefixByChainId } from "@hats.finance/shared";
+import { IEditedSessionResponse, getBaseSafeAppUrl, getGnosisChainPrefixByChainId } from "@hats.finance/shared";
 import { Alert, Button, FormInput, Loading } from "components";
 import { useEnhancedForm } from "hooks/form";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
@@ -91,7 +91,7 @@ export const GovActionsStatusCard = () => {
 
     const govAddress = appChains[vault.chainId].govMultisig;
     window.open(
-      `https://app.safe.global/transactions/queue?safe=${getGnosisChainPrefixByChainId(vault.chainId)}:${govAddress}`,
+      `${getBaseSafeAppUrl(vault.chainId)}/transactions/queue?safe=${getGnosisChainPrefixByChainId(vault.chainId)}:${govAddress}`,
       "_blank"
     );
   };
