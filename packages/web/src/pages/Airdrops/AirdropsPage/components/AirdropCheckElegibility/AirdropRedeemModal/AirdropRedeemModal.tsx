@@ -90,7 +90,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
         const newRedeemsData = await updateAirdropsRedeemedData();
 
         for (const [idx, redeemData] of newRedeemsData.entries()) {
-          if (!redeemData) continue;
+          if (!redeemData || airdropsData[idx].isLocked) continue;
           const txResult = await DelegateAirdropContract.send(airdropsData[idx], redeemData, selectedDelegatee);
           await txResult?.wait();
         }
