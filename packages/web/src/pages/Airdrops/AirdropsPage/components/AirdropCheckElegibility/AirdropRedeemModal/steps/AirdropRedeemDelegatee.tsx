@@ -29,7 +29,8 @@ export const AirdropRedeemDelegatee = () => {
   return (
     <div className="content-modal">
       <img className="banner" src={require("assets/images/hats_delegatee.png")} alt="hats claim" />
-      <h2>{t("Airdrop.chooseDelegatee")}</h2>
+      <h2 className="mb-2">{t("Airdrop.chooseDelegatee")}</h2>
+      <p>{t("Airdrop.chooseDelegateeExplanation")}</p>
 
       <div className="delegatees-list">
         {!isLoading && delegateesToShow && delegateesToShow?.length > 0 ? (

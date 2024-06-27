@@ -63,7 +63,7 @@ export const AirdropRedeemQuestionnaire = () => {
     <div className="content-modal">
       <h2>{t("Airdrop.questionNumber", { number: currentQuestion + 1 })}</h2>
       <p>{questions[currentQuestion].description}</p>
-      <p className="">{t("Airdrop.choose")}:</p>
+      <p className="mt-3">{t("Airdrop.choose")}:</p>
 
       <div className="quiz-answers">
         {questions[currentQuestion].answers.map((answer, index) => (

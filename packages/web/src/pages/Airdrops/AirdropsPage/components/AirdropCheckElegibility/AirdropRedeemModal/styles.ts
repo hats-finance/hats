@@ -87,7 +87,7 @@ export const StyledAirdropRedeemModal = styled.div`
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(2, 1fr);
       gap: ${getSpacing(2)};
-      margin-top: ${getSpacing(2)};
+      margin-top: ${getSpacing(4)};
       height: 520px;
     }
 
