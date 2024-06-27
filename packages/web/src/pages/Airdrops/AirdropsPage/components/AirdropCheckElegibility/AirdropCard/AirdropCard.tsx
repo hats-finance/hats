@@ -2,7 +2,7 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import ArrowUpIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
-import { Pill, WithTooltip } from "components";
+import { CopyToClipboard, Pill, WithTooltip } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
 import { AirdropData } from "pages/Airdrops/types";
@@ -10,6 +10,7 @@ import { AirdropElegibility, getAirdropElegibility } from "pages/Airdrops/utils/
 import { AirdropRedeemData, getAirdropRedeemedData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { Amount } from "utils/amounts.utils";
 import { LinearReleaseAirdropControls } from "./LinearReleaseAirdropControls/LinearReleaseAirdropControls";
@@ -49,31 +50,43 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
   const getStatusInfo = () => {
     if (isLive) {
       return {
+        isExpired: false,
         text: elegibilityData?.eligible ? (redeemedData ? t("Airdrop.redeemed") : t("Airdrop.congrats")) : t("Airdrop.sorry"),
         description: elegibilityData?.eligible ? t("Airdrop.congratsContent") : t("Airdrop.sorryContent"),
         pills: (
           <>
+            <Pill transparent text={t("Airdrop.live")} />
             {airdropData && airdropData.isLocked && (
-              <Pill text={t("Airdrop.linearReleaseUntil", { date: moment(airdropData.lockEndDate).format("MMM Do YY'") })} />
+              <Pill
+                transparent
+                text={t("Airdrop.linearReleaseUntil", { date: moment(airdropData.lockEndDate).format("MMM Do YY'") })}
+              />
             )}
-            <Pill text={t("Airdrop.live")} />
           </>
         ),
       };
     } else {
       return {
-        text: elegibilityData?.eligible ? (redeemedData ? t("Airdrop.redeemed") : t("Airdrop.lostAirdrop")) : t("Airdrop.sorry"),
+        isExpired: elegibilityData?.eligible && !redeemedData,
+        text: elegibilityData?.eligible
+          ? redeemedData
+            ? t("Airdrop.redeemed")
+            : `${t("Airdrop.expired")}!`
+          : t("Airdrop.sorry"),
         description: elegibilityData?.eligible
           ? redeemedData
             ? t("Airdrop.congratsContent")
-            : t("Airdrop.lostAirdropContent")
+            : t("Airdrop.lostAirdropContent", { date: moment(airdropData.deadlineDate).format("MMM Do YY'") })
           : t("Airdrop.sorryContent"),
         pills: (
-          <Pill
-            dotColor="red"
-            textColor="var(--error-red)"
-            text={`${t("Airdrop.past")} - ${moment(airdropData.deadlineDate).fromNow()}`}
-          />
+          <>
+            {airdropData && airdropData.isLocked && (
+              <Pill
+                transparent
+                text={t("Airdrop.linearReleaseUntil", { date: moment(airdropData.lockEndDate).format("MMM Do YY'") })}
+              />
+            )}
+          </>
         ),
       };
     }
@@ -84,27 +97,47 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
       <div className="preview">
         <div className="section">
           <div className="info">
-            <div className="name">
-              {airdropData.descriptionData.name} {shortenIfAddress(airdropData.address)} {getStatusInfo().pills}
+            <div className="header-container">
+              <div className="title-container">
+                <div className="name">
+                  <p>{airdropData.descriptionData.name}</p>
+                  <div className="address">
+                    {shortenIfAddress(airdropData.address)}
+                    <CopyToClipboard
+                      valueToCopy={airdropData.address}
+                      overlayText={t("copyAddress")}
+                      simple
+                      tooltipPlacement="right"
+                    />
+                  </div>
+                </div>
+                <div className="network">
+                  {t("network")}:
+                  <img className="chain" src={require(`assets/icons/chains/${airdropData.chainId}.png`)} alt="network" />
+                  {appChains[airdropData.chainId].chain.name}
+                </div>
+              </div>
+              <div className="pills">{getStatusInfo().pills}</div>
             </div>
-            <p className="blurb">{airdropData.descriptionData.description}</p>
+            <p className="blurb mt-4">{airdropData.descriptionData.description}</p>
+          </div>
 
+          <div className="status-amount">
             {isLoading ? (
               <p>{`${t("Airdrop.loadingAirdropData")}...`}</p>
             ) : (
-              <>
-                <h2 className="mt-3">{getStatusInfo().text}</h2>
+              <div>
+                <h2 className={`${getStatusInfo().isExpired ? "red" : ""}`}>{getStatusInfo().text}</h2>
                 <p>{getStatusInfo().description}</p>
-              </>
+              </div>
+            )}
+            {!isLoading && elegibilityData?.eligible && (
+              <div className="amount">
+                <img src={HatsTokenIcon} alt="$HAT token" width={40} height={40} className="mt-1" />
+                <p>{new Amount(BigNumber.from(elegibilityData.total), 18, "$HAT").formatted()}</p>
+              </div>
             )}
           </div>
-
-          {!isLoading && elegibilityData?.eligible && (
-            <div className="amount">
-              <img src={HatsTokenIcon} alt="$HAT token" width={40} height={40} className="mt-1" />
-              <p>{new Amount(BigNumber.from(elegibilityData.total), 18, "$HAT").formatted()}</p>
-            </div>
-          )}
         </div>
 
         {/* Linearly released airdrop controls */}

@@ -12,26 +12,73 @@ export const StyledAidropCard = styled.div`
   .preview {
     .section {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: ${getSpacing(2.5)};
 
       .info {
-        .name {
+        .header-container {
+          width: 100%;
           display: flex;
+          justify-content: space-between;
           align-items: center;
           gap: ${getSpacing(1.5)};
           font-size: var(--xsmall);
           font-family: "IBM Plex Sans", sans-serif !important;
           font-weight: 500;
+          font-size: var(--small);
+
+          .title-container {
+            .name {
+              display: flex;
+              align-items: center;
+              gap: ${getSpacing(1)};
+
+              .address {
+                display: flex;
+                align-items: center;
+                gap: ${getSpacing(1)};
+                color: var(--grey-400);
+                font-size: var(--xsmall);
+              }
+            }
+
+            .network {
+              display: flex;
+              align-items: center;
+              gap: ${getSpacing(0.5)};
+              font-size: var(--xsmall);
+              color: var(--grey-400);
+
+              img {
+                width: ${getSpacing(2.5)};
+                height: ${getSpacing(2.5)};
+              }
+            }
+          }
+          .pills {
+            display: flex;
+            gap: ${getSpacing(1)};
+          }
         }
       }
 
-      .amount {
+      .status-amount {
         display: flex;
         align-items: center;
-        gap: ${getSpacing(1.5)};
-        font-size: var(--moderate-big);
-        font-weight: 700;
+        justify-content: space-between;
+        margin-top: ${getSpacing(3)};
+
+        .amount {
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(1.5)};
+          font-size: var(--moderate-big);
+          font-weight: 700;
+        }
+
+        .red {
+          color: var(--error-red);
+        }
       }
     }
   }
