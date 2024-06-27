@@ -1,6 +1,5 @@
 import { BackArrowIcon } from "assets/icons/back-arrow";
-import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
-import { Alert, Button, FormInput, FormSliderInput } from "components";
+import { Alert, Button, FormSliderInput } from "components";
 import { ApyPill } from "components/VaultCard/styles";
 import { BigNumber } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
@@ -11,7 +10,7 @@ import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
 import { AirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { shortenAddress, shortenIfAddress } from "utils/addresses.utils";
+import { shortenAddress } from "utils/addresses.utils";
 import { Amount, numberWithThousandSeparator } from "utils/amounts.utils";
 import { useAccount } from "wagmi";
 import { AirdropRedeemModalContext } from "../store";
