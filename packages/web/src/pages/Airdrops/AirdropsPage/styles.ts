@@ -14,6 +14,24 @@ export const StyledAirdropsPage = styled.div`
 
     video {
       width: 100%;
+
+      &#airdrop-video {
+        display: block;
+      }
+
+      &#airdrop-video-mobile {
+        display: none;
+      }
+
+      @media (max-width: ${breakpointsDefinition.smallMobile}) {
+        &#airdrop-video {
+          display: none;
+        }
+
+        &#airdrop-video-mobile {
+          display: block;
+        }
+      }
     }
 
     .buttons {

@@ -5,7 +5,8 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 export const StyledHatsTokenInfo = styled.div`
   .hats-vision {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    text-align: center;
     gap: ${getSpacing(6)};
 
     @media (max-width: ${breakpointsDefinition.mobile}) {
@@ -37,6 +38,14 @@ export const StyledHatsTokenInfo = styled.div`
   .hats-utility {
     margin-top: ${getSpacing(12)};
 
+    h1 {
+      font-size: var(--large);
+    }
+
+    .text-info {
+      font-size: var(--small);
+    }
+
     .utilities {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -51,9 +60,11 @@ export const StyledHatsTokenInfo = styled.div`
         display: flex;
         flex-direction: column;
         gap: ${getSpacing(2)};
-        padding: ${getSpacing(4)} ${getSpacing(5)};
+        padding: ${getSpacing(4)} ${getSpacing(7)};
         background: linear-gradient(180deg, #231e51 0%, #0e0e18 23.26%);
         transition: 0.2s;
+        font-size: var(--small);
+        line-height: 1.4;
 
         &:hover {
           background: linear-gradient(180deg, #231e51 0%, #0e0e18 114.05%);
@@ -74,20 +85,47 @@ export const StyledHatsTokenInfo = styled.div`
     }
   }
 
-  .hats-allocation,
-  .hats-distribution {
+  .hats-allocation {
     margin-top: ${getSpacing(12)};
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h1 {
+        font-size: var(--large);
+      }
+
+      .distribution {
+        font-size: var(--small);
+        background: var(--secondary);
+        color: var(--background);
+        border-radius: 20px 0 0 20px;
+        padding: ${getSpacing(1)} ${getSpacing(4)};
+        text-transform: uppercase;
+        font-family: "IBM Plex Mono", monospace;
+      }
+    }
 
     h3 {
       font-size: var(--small);
     }
 
     img {
-      width: 70%;
-      margin-top: ${getSpacing(4)};
+      &.chart {
+        width: 70%;
+        margin-top: ${getSpacing(4)};
+      }
+
+      &.table {
+        width: 100%;
+        margin-top: ${getSpacing(8)};
+      }
     }
   }
 `;

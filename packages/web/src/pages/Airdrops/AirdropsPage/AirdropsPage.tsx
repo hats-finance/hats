@@ -1,4 +1,5 @@
 import { HATAirdrop_abi } from "@hats.finance/shared";
+import AirdropVideoMobile from "assets/videos/airdrop-v2-mobile.mp4";
 import AirdropVideo from "assets/videos/airdrop-v2.mp4";
 import { Button } from "components";
 import { ethers } from "ethers";
@@ -91,6 +92,9 @@ export const AirdropsPage = () => {
       <div className="hero">
         <video id="airdrop-video" autoPlay muted playsInline>
           <source src={AirdropVideo} type="video/mp4" />
+        </video>
+        <video id="airdrop-video-mobile" autoPlay muted playsInline loop>
+          <source src={AirdropVideoMobile} type="video/mp4" />
         </video>
         <div className="buttons">
           <a href="#check-elegibility">
