@@ -66,7 +66,7 @@ export const AirdropRedeemReview = () => {
             return (
               <li>
                 <strong>{airdrop.descriptionData.name}:</strong> {total}
-                {"\n"}
+                {", "}
                 {airdrop.isLocked ? t("Airdrop.linearlyReleasedUntil", { date: daysLocked }) : t("Airdrop.immediatelyReleased")}
               </li>
             );

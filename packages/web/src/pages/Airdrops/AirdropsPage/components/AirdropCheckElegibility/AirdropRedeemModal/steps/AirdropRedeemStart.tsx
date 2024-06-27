@@ -18,9 +18,13 @@ export const AirdropRedeemStart = () => {
         dangerouslySetInnerHTML={{ __html: t(onlyTokenLocks ? "Airdrop.startTextContentTokenLock" : "Airdrop.startTextContent") }}
       />
 
-      <hr />
-      <div className="mt-5">
-        <h3>{t("Airdrop.youWillRedeemNAirdrops", { quantity: airdropsData.length })}</h3>
+      <div>
+        <p>
+          <strong>{t("Airdrop.readyToUnlockYourRewards")}</strong>
+        </p>
+        <p>
+          <strong>{t("Airdrop.youWillRedeemNAirdrops", { quantity: airdropsData.length })}:</strong>
+        </p>
         <ol>
           {airdropsData.map((airdrop, i) => {
             const elegibility = airdropsElegibility[i];
@@ -32,7 +36,7 @@ export const AirdropRedeemStart = () => {
             return (
               <li>
                 <strong>{airdrop.descriptionData.name}:</strong> {total}
-                {"\n"}
+                {", "}
                 {airdrop.isLocked ? t("Airdrop.linearlyReleasedUntil", { date: daysLocked }) : t("Airdrop.immediatelyReleased")}
               </li>
             );

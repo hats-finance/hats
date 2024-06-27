@@ -1,7 +1,8 @@
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import ArrowUpIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
-import { Pill } from "components";
+import { Pill, WithTooltip } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
 import { AirdropData } from "pages/Airdrops/types";
@@ -127,10 +128,13 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
                     const eligible = BigNumber.from(elegibilityData[k]).gt(0);
                     return (
                       <div className={`breakdown-item ${eligible ? "eligible" : ""}`} key={k}>
-                        <div className="left">
-                          <span className="check">{eligible ? "✓" : "✗"}</span>
-                          <span className="name">{t(`Airdrop.${k}`)}</span>
-                        </div>
+                        <WithTooltip text={t(`Airdrop.${k}_desc`)}>
+                          <div className="left">
+                            <span className="check">{eligible ? "✓" : "✗"}</span>
+                            <span className="name">{t(`Airdrop.${k}`)}</span>
+                            <InfoIcon className="icon" fontSize="inherit" />
+                          </div>
+                        </WithTooltip>
                         <span className="amount">{new Amount(BigNumber.from(elegibilityData[k]), 18, "$HAT").formatted()}</span>
                       </div>
                     );

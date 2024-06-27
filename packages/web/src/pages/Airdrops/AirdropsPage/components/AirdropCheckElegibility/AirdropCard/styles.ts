@@ -78,6 +78,8 @@ export const StyledElegibilityBreakdown = styled.div`
 
         .left {
           display: flex;
+          align-items: center;
+          gap: ${getSpacing(0.5)};
 
           .check {
             color: var(--grey-600);
