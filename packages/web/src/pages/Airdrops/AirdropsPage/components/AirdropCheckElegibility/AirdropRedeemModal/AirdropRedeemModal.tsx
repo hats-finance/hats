@@ -119,7 +119,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
   }, [isLoading, airdropsRedeemData, stepsType]);
 
   const handleClaimAirdrops = async (percentageToDeposit: number | undefined, vaultToDeposit: string | undefined) => {
-    return redeemAirdropsCall.send(percentageToDeposit, vaultToDeposit);
+    return redeemAirdropsCall.send(percentageToDeposit, vaultToDeposit, selectedDelegatee);
   };
 
   const airdropRedeemModalContext = {
@@ -153,6 +153,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
 
       {redeemAirdropsCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
       {waitingRedeemAirdropsCall.isLoading && <Loading fixed extraText={`${t("redeemingYourAirdrop")}...`} />}
+      {redeemAirdropsCall.isCollectingDelegationSig && <Loading fixed extraText={`${t("Airdrop.delegatingTokens")}...`} />}
       {isDelegating && <Loading fixed extraText={`${t("Airdrop.delegatingTokens")}...`} />}
     </StyledAirdropRedeemModal>
   );

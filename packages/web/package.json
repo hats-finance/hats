@@ -112,6 +112,7 @@
     "csvtojson": "^2.0.10",
     "dompurify": "^3.0.1",
     "encrypt-storage": "^2.12.15",
+    "ethereumjs-util": "^7.1.5",
     "rc-slider": "^10.6.2",
     "rc-tooltip": "^6.2.0",
     "react-content-loader": "^6.2.1",

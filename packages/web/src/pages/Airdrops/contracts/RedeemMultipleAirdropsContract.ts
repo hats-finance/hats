@@ -1,11 +1,15 @@
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import { HATAirdropFactory_abi } from "@hats.finance/shared";
+import { HATAirdropFactory_abi, HATToken_abi } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
+import { hexlify } from "ethers/lib/utils.js";
+import { useState } from "react";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
+import { readContract } from "wagmi/actions";
 import { AirdropData } from "../types";
 import { AirdropElegibility } from "../utils/getAirdropElegibility";
 import { getAirdropMerkelTree, hashToken } from "../utils/getAirdropMerkelTree";
+import { generateDelegationSig } from "./getDelegationSignature";
 
 export class RedeemMultipleAirdropsContract {
   /**
@@ -19,6 +23,8 @@ export class RedeemMultipleAirdropsContract {
     factory: string,
     chainId: number
   ) => {
+    const [isCollectingDelegationSig, setIsCollectingDelegationSig] = useState(false);
+
     const { address: account } = useAccount();
     const { chain: connectedChain } = useNetwork();
 
@@ -29,9 +35,22 @@ export class RedeemMultipleAirdropsContract {
       functionName: "redeemMultipleAirdrops",
     });
 
+    const redeemAirdropsAndDelegate = useContractWrite({
+      mode: "recklesslyUnprepared",
+      address: factory as `0x${string}`,
+      abi: HATAirdropFactory_abi,
+      functionName: "redeemAndDelegateMultipleAirdrops",
+    });
+
     return {
-      ...redeemAirdrops,
-      send: async (percentageToDeposit: number | undefined, vaultToDeposit: string | undefined) => {
+      data: redeemAirdrops.data ?? redeemAirdropsAndDelegate.data,
+      isLoading: redeemAirdrops.isLoading || redeemAirdropsAndDelegate.isLoading,
+      isCollectingDelegationSig,
+      send: async (
+        percentageToDeposit: number | undefined,
+        vaultToDeposit: string | undefined,
+        delegatee: string | "self" | undefined
+      ) => {
         try {
           if (airdropsElegibility.some((elegibility) => !elegibility)) return;
           if (!account || !connectedChain) return;
@@ -57,10 +76,47 @@ export class RedeemMultipleAirdropsContract {
           });
           const minShares = airdrops.map((_) => BigNumber.from(0));
 
-          return redeemAirdrops.write({
-            recklesslySetUnpreparedArgs: [addresses, amounts, proofs, vaults, deposits, minShares],
-          });
+          if (!delegatee || delegatee === "self") {
+            // No delegation flow
+            return redeemAirdrops.write({
+              recklesslySetUnpreparedArgs: [addresses, amounts, proofs, vaults, deposits, minShares],
+            });
+          } else {
+            // With delegation flow
+            setIsCollectingDelegationSig(true);
+            const tokenAddress = airdrops[0].token;
+            const nonce = await readContract({
+              address: tokenAddress as `0x${string}`,
+              abi: HATToken_abi,
+              chainId,
+              functionName: "nonces",
+              args: [account],
+            });
+
+            const expiryDate = (new Date().getTime() / 1000 + 365 * 24 * 3600).toFixed(0);
+            const expiry = BigNumber.from(expiryDate); // 1 year
+            const { v, r, s } = await generateDelegationSig(account, chainId, tokenAddress, delegatee, expiry.toNumber());
+            setIsCollectingDelegationSig(false);
+
+            return redeemAirdropsAndDelegate.write({
+              recklesslySetUnpreparedArgs: [
+                addresses,
+                amounts,
+                proofs,
+                vaults,
+                deposits,
+                minShares,
+                delegatee as `0x${string}`,
+                nonce,
+                expiry,
+                v,
+                hexlify(r) as `0x${string}`,
+                hexlify(s) as `0x${string}`,
+              ],
+            });
+          }
         } catch (error) {
+          setIsCollectingDelegationSig(false);
           console.log(error);
         }
       },
