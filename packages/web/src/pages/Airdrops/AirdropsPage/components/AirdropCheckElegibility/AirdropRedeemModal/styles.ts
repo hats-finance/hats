@@ -157,6 +157,8 @@ export const StyledAirdropRedeemModal = styled.div`
     }
 
     .deposit-amount {
+      margin-top: ${getSpacing(5)};
+
       .top-section {
         display: flex;
         justify-content: space-between;

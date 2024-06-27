@@ -9,6 +9,7 @@ import { AirdropElegibility, getAirdropElegibility } from "../../../../utils/get
 import { AirdropRedeemData, getAirdropRedeemedData } from "../../../../utils/getAirdropRedeemedData";
 import { AirdropRedeemCompleted } from "./steps/AirdropRedeemCompleted";
 import { AirdropRedeemDelegatee } from "./steps/AirdropRedeemDelegatee";
+import { AirdropRedeemDeposit } from "./steps/AirdropRedeemDeposit";
 import { AirdropRedeemQuestionnaire } from "./steps/AirdropRedeemQuestionnaire";
 import { AirdropRedeemReview } from "./steps/AirdropRedeemReview";
 import { AirdropRedeemStart } from "./steps/AirdropRedeemStart";
@@ -28,6 +29,7 @@ const redeemSteps = {
     { element: <AirdropRedeemQuestionnaire /> },
     { element: <AirdropRedeemDelegatee /> },
     { element: <AirdropRedeemReview /> },
+    { element: <AirdropRedeemDeposit /> },
     { element: <AirdropRedeemCompleted /> },
   ],
   tokenLock: [

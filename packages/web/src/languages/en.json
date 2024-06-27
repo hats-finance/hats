@@ -818,7 +818,11 @@
       "checkElegibilityNow": "Check Your Airdrop Eligibility Now",
       "checkElegibilityNowDescription": "Have you explored your potential rewards yet? \nClick here to see if you're eligible for our exciting airdrop and don't miss out on your chance to claim exclusive benefits.",
       "readyToUnlockYourRewards": "Ready to unlock your rewards?",
-      "expired": "Expired"
+      "expired": "Expired",
+      "continueToClaim": "Continue to claim",
+      "yourTokenEligibility": "Your token eligibility",
+      "depositToEarnAPY": "Deposit to earn APY",
+      "depositToEarnAPYExplanation": "You can deposit the immediately released tokens to earn an attractive APY. Adjust the slider below to select the percentage of your tokens to deposit."
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",
