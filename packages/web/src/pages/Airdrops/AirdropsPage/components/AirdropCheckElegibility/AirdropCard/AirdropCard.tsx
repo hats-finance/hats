@@ -1,3 +1,5 @@
+import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import ArrowUpIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
 import { Pill } from "components";
 import { BigNumber } from "ethers";
@@ -23,7 +25,8 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
   const { t } = useTranslation();
   const [elegibilityData, setElegibilityData] = useState<AirdropElegibility | undefined>();
   const [redeemedData, setRedeemedData] = useState<AirdropRedeemData>();
-  const [isLoading, setIsLoading] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showElegibilityCriteria, setShowElegibilityCriteria] = useState<boolean>(false);
 
   const updateElegibility = useCallback(async () => {
     setIsLoading((prev) => prev === undefined);
@@ -111,29 +114,34 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
 
       {!isLoading && elegibilityData?.eligible && (
         <StyledElegibilityBreakdown>
-          <div className="title">{t("Airdrop.elegibilityCriteriaBreakdown")}</div>
-          <div className="elegibility-breakdown">
-            <div className="breakdown">
-              {Object.keys(elegibilityData)
-                .filter((k) => !["info", "total", "eligible"].includes(k))
-                .map((k) => {
-                  const eligible = BigNumber.from(elegibilityData[k]).gt(0);
-                  return (
-                    <div className={`breakdown-item ${eligible ? "eligible" : ""}`} key={k}>
-                      <div className="left">
-                        <span className="check">{eligible ? "✓" : "✗"}</span>
-                        <span className="name">{t(`Airdrop.${k}`)}</span>
-                      </div>
-                      <span className="amount">{new Amount(BigNumber.from(elegibilityData[k]), 18, "$HAT").formatted()}</span>
-                    </div>
-                  );
-                })}
-            </div>
-            <div className="total">
-              <span>{t("total")}</span>
-              <span>{new Amount(BigNumber.from(elegibilityData.total), 18, "$HAT").formatted()}</span>
-            </div>
+          <div className="title" onClick={() => setShowElegibilityCriteria((prev) => !prev)}>
+            {showElegibilityCriteria ? <ArrowUpIcon /> : <ArrowDownIcon />}
+            {t("Airdrop.elegibilityCriteriaBreakdown")}
           </div>
+          {showElegibilityCriteria && (
+            <div className="elegibility-breakdown">
+              <div className="breakdown">
+                {Object.keys(elegibilityData)
+                  .filter((k) => !["info", "total", "eligible"].includes(k))
+                  .map((k) => {
+                    const eligible = BigNumber.from(elegibilityData[k]).gt(0);
+                    return (
+                      <div className={`breakdown-item ${eligible ? "eligible" : ""}`} key={k}>
+                        <div className="left">
+                          <span className="check">{eligible ? "✓" : "✗"}</span>
+                          <span className="name">{t(`Airdrop.${k}`)}</span>
+                        </div>
+                        <span className="amount">{new Amount(BigNumber.from(elegibilityData[k]), 18, "$HAT").formatted()}</span>
+                      </div>
+                    );
+                  })}
+              </div>
+              <div className="total">
+                <span>{t("total")}</span>
+                <span>{new Amount(BigNumber.from(elegibilityData.total), 18, "$HAT").formatted()}</span>
+              </div>
+            </div>
+          )}
         </StyledElegibilityBreakdown>
       )}
 

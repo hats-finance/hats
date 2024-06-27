@@ -53,6 +53,15 @@ export const StyledElegibilityBreakdown = styled.div`
     border-bottom: 1px solid var(--grey-600);
     padding-bottom: ${getSpacing(1)};
     margin-bottom: ${getSpacing(1.5)};
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(1)};
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.7;
+    }
   }
 
   .elegibility-breakdown {
