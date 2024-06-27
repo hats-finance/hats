@@ -47,8 +47,14 @@ export const AirdropCheckElegibility = () => {
     );
   }
 
-  const liveAirdrops = airdropsData?.filter((airdrop) => airdrop.isLive) ?? [];
-  const pastAirdrops = airdropsData?.filter((airdrop) => !airdrop.isLive) ?? [];
+  // Airdrops that are live but not redeemed by the user
+  const liveAirdrops =
+    airdropsData?.filter((airdrop) => airdrop.isLive && !airdrop.redeemedBy.includes(addressToCheck.toLowerCase())) ?? [];
+  // Airdrops that were redeemed by the user
+  const redeemedAirdrops = airdropsData?.filter((airdrop) => airdrop.redeemedBy.includes(addressToCheck.toLowerCase())) ?? [];
+  // Airdrops that are not live and were not redeemed by the user
+  const pastAirdrops =
+    airdropsData?.filter((airdrop) => !airdrop.isLive && !airdrop.redeemedBy.includes(addressToCheck.toLowerCase())) ?? [];
 
   return (
     <StyledAirdropCheckElegibility id="check-elegibility">
@@ -85,8 +91,23 @@ export const AirdropCheckElegibility = () => {
         )}
       </div>
 
+      {checkElegibility && addressToCheck && liveAirdrops.length > 0 && (
+        <div className="mt-5">
+          <h2 className="underline">{t("Airdrop.liveAirdrops")}</h2>
+          {liveAirdrops.map((airdropData, idx) => (
+            <AirdropCard
+              key={airdropData.address}
+              addressToCheck={addressToCheck}
+              airdropData={airdropData}
+              onOpenClaimModal={() => setAirdropsToClaim([airdropData])}
+              onOpenDelegateModal={() => {}}
+            />
+          ))}
+        </div>
+      )}
+
       {liveAirdrops.length > 0 && checkElegibility && isEligibleForSomeAirdrop && (
-        <div className="buttons mt-5">
+        <div className="buttons mt-2">
           <Button
             disabled={!areRedeemableAirdrops}
             onClick={() => {
@@ -108,10 +129,10 @@ export const AirdropCheckElegibility = () => {
         </div>
       )}
 
-      {checkElegibility && addressToCheck && (
+      {checkElegibility && addressToCheck && redeemedAirdrops.length > 0 && (
         <div className="mt-5">
-          <h2 className="underline">{t("Airdrop.liveAirdrops")}</h2>
-          {liveAirdrops.map((airdropData, idx) => (
+          <h2 className="underline">{t("Airdrop.redeemedAirdrops")}</h2>
+          {redeemedAirdrops.map((airdropData, idx) => (
             <AirdropCard
               key={airdropData.address}
               addressToCheck={addressToCheck}

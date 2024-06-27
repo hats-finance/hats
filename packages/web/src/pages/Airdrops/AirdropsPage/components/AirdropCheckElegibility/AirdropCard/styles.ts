@@ -2,15 +2,14 @@ import styled from "styled-components";
 import { getSpacing } from "styles";
 
 export const StyledAidropCard = styled.div`
-  margin-bottom: ${getSpacing(10)};
+  margin-bottom: ${getSpacing(6)};
   display: flex;
   flex-direction: column;
+  background: var(--background-clear-blue-2);
+  padding: ${getSpacing(3.5)} ${getSpacing(4.5)};
+  border-radius: ${getSpacing(1.5)};
 
   .preview {
-    background: var(--background-clear-blue-2);
-    padding: ${getSpacing(3.5)} ${getSpacing(4.5)};
-    border-radius: ${getSpacing(1.5)};
-
     .section {
       display: flex;
       align-items: center;
@@ -47,8 +46,8 @@ export const StyledAidropCard = styled.div`
 
 export const StyledElegibilityBreakdown = styled.div`
   margin: 0 auto;
-  width: calc(100% - ${getSpacing(4)});
-  margin-top: ${getSpacing(2.5)};
+  width: 100%;
+  margin-top: ${getSpacing(6)};
 
   div.title {
     border-bottom: 1px solid var(--grey-600);

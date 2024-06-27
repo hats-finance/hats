@@ -793,7 +793,8 @@
       "immediatelyReleased": "Immediately released",
       "claimAndDeposit": "Claim & Deposit",
       "claim": "Claim",
-      "delegateSelf": "Delegate self"
+      "delegateSelf": "Delegate self",
+      "redeemedAirdrops": "Redeemed airdrops"
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",
