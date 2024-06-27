@@ -24,7 +24,7 @@ export const AirdropRedeemReview = () => {
   const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT);
   const vaultApy = useVaultApy(vaultToDeposit);
 
-  const [percentageToDeposit, setPercentageToDeposit] = useState<number>(0);
+  const [percentageToDeposit, setPercentageToDeposit] = useState<number>(0.5);
 
   const { prevStep, addressToCheck, airdropsElegibility, airdropsData, handleClaimAirdrops, onlyTokenLocks } =
     useContext(AirdropRedeemModalContext);
@@ -88,7 +88,7 @@ export const AirdropRedeemReview = () => {
             <div>
               <p className="mt-3">{t("Airdrop.percentageToDeposit")}</p>
               <div className="mt-5">
-                <FormSliderInput onChange={(val) => setPercentageToDeposit(val / 100)} />
+                <FormSliderInput defaultValue={percentageToDeposit * 100} onChange={(val) => setPercentageToDeposit(val / 100)} />
               </div>
             </div>
 
