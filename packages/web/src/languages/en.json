@@ -794,7 +794,10 @@
       "claimAndDeposit": "Claim & Deposit",
       "claim": "Claim",
       "delegateSelf": "Delegate self",
-      "redeemedAirdrops": "Redeemed airdrops"
+      "redeemedAirdrops": "Redeemed airdrops",
+      "depositRedeemedTokensExplanation": "You can deposit the immediately released tokens and earn APY.",
+      "percentageToDeposit": "Percentage to deposit:",
+      "amountToDeposit": "Amount to deposit:"
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",

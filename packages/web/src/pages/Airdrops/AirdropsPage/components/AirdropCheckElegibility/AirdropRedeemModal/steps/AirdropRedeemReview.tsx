@@ -84,9 +84,9 @@ export const AirdropRedeemReview = () => {
 
         {!onlyTokenLocks && vaultToDeposit && (
           <div className="mt-2">
-            <h3>You can deposit the immediately released tokens and earn APY.</h3>
+            <h3>{t("Airdrop.depositRedeemedTokensExplanation")}</h3>
             <div>
-              <p className="mt-3">Percentage to deposit:</p>
+              <p className="mt-3">{t("Airdrop.percentageToDeposit")}</p>
               <div className="mt-5">
                 <FormSliderInput onChange={(val) => setPercentageToDeposit(val / 100)} />
               </div>
@@ -94,7 +94,7 @@ export const AirdropRedeemReview = () => {
 
             <div className="deposit-amount">
               <div className="top-section">
-                <p>Amount to deposit:</p>
+                <p>{t("Airdrop.amountToDeposit")}</p>
                 {vaultApy && vaultApy.length > 0 && (
                   <ApyPill>
                     <div className="content-apy">
