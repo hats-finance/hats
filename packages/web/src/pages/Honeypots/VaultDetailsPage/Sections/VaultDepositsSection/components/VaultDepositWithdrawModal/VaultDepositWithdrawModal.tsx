@@ -122,25 +122,29 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
   return (
     <>
       <StyledVaultDepositWithdrawModal>
-        {fromReleaseTokens && vaultApy && vaultApy.length > 0 && (
-          <>
-            <p className="mb-4">
+        {fromReleaseTokens && (
+          <div className="mb-5">
+            <h2>
+              {t("Airdrop.lastStep")}
+              <br />
               {t("depositAndEarnAPYDescription", {
                 name: `${vault.description?.["project-metadata"].name} ${
                   vault.description?.["project-metadata"].type === "normal" ? t("bugBounty") : t("auditCompetition")
                 }`,
               })}
-            </p>
+            </h2>
 
-            <div className="mb-5">
-              <ApyPill>
-                <div className="content-apy">
-                  {t("apy")} <span>{`${numberWithThousandSeparator(vaultApy[0]?.apy)}%`}</span>
-                </div>
-                <div className="bg" />
-              </ApyPill>
-            </div>
-          </>
+            {vaultApy && vaultApy.length > 0 && (
+              <div className="mb-5">
+                <ApyPill>
+                  <div className="content-apy">
+                    {t("apy")} <span>{`${numberWithThousandSeparator(vaultApy[0]?.apy)}%`}</span>
+                  </div>
+                  <div className="bg" />
+                </ApyPill>
+              </div>
+            )}
+          </div>
         )}
 
         <div className="balance">
