@@ -27,7 +27,7 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
   const [elegibilityData, setElegibilityData] = useState<AirdropElegibility | undefined>();
   const [redeemedData, setRedeemedData] = useState<AirdropRedeemData>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [showElegibilityCriteria, setShowElegibilityCriteria] = useState<boolean>(false);
+  const [showElegibilityCriteria, setShowElegibilityCriteria] = useState<boolean>(true);
 
   const updateElegibility = useCallback(async () => {
     setIsLoading((prev) => prev === undefined);
@@ -54,7 +54,7 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
         pills: (
           <>
             {airdropData && airdropData.isLocked && (
-              <Pill text={t("Airdrop.linearRelease", { date: moment(airdropData.lockEndDate).format("MMM Do YY'") })} />
+              <Pill text={t("Airdrop.linearReleaseUntil", { date: moment(airdropData.lockEndDate).format("MMM Do YY'") })} />
             )}
             <Pill text={t("Airdrop.live")} />
           </>

@@ -770,7 +770,7 @@
       "liveAirdrops": "Live airdrops",
       "pastAirdrops": "Past airdrops",
       "loadingAirdrops": "Loading airdrops",
-      "linearRelease": "Linear release ({{date}})",
+      "linearReleaseUntil": "Linear release until {{date}}",
       "live": "Live",
       "past": "Past",
       "lostAirdrop": "Lost airdrop :(",
