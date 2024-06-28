@@ -9,6 +9,7 @@ enum RoutePaths {
   payouts = "/committee-tools/payouts",
   submissions = "/committee-tools/submissions",
   airdrop_machine = "/airdrop_machine",
+  airdrop = "/airdrop",
 }
 
 export { RoutePaths };

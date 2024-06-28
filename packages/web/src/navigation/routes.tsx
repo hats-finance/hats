@@ -1,4 +1,5 @@
 import { BasicLayout } from "layout";
+import { airdropsRouter } from "pages/Airdrops/router";
 import { committeeToolsRouter } from "pages/CommitteeTools/router";
 import { hackerProfileRouter } from "pages/HackerProfile/router";
 import { HoneypotsRoutePaths, honeypotsRouter } from "pages/Honeypots/router";
@@ -21,6 +22,7 @@ const routes: RouteObject[] = [
       vaultEditorRouter(),
       hackerProfileRouter(),
       leaderboardRouter(),
+      airdropsRouter(),
     ],
   },
   {

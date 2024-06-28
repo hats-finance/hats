@@ -81,6 +81,7 @@ export const variables = css`
     --strong-purple: #4b239f;
     --strong-purple-2: #5662f6;
 
+    --background-clear-blue-2: #171728;
     --background-clear-blue: #161b2f;
     --background-clearer-blue: #212639;
 

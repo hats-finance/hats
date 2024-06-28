@@ -1,6 +1,7 @@
 export { Header } from "./Header/Header";
 export { Sidebar } from "./Sidebar/Sidebar";
 export { CookiesBanner } from "./CookiesBanner/CookiesBanner";
+export { AirdropModalAlert } from "./AirdropModalAlert/AirdropModalAlert";
 export { WalletButton } from "./WalletButton/WalletButton";
 export { Vault } from "./Vault/Vault";
 export { NFTCard } from "./NFTCard/NFTCard";

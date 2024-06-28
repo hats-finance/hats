@@ -1,18 +1,34 @@
+import ArrowIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { useState } from "react";
 import { StyledCollapsableTextContent } from "./styles";
-import ArrowIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 
 export type CollapsableTextContentProps = {
   title: string;
   children: JSX.Element;
   noContentPadding?: boolean;
+  inverseArrow?: boolean;
+  titleBold?: boolean;
+  color?: string;
 };
 
-export const CollapsableTextContent = ({ title, children, noContentPadding = false }: CollapsableTextContentProps) => {
+export const CollapsableTextContent = ({
+  title,
+  children,
+  noContentPadding = false,
+  inverseArrow = false,
+  titleBold = false,
+  color,
+}: CollapsableTextContentProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <StyledCollapsableTextContent isOpen={isOpen} noContentPadding={noContentPadding}>
+    <StyledCollapsableTextContent
+      titleBold={titleBold}
+      color={color}
+      isOpen={isOpen}
+      noContentPadding={noContentPadding}
+      inverseArrow={inverseArrow}
+    >
       <div className="title-container" onClick={() => setIsOpen((prev) => !prev)}>
         <ArrowIcon className="arrow" />
         <p>{title}</p>
