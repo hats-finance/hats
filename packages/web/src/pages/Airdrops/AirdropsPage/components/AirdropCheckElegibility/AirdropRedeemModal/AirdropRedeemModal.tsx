@@ -1,5 +1,4 @@
 import { HatSpinner, Loading } from "components";
-import { DelegateAirdropContract } from "pages/Airdrops/contracts/DelegateAirdropContract";
 import { RedeemMultipleAirdropsContract } from "pages/Airdrops/contracts/RedeemMultipleAirdropsContract";
 import { AirdropData } from "pages/Airdrops/types";
 import { useCallback, useEffect, useState } from "react";
@@ -47,7 +46,6 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
   const [airdropsElegibility, setAirdropsElegibility] = useState<(AirdropElegibility | undefined)[]>([]);
   const [airdropsRedeemData, setAidropsRedeemData] = useState<(AirdropRedeemData | undefined)[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDelegating, setIsDelegating] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedDelegatee, setSelectedDelegatee] = useState<string | "self">();
 
@@ -83,25 +81,9 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
   const redeemAirdropsCall = RedeemMultipleAirdropsContract.hook(airdropsData, airdropsElegibility, airdropFactory, chainId);
   const waitingRedeemAirdropsCall = useWaitForTransaction({
     hash: redeemAirdropsCall.data?.hash as `0x${string}`,
-    confirmations: 2,
     onSuccess: async () => {
-      if (!selectedDelegatee || selectedDelegatee === "self") return;
-      try {
-        setIsDelegating(true);
-        updateAirdropsElegibility();
-        const newRedeemsData = await updateAirdropsRedeemedData();
-
-        for (const [idx, redeemData] of newRedeemsData.entries()) {
-          if (!redeemData || airdropsData[idx].isLocked) continue;
-          const txResult = await DelegateAirdropContract.send(airdropsData[idx], redeemData, selectedDelegatee);
-          await txResult?.wait();
-        }
-
-        setIsDelegating(false);
-      } catch (error) {
-        console.log(error);
-        setIsDelegating(false);
-      }
+      updateAirdropsElegibility();
+      updateAirdropsRedeemedData();
     },
   });
 
@@ -156,7 +138,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
       {redeemAirdropsCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
       {waitingRedeemAirdropsCall.isLoading && <Loading fixed extraText={`${t("redeemingYourAirdrop")}...`} />}
       {redeemAirdropsCall.isCollectingDelegationSig && <Loading fixed extraText={`${t("Airdrop.delegatingTokens")}...`} />}
-      {isDelegating && <Loading fixed extraText={`${t("Airdrop.delegatingTokens")}...`} />}
+      {/* {isDelegating && <Loading fixed extraText={`${t("Airdrop.delegatingTokens")}...`} />} */}
     </StyledAirdropRedeemModal>
   );
 };
