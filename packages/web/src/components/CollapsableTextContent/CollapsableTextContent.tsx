@@ -7,6 +7,8 @@ export type CollapsableTextContentProps = {
   children: JSX.Element;
   noContentPadding?: boolean;
   inverseArrow?: boolean;
+  titleBold?: boolean;
+  color?: string;
 };
 
 export const CollapsableTextContent = ({
@@ -14,11 +16,19 @@ export const CollapsableTextContent = ({
   children,
   noContentPadding = false,
   inverseArrow = false,
+  titleBold = false,
+  color,
 }: CollapsableTextContentProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <StyledCollapsableTextContent isOpen={isOpen} noContentPadding={noContentPadding} inverseArrow={inverseArrow}>
+    <StyledCollapsableTextContent
+      titleBold={titleBold}
+      color={color}
+      isOpen={isOpen}
+      noContentPadding={noContentPadding}
+      inverseArrow={inverseArrow}
+    >
       <div className="title-container" onClick={() => setIsOpen((prev) => !prev)}>
         <ArrowIcon className="arrow" />
         <p>{title}</p>
