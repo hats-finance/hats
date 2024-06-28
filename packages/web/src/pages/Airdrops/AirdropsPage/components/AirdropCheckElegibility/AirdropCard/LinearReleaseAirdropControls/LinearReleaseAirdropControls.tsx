@@ -30,7 +30,7 @@ export const LinearReleaseAirdropControls = ({
   const { allVaults } = useVaults();
   const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT);
 
-  const { data, isLoading } = useLinearReleaseAidropInfo(addressToCheck, redeemedData.tokenLock?.address, airdropData.chainId);
+  const { data, isLoading, refetch: refetchTokenLockInfo } = useLinearReleaseAidropInfo(addressToCheck, redeemedData.tokenLock?.address, airdropData.chainId);
   const areTokensToRelease = (data?.releasable.number ?? 0) > 0;
 
   const getProgressPercentages = () => {
@@ -64,7 +64,9 @@ export const LinearReleaseAirdropControls = ({
   const waitingReleaseTokensCall = useWaitForTransaction({
     hash: releaseTokensCall.data?.hash as `0x${string}`,
     confirmations: 2,
-    onSuccess: async () => showDepositModal(),
+    onSuccess: async () => {
+      refetchTokenLockInfo();
+      showDepositModal()},
   });
 
   if (isLoading) return null;
