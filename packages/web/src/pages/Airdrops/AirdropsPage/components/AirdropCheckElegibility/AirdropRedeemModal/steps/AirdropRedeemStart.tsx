@@ -22,10 +22,8 @@ export const AirdropRedeemStart = () => {
         <p>
           <strong>{t("Airdrop.readyToUnlockYourRewards")}</strong>
         </p>
-        <p>
-          <strong>{t("Airdrop.youWillRedeemNAirdrops", { quantity: airdropsData.length })}:</strong>
-        </p>
-        <ol>
+        <p className="mt-2">{t("Airdrop.youWillRedeemNAirdrops", { quantity: airdropsData.length })}:</p>
+        <ul>
           {airdropsData.map((airdrop, i) => {
             const elegibility = airdropsElegibility[i];
             if (!elegibility) return null;
@@ -35,13 +33,14 @@ export const AirdropRedeemStart = () => {
 
             return (
               <li>
-                <strong>{airdrop.descriptionData.name}:</strong> {total}
-                {", "}
+                <strong className="italic">{airdrop.descriptionData.name}:</strong>
+                <br />
+                {`${total}, `}
                 {airdrop.isLocked ? t("Airdrop.linearlyReleasedUntil", { date: daysLocked }) : t("Airdrop.immediatelyReleased")}
               </li>
             );
           })}
-        </ol>
+        </ul>
       </div>
 
       <div className="buttons center">

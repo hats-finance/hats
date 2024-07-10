@@ -12,6 +12,11 @@ export const StyledHatsTokenInfo = styled.div`
     @media (max-width: ${breakpointsDefinition.mobile}) {
       flex-direction: column;
       align-items: center;
+      margin-top: ${getSpacing(5)};
+    }
+
+    h1 {
+      font-size: var(--large);
     }
 
     .info {
@@ -31,15 +36,24 @@ export const StyledHatsTokenInfo = styled.div`
 
       p {
         font-size: var(--small);
+        line-height: 1.5;
       }
     }
   }
 
   .hats-utility {
-    margin-top: ${getSpacing(12)};
+    margin-top: ${getSpacing(20)};
+
+    @media (max-width: ${breakpointsDefinition.mobile}) {
+      margin-top: ${getSpacing(10)};
+    }
 
     h1 {
       font-size: var(--large);
+    }
+
+    p {
+      line-height: 1.5;
     }
 
     .text-info {
@@ -49,7 +63,7 @@ export const StyledHatsTokenInfo = styled.div`
     .utilities {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: ${getSpacing(3)};
+      gap: ${getSpacing(7)};
       padding-top: ${getSpacing(6)};
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
@@ -79,14 +93,14 @@ export const StyledHatsTokenInfo = styled.div`
         }
 
         p {
-          font-size: var(--xsmall);
+          font-size: var(--small);
         }
       }
     }
   }
 
   .hats-allocation {
-    margin-top: ${getSpacing(12)};
+    margin-top: ${getSpacing(25)};
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -119,12 +133,20 @@ export const StyledHatsTokenInfo = styled.div`
     img {
       &.chart {
         width: 70%;
-        margin-top: ${getSpacing(4)};
+        margin-top: ${getSpacing(8)};
+
+        @media (max-width: ${breakpointsDefinition.mobile}) {
+          width: 95%;
+        }
       }
 
       &.table {
         width: 100%;
-        margin-top: ${getSpacing(8)};
+        margin-top: ${getSpacing(16)};
+
+        @media (max-width: ${breakpointsDefinition.mobile}) {
+          margin-top: ${getSpacing(10)};
+        }
       }
     }
   }

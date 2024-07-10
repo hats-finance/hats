@@ -6,7 +6,7 @@ export const HatsVision = () => {
   return (
     <div className="hats-vision">
       <div className="info">
-        <h3>{t("Airdrop.hatsVision")}</h3>
+        <h1>{t("Airdrop.hatsVision")}</h1>
         <p>{t("Airdrop.hatsVisionContent")}</p>
       </div>
     </div>

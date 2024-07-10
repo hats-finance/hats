@@ -1,3 +1,5 @@
+import CheckIcon from "@mui/icons-material/CheckOutlined";
+import CancelIcon from "@mui/icons-material/ClearOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import ArrowUpIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
@@ -163,7 +165,7 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
                       <div className={`breakdown-item ${eligible ? "eligible" : ""}`} key={k}>
                         <WithTooltip text={t(`Airdrop.${k}_desc`)}>
                           <div className="left">
-                            <span className="check">{eligible ? "✓" : "✗"}</span>
+                            <span className="check mr-1">{eligible ? <CheckIcon /> : <CancelIcon />}</span>
                             <span className="name">{t(`Airdrop.${k}`)}</span>
                             <InfoIcon className="icon" fontSize="inherit" />
                           </div>
@@ -232,6 +234,9 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
           )}
         </>
       )} */}
+      {/* <Button size="small" styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
+        {redeemedData ? "Claimed" : "Claim airdrop"}
+      </Button> */}
     </StyledAidropCard>
   );
 };

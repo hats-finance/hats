@@ -91,6 +91,13 @@ export const StyledAirdropRedeemModal = styled.div`
       height: 520px;
     }
 
+    .pages {
+      width: 100%;
+      text-align: center;
+      margin-top: ${getSpacing(2)};
+      font-weight: 700;
+    }
+
     .locked-info {
       margin: ${getSpacing(2)} 0;
       padding-bottom: ${getSpacing(2)};

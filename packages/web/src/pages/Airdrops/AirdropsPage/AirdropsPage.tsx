@@ -35,7 +35,7 @@ export const AirdropsPage = () => {
     <StyledAirdropsPage className="content-wrapper">
       {/* <button onClick={createAirdropHelper}>Test</button> */}
       <div className="hero">
-        <video id="airdrop-video" autoPlay muted playsInline>
+        <video id="airdrop-video" autoPlay muted playsInline loop>
           <source src={AirdropVideo} type="video/mp4" />
         </video>
         <video id="airdrop-video-mobile" autoPlay muted playsInline loop>
@@ -43,7 +43,9 @@ export const AirdropsPage = () => {
         </video>
         <div className="buttons">
           <a href="#check-elegibility">
-            <Button>{t("Airdrop.checkElegibility")}</Button>
+            <Button bigHorizontalPadding size="big">
+              {t("Airdrop.checkElegibility")}
+            </Button>
           </a>
         </div>
       </div>

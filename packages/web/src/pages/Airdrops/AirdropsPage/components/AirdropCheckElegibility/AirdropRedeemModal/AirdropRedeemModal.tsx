@@ -99,7 +99,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
   }, [updateAirdropsElegibility, updateAirdropsRedeemedData]);
 
   useEffect(() => {
-    if (!isLoading && airdropsRedeemData.some((air) => !!air)) setCurrentStep(redeemSteps[stepsType].length - 1);
+    // if (!isLoading && airdropsRedeemData.some((air) => !!air)) setCurrentStep(redeemSteps[stepsType].length - 1);
   }, [isLoading, airdropsRedeemData, stepsType]);
 
   const handleClaimAirdrops = async (percentageToDeposit: number | undefined, vaultToDeposit: string | undefined) => {

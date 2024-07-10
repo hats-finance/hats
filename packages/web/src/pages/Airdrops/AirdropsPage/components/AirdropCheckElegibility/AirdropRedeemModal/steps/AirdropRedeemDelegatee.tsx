@@ -30,7 +30,7 @@ export const AirdropRedeemDelegatee = () => {
     <div className="content-modal">
       <img className="banner" src={require("assets/images/hats_delegatee.png")} alt="hats claim" />
       <h2 className="mb-2">{t("Airdrop.chooseDelegatee")}</h2>
-      <p>{t("Airdrop.chooseDelegateeExplanation")}</p>
+      <p dangerouslySetInnerHTML={{ __html: t("Airdrop.chooseDelegateeExplanation") }} />
 
       <div className="delegatees-list">
         {!isLoading && delegateesToShow && delegateesToShow?.length > 0 ? (
@@ -38,6 +38,10 @@ export const AirdropRedeemDelegatee = () => {
         ) : (
           <div>Loading...</div>
         )}
+      </div>
+
+      <div className="pages">
+        {page + 1}/{totalPages}
       </div>
 
       <div className={`buttons ${totalPages === 1 ? "center" : ""}`}>
