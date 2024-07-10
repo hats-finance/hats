@@ -5,7 +5,7 @@ import useModal from "hooks/useModal";
 import moment from "moment";
 import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
 import { ReleaseTokenLockContract } from "pages/Airdrops/contracts/ReleaseTokenLockContract";
-import { AirdropData } from "pages/Airdrops/types";
+import { DropData } from "pages/Airdrops/types";
 import { AirdropRedeemData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { VaultDepositWithdrawModal } from "pages/Honeypots/VaultDetailsPage/Sections/VaultDepositsSection/components";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ import { useLinearReleaseAidropInfo } from "./hooks";
 import { StyledLinearReleaseAirdropControls, StyledLinearReleaseProgressBar } from "./styles";
 
 type LinearReleaseAirdropControlsProps = {
-  airdropData: AirdropData;
+  airdropData: DropData;
   redeemedData: AirdropRedeemData;
   addressToCheck: string;
 };
@@ -30,7 +30,11 @@ export const LinearReleaseAirdropControls = ({
   const { allVaults } = useVaults();
   const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT);
 
-  const { data, isLoading, refetch: refetchTokenLockInfo } = useLinearReleaseAidropInfo(addressToCheck, redeemedData.tokenLock?.address, airdropData.chainId);
+  const {
+    data,
+    isLoading,
+    refetch: refetchTokenLockInfo,
+  } = useLinearReleaseAidropInfo(addressToCheck, redeemedData.tokenLock?.address, airdropData.chainId);
   const areTokensToRelease = (data?.releasable.number ?? 0) > 0;
 
   const getProgressPercentages = () => {
@@ -66,7 +70,8 @@ export const LinearReleaseAirdropControls = ({
     confirmations: 2,
     onSuccess: async () => {
       refetchTokenLockInfo();
-      showDepositModal()},
+      showDepositModal();
+    },
   });
 
   if (isLoading) return null;

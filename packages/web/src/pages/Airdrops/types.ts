@@ -40,7 +40,6 @@ export type DropData = {
   factory: string;
   address: string;
   chainId: number;
-  factory: string;
   isLocked: boolean;
   lockEndDate: Date;
   isLive: boolean;

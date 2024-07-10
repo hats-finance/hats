@@ -24,29 +24,31 @@ export class RedeemPointdropsContract {
       functionName: "redeemMultipleAirdrops",
     });
 
+    // TODO: Fix this
     return {
       ...redeemPointdrops,
-      send: async () => {
-        try {
-          if (!account || !connectedChain) return;
-          await switchNetworkAndValidate(connectedChain.id, chainId);
+      send: async () => {},
+      // send: async () => {
+      //   try {
+      //     if (!account || !connectedChain) return;
+      //     await switchNetworkAndValidate(connectedChain.id, chainId);
 
-          const pointdropsAddresses = pointdrops.map((pointdrop) => pointdrop.address as `0x${string}`);
-          const pointdropsAmounts = pointdrops.map((pointdrop) => pointdrop.tokens);
-          const pointdropsProofs = await Promise.all(
-            pointdrops.map(async (pointdrop) => {
-              const merkelTree = await getAirdropMerkelTree(pointdrop.descriptionData.merkeltree);
-              return merkelTree.getHexProof(hashToken(account, pointdrop.tokens)) as `0x${string}`[];
-            })
-          );
+      //     const pointdropsAddresses = pointdrops.map((pointdrop) => pointdrop.address as `0x${string}`);
+      //     const pointdropsAmounts = pointdrops.map((pointdrop) => pointdrop.tokens);
+      //     const pointdropsProofs = await Promise.all(
+      //       pointdrops.map(async (pointdrop) => {
+      //         const merkelTree = await getAirdropMerkelTree(pointdrop.descriptionData.merkeltree);
+      //         return merkelTree.getHexProof(hashToken(account, pointdrop.tokens)) as `0x${string}`[];
+      //       })
+      //     );
 
-          return redeemPointdrops.write({
-            recklesslySetUnpreparedArgs: [pointdropsAddresses, pointdropsAmounts, pointdropsProofs],
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      },
+      //     return redeemPointdrops.write({
+      //       recklesslySetUnpreparedArgs: [pointdropsAddresses, pointdropsAmounts, pointdropsProofs],
+      //     });
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
+      // },
     };
   };
 }
