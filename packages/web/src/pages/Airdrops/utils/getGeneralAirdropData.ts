@@ -1,13 +1,13 @@
-import { AirdropFactoryConfig, HATAirdrop_abi } from "@hats.finance/shared";
+import { HATAirdrop_abi } from "@hats.finance/shared";
 import { getContract, getProvider } from "wagmi/actions";
 import { DropData } from "../types";
 import { getAirdropDescriptionJSON } from "./getAirdropDescriptionJSON";
 
 export const getGeneralAirdropData = async (address: string, chainId: number, factory: string): Promise<DropData | undefined> => {
   try {
-    const airdropDescription = await getAirdropDescriptionJSON({ address, chainId: factoryInfo.chain.id });
+    const airdropDescription = await getAirdropDescriptionJSON({ address, chainId });
 
-    const provider = getProvider({ chainId: factoryInfo.chain.id });
+    const provider = getProvider({ chainId });
     const airdropContract = getContract({
       abi: HATAirdrop_abi,
       address: address,
@@ -37,9 +37,8 @@ export const getGeneralAirdropData = async (address: string, chainId: number, fa
     const eligibleFor = Object.keys(airdropDescription.merkeltree).map((key) => key.toLowerCase());
 
     return {
-      factory: factoryInfo.address,
-      chainId: factoryInfo.chain.id,
       address,
+      chainId,
       isLocked,
       lockEndDate,
       deadlineDate,
