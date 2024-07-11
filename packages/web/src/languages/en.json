@@ -730,7 +730,10 @@
       "streakMultiplierCalculation": "Streak multiplier calculation",
       "leader": "Leader",
       "externalLeaderboardPosition": "External leaderboard position",
-      "yourPosition": "Your position"
+      "yourPosition": "Your position",
+      "dao": "DAO",
+      "linear_release": "Linear release",
+      "secure_pay": "Secure pay"
     },
     "Airdrop": {
       "checkElegibility": "Check eligibility",

@@ -23,7 +23,6 @@ export const usePointValue = () => {
     // Get points values per month
     // (we can have more than one value per month if there are more than one pointdrop in the same month)
     const pointValues = pointdropsData.reduce((acc, pointdrop) => {
-      console.log(pointdrop);
       const descriptionData = pointdrop.descriptionData as PointdropDescriptionData;
       const date = moment(pointdrop.startTimeDate).format("YYYY-MM");
 
