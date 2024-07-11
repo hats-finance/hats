@@ -149,6 +149,7 @@
     "setMaxBountyHelper": "Set the maximum % of the vault allocated for bounties",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
+    "aiSafety": "AI Safety Competition",
     "privateAuditCompetition": "Private Audit Competition",
     "grant": "Grant",
     "level": "Level",

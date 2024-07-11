@@ -41,6 +41,7 @@ export function VaultDetailsForm() {
   const vaultTypes = [
     { label: t("bugBountyProgram"), value: "normal" },
     { label: t("auditCompetition"), value: "audit" },
+    { label: t("aiSafety"), value: "audit" },
     // { label: t("grant"), value: "grants" },
   ];
 
