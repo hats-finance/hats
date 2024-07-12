@@ -18,11 +18,11 @@ export const AirdropsPage = () => {
   //   const merkeltree = await getAirdropMerkelTree(a);
   //   const contractInterface = new ethers.utils.Interface(HATAirdrop_abi);
   //   const initData = contractInterface.encodeFunctionData("initialize", [
-  //     "QmUPNDZHkjwjT4d7wwqfAngLDxFcTsqEJwR2Ed7ggL5uny",
+  //     "QmNVxio3hNG5r6raEnkMzGySdQFtx6aX4KnwniS8gDWCAA",
   //     merkeltree.getHexRoot(),
-  //     1716122240,
-  //     1719222240,
-  //     1719222240,
+  //     1720114374, // startTime
+  //     1820222240, // deadline
+  //     1720714374, // lockEndTime
   //     60,
   //     "0xbdb34BB8665510d331FacAAaA0eeAe994a5B6612",
   //     "0x0153A75550E32CDf9a4458301bb89b600e745EAf",
