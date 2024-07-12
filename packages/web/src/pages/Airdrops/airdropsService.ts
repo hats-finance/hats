@@ -7,16 +7,16 @@ import { getGeneralAirdropData } from "./utils/getGeneralAirdropData";
 export type IDelegateeInfo = {
   icon?: string;
   address: string;
-  name: string;
-  twitterProfile: string;
-  description: string;
+  name?: string;
+  twitterProfile?: string;
+  description?: string;
   votes?: number;
 };
 
 /**
  * Gets the delegatees
  */
-export async function getDelegatees(token: string, chainId: number): Promise<IDelegateeInfo[]> {
+export async function getDelegatees(token: string | undefined, chainId: number | undefined): Promise<IDelegateeInfo[]> {
   try {
     const delegatees = [
       {
@@ -90,6 +90,8 @@ export async function getDelegatees(token: string, chainId: number): Promise<IDe
         `,
       },
     ];
+
+    if (!token || !chainId) return delegatees;
 
     const withVotingPower = await Promise.all(
       delegatees.map(async (delegatee) => {

@@ -26,10 +26,10 @@ export const usePointValue = () => {
       const descriptionData = pointdrop.descriptionData as PointdropDescriptionData;
       const date = moment(pointdrop.startTimeDate).format("YYYY-MM");
 
-      const totalPoints = Number(descriptionData.total_points);
-      const totalTokens = new Amount(BigNumber.from(descriptionData.total_tokens), 18).number;
+      const totalPoints = Number(descriptionData.total_points ?? "0");
+      const totalTokens = new Amount(BigNumber.from(descriptionData.total_tokens ?? "0"), 18).number;
 
-      const pointValue = totalTokens / totalPoints;
+      const pointValue = totalPoints > 0 ? totalTokens / totalPoints : 0;
       return { ...acc, [date]: [...(acc[date] ?? []), pointValue] };
     }, {} as { [date: string]: number[] });
 

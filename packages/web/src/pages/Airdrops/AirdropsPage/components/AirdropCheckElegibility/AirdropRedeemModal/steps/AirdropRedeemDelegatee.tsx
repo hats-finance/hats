@@ -97,7 +97,7 @@ const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo | "self" }) =>
           <div className="votes">{delegatee.votes ?? 0} votes</div>
           <div className="address">{shortenIfAddress(delegatee.address)}</div>
           <div className="name">
-            <span>{delegatee.name}</span>
+            {delegatee.name && <span>{delegatee.name}</span>}
             {delegatee.twitterProfile && (
               <a {...defaultAnchorProps} href={`https://twitter.com/${delegatee.twitterProfile}`}>
                 <TwitterIcon />
@@ -105,7 +105,7 @@ const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo | "self" }) =>
             )}
           </div>
 
-          <div className="description" dangerouslySetInnerHTML={{ __html: delegatee.description }} />
+          {delegatee.description && <div className="description" dangerouslySetInnerHTML={{ __html: delegatee.description }} />}
         </>
       )}
     </StyledDelegateeCard>

@@ -5,8 +5,9 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { EarningsBreakdown } from "./Sections/EarningsBreakdown/EarningsBreakdown";
-import { PointsOverview } from "./Sections/PointsOverview/PointsOverview";
+import { DaoOverview } from "./Sections/DaoOverview/DaoOverview";
+import { LinearReleaseDashboard } from "./Sections/LinearReleaseDashboard/LinearReleaseDashboard";
+import { SecurePay } from "./Sections/SecurePay/SecurePay";
 import { StyledMyWalletPage } from "./styles";
 
 export const MyWalletPage = () => {
@@ -17,6 +18,12 @@ export const MyWalletPage = () => {
   const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
 
   if ((!createdProfile && !isLoadingProfile) || !account) return <Navigate to={RoutePaths.vaults} replace={true} />;
+
+  const sections = {
+    dao: <DaoOverview />,
+    linear_release: <LinearReleaseDashboard />,
+    secure_pay: <SecurePay />,
+  };
 
   return (
     <>
@@ -35,8 +42,7 @@ export const MyWalletPage = () => {
             ))}
           </div>
 
-          <PointsOverview />
-          <EarningsBreakdown />
+          {sections[selectedSection]}
         </StyledMyWalletPage>
       )}
       {isLoadingProfile && <Loading extraText={`${t("HackerProfile.loadingProfile")}...`} />}

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { IS_PROD, appChains } from "settings";
 import { Amount } from "utils/amounts.utils";
 import { useAccount, useContractReads, useNetwork } from "wagmi";
+import { StyledHATHoldingsCard } from "./styles";
 
 const useHATMultipleBalances = () => {
   const { address: account } = useAccount();
@@ -35,7 +36,7 @@ const useHATMultipleBalances = () => {
 
   return {
     isLoading,
-    totalAcrossChains: new Amount(totalAcrossChains ?? BigNumber.from(0), 18, "HAT"),
+    totalAcrossChains: new Amount(totalAcrossChains ?? BigNumber.from(0), 18, "$HAT"),
     breakdownPerChain: breakdownPerChain.map((x) => ({
       ...x,
       balance: new Amount(x.balance, 18, "HAT"),
@@ -54,16 +55,16 @@ export const HATHoldingsCard = () => {
   };
 
   return (
-    <div className="overview-card">
+    <StyledHATHoldingsCard>
       <WithTooltip text={getBreakdownText()} placement="bottom">
-        <div>
+        <div className="container">
           <p className="main-content">{isLoading ? "--" : totalAcrossChains.formatted(5, true)}</p>
-          <div className="flex mt-4">
-            <p>{t("MyWallet.HATCurrentHoldings")}</p>
+          <div className="subtitle mt-4">
+            <p>{t("MyWallet.totalHAT")}</p>
             <InfoIcon width={16} height={16} />
           </div>
         </div>
       </WithTooltip>
-    </div>
+    </StyledHATHoldingsCard>
   );
 };

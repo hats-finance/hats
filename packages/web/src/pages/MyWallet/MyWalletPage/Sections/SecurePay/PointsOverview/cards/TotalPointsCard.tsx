@@ -3,7 +3,7 @@ import { WithTooltip } from "components";
 import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
-import { usePointsDataByUser } from "../../../../hooks";
+import { usePointsDataByUser } from "../../../../../hooks";
 
 export const TotalPointsCard = () => {
   const { t } = useTranslation();
