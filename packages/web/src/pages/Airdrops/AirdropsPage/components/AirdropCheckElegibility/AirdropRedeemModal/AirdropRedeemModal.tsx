@@ -84,6 +84,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
     onSuccess: async () => {
       updateAirdropsElegibility();
       updateAirdropsRedeemedData();
+      nextStep();
     },
   });
 

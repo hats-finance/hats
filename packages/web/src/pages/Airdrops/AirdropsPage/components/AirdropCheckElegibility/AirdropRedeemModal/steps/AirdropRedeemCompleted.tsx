@@ -3,7 +3,7 @@ import { SocialLinks } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { useTranslation } from "react-i18next";
 
-const UTILITY_GUIDE_URL = "https://hats.finance/tge";
+const UTILITY_GUIDE_URL = "https://hatsfinance.medium.com/hats-finance-hat-tokenomics-efe090f98d49";
 
 export const AirdropRedeemCompleted = () => {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ export const AirdropRedeemCompleted = () => {
         </Button>
         <Button>
           <a href={UTILITY_GUIDE_URL} {...defaultAnchorProps}>
-            {t("Airdrop.viewAirdropPage")}
+            {t("Airdrop.readHATUtilityGuide")}
           </a>
         </Button>
       </div>
