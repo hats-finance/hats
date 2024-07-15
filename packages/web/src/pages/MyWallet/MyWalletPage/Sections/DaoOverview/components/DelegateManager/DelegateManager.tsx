@@ -5,7 +5,7 @@ import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import useModal from "hooks/useModal";
 import { IDelegateeInfo } from "pages/Airdrops/airdropsService";
 import { useDelegatees } from "pages/Airdrops/hooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
 import { IS_PROD, appChains } from "settings";
@@ -43,9 +43,6 @@ export const DelegateManager = () => {
     args: [account ?? "0x0000000000000000000000000000000000000000"],
     enabled: !!account && !!tokenInfo,
   });
-
-  console.log(delegate);
-  console.log(account);
 
   const { data: delegateOptions, isLoading: isLoadingDelegateOptions } = useDelegatees(
     tokenInfo?.[1]?.address,

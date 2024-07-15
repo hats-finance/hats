@@ -745,7 +745,8 @@
       "submitDelegate": "Submit delegate",
       "delegatingYourTokens": "Delegating your tokens",
       "delegateSubmitted": "Delegate submitted",
-      "delegateSubmittedExplanation": "Your selection has been submitted. You can edit your delegate selection at any time from the 'My Wallet' &gt; 'DAO' section."
+      "delegateSubmittedExplanation": "Your selection has been submitted. You can edit your delegate selection at any time from the 'My Wallet' &gt; 'DAO' section.",
+      "youHaveNoTokenLocks": "You have no token locks"
     },
     "Airdrop": {
       "checkElegibility": "Check eligibility",

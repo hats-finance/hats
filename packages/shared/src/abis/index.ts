@@ -15,4 +15,5 @@ export { HATPaymentSplitter_abi } from "./HATPaymentSplitter_abi";
 export { HATAirdrop_abi } from "./HATAirdrop_abi";
 export { HATAirdropFactory_abi } from "./HATAirdropFactory_abi";
 export { HATTokenLock_abi } from "./HATTokenLock_abi";
+export { HATTokenLockFactory_abi } from "./HATTokenLockFactory_abi";
 export { erc20_abi } from "./erc20_abi";

@@ -13,3 +13,15 @@ export const HATTokensConfig: {
   },
   prod: {},
 };
+
+export const HATTokenLockFactoriesConfig: {
+  test: { [chainId: number]: { address: string } };
+  prod: { [chainId: number]: { address: string } };
+} = {
+  test: {
+    [wagmiChains.sepolia.id]: {
+      address: "0x0153A75550E32CDf9a4458301bb89b600e745EAf",
+    },
+  },
+  prod: {},
+};

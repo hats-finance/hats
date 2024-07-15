@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { DaoOverview } from "./Sections/DaoOverview/DaoOverview";
 import { LinearReleaseDashboard } from "./Sections/LinearReleaseDashboard/LinearReleaseDashboard";
-import { SecurePay } from "./Sections/SecurePay/SecurePay";
+// import { SecurePay } from "./Sections/SecurePay/SecurePay";
 import { StyledMyWalletPage } from "./styles";
 
 export const MyWalletPage = () => {
@@ -22,7 +22,7 @@ export const MyWalletPage = () => {
   const sections = {
     dao: <DaoOverview />,
     linear_release: <LinearReleaseDashboard />,
-    secure_pay: <SecurePay />,
+    // secure_pay: <SecurePay />,
   };
 
   return (
@@ -32,7 +32,7 @@ export const MyWalletPage = () => {
           <h2>Hello, @{createdProfile?.username}</h2>
 
           <div className="sections-handler">
-            {(["dao", "linear_release", "secure_pay"] as const).map((section) => (
+            {(["dao", "linear_release" /* "secure_pay"*/] as const).map((section) => (
               <h3
                 className={`section ${selectedSection === section ? "selected" : ""}`}
                 onClick={() => setSelectedSection(section)}

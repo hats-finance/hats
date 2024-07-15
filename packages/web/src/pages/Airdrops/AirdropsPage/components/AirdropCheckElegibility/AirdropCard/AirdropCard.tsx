@@ -143,8 +143,12 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
         </div>
 
         {/* Linearly released airdrop controls */}
-        {!isLoading && redeemedData && airdropData.isLocked && (
-          <LinearReleaseAirdropControls airdropData={airdropData} redeemedData={redeemedData} addressToCheck={addressToCheck} />
+        {!isLoading && redeemedData && airdropData.isLocked && redeemedData.tokenLock && (
+          <LinearReleaseAirdropControls
+            chainId={airdropData.chainId}
+            tokenLockAddress={redeemedData.tokenLock.address}
+            addressToCheck={addressToCheck}
+          />
         )}
       </div>
 
