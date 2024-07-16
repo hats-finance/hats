@@ -5,7 +5,7 @@ import { getAirdropsDataByFactory, getDelegatees } from "./airdropsService";
 /**
  * Gets the delegatees
  */
-export const useDelegatees = (token: string, chainId: number) => {
+export const useDelegatees = (token: string | undefined, chainId: number | undefined) => {
   return useQuery({
     queryKey: ["delegatees"],
     queryFn: () => getDelegatees(token, chainId),
@@ -17,7 +17,7 @@ export const useDelegatees = (token: string, chainId: number) => {
  */
 export const useAirdropsByFactories = (factories: AirdropFactoryConfig[]) => {
   return useQuery({
-    queryKey: ["airdrop-by-factories", ...factories.map((f) => f.address + f.chain.id)],
+    queryKey: ["airdrop-by-factories"],
     queryFn: async () => {
       return (await Promise.all(factories.map((f) => getAirdropsDataByFactory(f)))).flat();
     },

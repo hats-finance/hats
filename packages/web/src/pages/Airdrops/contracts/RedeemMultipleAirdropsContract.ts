@@ -6,7 +6,7 @@ import { useState } from "react";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
 import { readContract } from "wagmi/actions";
-import { AirdropData } from "../types";
+import { DropData } from "../types";
 import { AirdropElegibility } from "../utils/getAirdropElegibility";
 import { getAirdropMerkelTree, hashToken } from "../utils/getAirdropMerkelTree";
 import { generateDelegationSig } from "./getDelegationSignature";
@@ -18,7 +18,7 @@ export class RedeemMultipleAirdropsContract {
    * @param vault - The selected vault to deposit staking token
    */
   static hook = (
-    airdrops: AirdropData[],
+    airdrops: DropData[],
     airdropsElegibility: (AirdropElegibility | false | undefined)[],
     factory: string,
     chainId: number

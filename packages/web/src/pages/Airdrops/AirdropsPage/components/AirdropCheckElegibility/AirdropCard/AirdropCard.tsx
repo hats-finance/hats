@@ -7,7 +7,7 @@ import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
 import { CopyToClipboard, Pill, WithTooltip } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
-import { AirdropData } from "pages/Airdrops/types";
+import { DropData } from "pages/Airdrops/types";
 import { AirdropElegibility, getAirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
 import { AirdropRedeemData, getAirdropRedeemedData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { useCallback, useEffect, useState } from "react";
@@ -19,7 +19,7 @@ import { LinearReleaseAirdropControls } from "./LinearReleaseAirdropControls/Lin
 import { StyledAidropCard, StyledElegibilityBreakdown } from "./styles";
 
 type AirdropCardProps = {
-  airdropData: AirdropData;
+  airdropData: DropData;
   addressToCheck: string;
   onOpenClaimModal: () => void;
   onOpenDelegateModal: () => void;
@@ -143,8 +143,12 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
         </div>
 
         {/* Linearly released airdrop controls */}
-        {!isLoading && redeemedData && airdropData.isLocked && (
-          <LinearReleaseAirdropControls airdropData={airdropData} redeemedData={redeemedData} addressToCheck={addressToCheck} />
+        {!isLoading && redeemedData && airdropData.isLocked && redeemedData.tokenLock && (
+          <LinearReleaseAirdropControls
+            chainId={airdropData.chainId}
+            tokenLockAddress={redeemedData.tokenLock.address}
+            addressToCheck={addressToCheck}
+          />
         )}
       </div>
 

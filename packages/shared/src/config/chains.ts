@@ -182,13 +182,15 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
 
 export type AirdropFactoryConfig = { chain: wagmiChains.Chain; address: string };
 export const AirdropFactoriesChainConfig: {
-  test: { airdrop: AirdropFactoryConfig[] };
-  prod: { airdrop: AirdropFactoryConfig[] };
+  test: { airdrop: AirdropFactoryConfig[]; pointdrop: AirdropFactoryConfig[] };
+  prod: { airdrop: AirdropFactoryConfig[]; pointdrop: AirdropFactoryConfig[] };
 } = {
   test: {
     airdrop: [{ address: "0xcBd1763C9CD705DDf0b7aEbB7f36A7b00E890729", chain: wagmiChains.sepolia }],
+    pointdrop: [{ address: "0xCE94b023259E6a49EB37339aCaA3F8e711b88e04", chain: wagmiChains.sepolia }],
   },
   prod: {
     airdrop: [],
+    pointdrop: [],
   },
 };

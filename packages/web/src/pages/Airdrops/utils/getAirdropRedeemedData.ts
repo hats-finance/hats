@@ -23,7 +23,7 @@ type TokensRedeemedEventArgs = {
 };
 
 /**
- * Returns the airdrop redeemed data for the selected address. If the address has not redeemed any airdrop, it will return undefined.
+ * Returns the airdrop redeemed data for the selected address. If the address has not redeemed the airdrop, it will return undefined.
  *
  * @param address: string - The address to check the airdrop redeemed data.
  * @param airdropData: {address: string, chainId: number} - The airdrop contract address and chain id.

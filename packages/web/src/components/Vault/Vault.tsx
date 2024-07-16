@@ -53,7 +53,7 @@ const VaultComponent = (
     const network = vault.chainId ? appChains[vault.chainId] : null;
 
     return (
-      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.chain.name}>
+      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE as any} overlay={network?.chain.name}>
         <div className="chain-logo">
           <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.chain.name} />
         </div>

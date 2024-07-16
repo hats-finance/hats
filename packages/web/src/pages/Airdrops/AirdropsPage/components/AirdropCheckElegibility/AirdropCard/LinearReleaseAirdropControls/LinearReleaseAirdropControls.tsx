@@ -1,28 +1,30 @@
 import { NextArrowIcon } from "assets/icons/next-arrow";
-import { Button, Loading, Modal } from "components";
+import { Button, CopyToClipboard, Loading, Modal } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useModal from "hooks/useModal";
 import moment from "moment";
 import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
 import { ReleaseTokenLockContract } from "pages/Airdrops/contracts/ReleaseTokenLockContract";
-import { AirdropData } from "pages/Airdrops/types";
-import { AirdropRedeemData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { VaultDepositWithdrawModal } from "pages/Honeypots/VaultDetailsPage/Sections/VaultDepositsSection/components";
 import { useTranslation } from "react-i18next";
+import { appChains } from "settings";
+import { shortenIfAddress } from "utils/addresses.utils";
 import { useWaitForTransaction } from "wagmi";
 import { useLinearReleaseAidropInfo } from "./hooks";
 import { StyledLinearReleaseAirdropControls, StyledLinearReleaseProgressBar } from "./styles";
 
 type LinearReleaseAirdropControlsProps = {
-  airdropData: AirdropData;
-  redeemedData: AirdropRedeemData;
+  chainId: number;
+  tokenLockAddress: string;
   addressToCheck: string;
+  standalone?: boolean;
 };
 
 export const LinearReleaseAirdropControls = ({
-  airdropData,
-  redeemedData,
+  chainId,
+  tokenLockAddress,
   addressToCheck,
+  standalone = false,
 }: LinearReleaseAirdropControlsProps) => {
   const { t } = useTranslation();
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
@@ -30,7 +32,11 @@ export const LinearReleaseAirdropControls = ({
   const { allVaults } = useVaults();
   const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT);
 
-  const { data, isLoading, refetch: refetchTokenLockInfo } = useLinearReleaseAidropInfo(addressToCheck, redeemedData.tokenLock?.address, airdropData.chainId);
+  const {
+    data,
+    isLoading,
+    refetch: refetchTokenLockInfo,
+  } = useLinearReleaseAidropInfo(addressToCheck, tokenLockAddress, chainId);
   const areTokensToRelease = (data?.releasable.number ?? 0) > 0;
 
   const getProgressPercentages = () => {
@@ -60,20 +66,33 @@ export const LinearReleaseAirdropControls = ({
     };
   };
 
-  const releaseTokensCall = ReleaseTokenLockContract.hook(redeemedData.tokenLock?.address, airdropData.chainId);
+  const releaseTokensCall = ReleaseTokenLockContract.hook(tokenLockAddress, chainId);
   const waitingReleaseTokensCall = useWaitForTransaction({
     hash: releaseTokensCall.data?.hash as `0x${string}`,
     confirmations: 2,
     onSuccess: async () => {
       refetchTokenLockInfo();
-      showDepositModal()},
+      showDepositModal();
+    },
   });
 
   if (isLoading) return null;
 
   return (
-    <StyledLinearReleaseAirdropControls>
-      {/* <p>{redeemedData.tokenLock?.address}</p> */}
+    <StyledLinearReleaseAirdropControls standalone={standalone}>
+      {standalone && (
+        <div className="chain-address">
+          <div className="address">
+            {shortenIfAddress(tokenLockAddress)}
+            <CopyToClipboard valueToCopy={tokenLockAddress} overlayText={t("copyAddress")} simple tooltipPlacement="right" />
+          </div>
+          <div className="network">
+            {t("network")}:
+            <img className="chain" src={require(`assets/icons/chains/${chainId}.png`)} alt="network" />
+            {appChains[chainId].chain.name}
+          </div>
+        </div>
+      )}
 
       <div className="legend">
         <div className="legend__item">
@@ -82,18 +101,22 @@ export const LinearReleaseAirdropControls = ({
             {t("Airdrop.released")} - <span>{data?.released.formatted(2)}</span>
           </p>
         </div>
-        <div className="legend__item">
-          <div className="dot releasable" />
-          <p>
-            {t("Airdrop.releasable")} - <span>{data?.releasable.formatted(2)}</span>
-          </p>
-        </div>
-        <div className="legend__item">
-          <div className="dot pending" />
-          <p>
-            {t("Airdrop.linearlyReleased")} - <span>{data?.pending.formatted(2)}</span>
-          </p>
-        </div>
+        {data?.releasable.number !== 0 && (
+          <div className="legend__item">
+            <div className="dot releasable" />
+            <p>
+              {t("Airdrop.releasable")} - <span>{data?.releasable.formatted(2)}</span>
+            </p>
+          </div>
+        )}
+        {data?.pending.number !== 0 && (
+          <div className="legend__item">
+            <div className="dot pending" />
+            <p>
+              {t("Airdrop.linearlyReleased")} - <span>{data?.pending.formatted(2)}</span>
+            </p>
+          </div>
+        )}
       </div>
 
       <StyledLinearReleaseProgressBar percentages={getProgressPercentages()}>

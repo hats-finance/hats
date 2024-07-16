@@ -26,6 +26,8 @@ interface FormSelectInputProps {
   noMargin?: boolean;
   readOnly?: boolean;
   flexExpand?: boolean;
+  noSelectedMark?: boolean;
+  smallPadding?: boolean;
   isDirty?: boolean | boolean[];
   value: string | string[];
   onChange?: (data: string | string[]) => void;
@@ -46,6 +48,8 @@ export function FormSelectInputComponent(
     readOnly = false,
     flexExpand = false,
     noMargin = false,
+    smallPadding = false,
+    noSelectedMark = false,
     emptyState,
     error,
     placeholder,
@@ -98,6 +102,7 @@ export function FormSelectInputComponent(
         isFilled={!!value}
         isOpen={isOpen}
         readOnly={readOnly}
+        smallPadding={smallPadding}
         noLabel={!label}
       >
         <span className="text">{getRenderValue()}</span>
@@ -119,6 +124,7 @@ export function FormSelectInputComponent(
               multiple={multiple}
               handleUnselectedItem={handleUnselectedItem}
               handleSelectedItem={handleSelectedItem}
+              noSelectedMark={noSelectedMark}
             />
           )}
 
@@ -131,6 +137,7 @@ export function FormSelectInputComponent(
                 multiple={multiple}
                 handleUnselectedItem={handleUnselectedItem}
                 handleSelectedItem={handleSelectedItem}
+                noSelectedMark={noSelectedMark}
               />
             );
           })}

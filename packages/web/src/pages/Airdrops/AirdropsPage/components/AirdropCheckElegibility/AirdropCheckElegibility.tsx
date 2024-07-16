@@ -4,7 +4,7 @@ import { NextArrowIcon } from "assets/icons/next-arrow";
 import { Button, FormInput, HatSpinner, Modal } from "components";
 import { isAddress } from "ethers/lib/utils.js";
 import { useAirdropsByFactories } from "pages/Airdrops/hooks";
-import { AirdropData } from "pages/Airdrops/types";
+import { DropData } from "pages/Airdrops/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IS_PROD } from "settings";
@@ -20,7 +20,7 @@ export const AirdropCheckElegibility = () => {
 
   const [showPastAidrops, setShowPastAidrops] = useState<boolean>(false);
   const [addressToCheck, setAddressToCheck] = useState<string>("");
-  const [airdropsToClaim, setAirdropsToClaim] = useState<AirdropData[]>([]);
+  const [airdropsToClaim, setAirdropsToClaim] = useState<DropData[]>([]);
   const [checkElegibility, setCheckElegibility] = useState<boolean>();
 
   const isTestnet = !IS_PROD && connectedChain?.testnet;

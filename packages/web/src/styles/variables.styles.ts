@@ -101,6 +101,9 @@ export const variables = css`
     --vault-editor-border-2: #212842;
 
     /* font sizes */
+    --xxxxlarge: 88px;
+    --xxxlarge: 72px;
+    --xxlarge: 60px;
     --xlarge: 48px;
     --large-2: 42px;
     --large: 36px;

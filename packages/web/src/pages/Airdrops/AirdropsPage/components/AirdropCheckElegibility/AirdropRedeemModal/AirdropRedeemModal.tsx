@@ -1,6 +1,6 @@
 import { HatSpinner, Loading } from "components";
 import { RedeemMultipleAirdropsContract } from "pages/Airdrops/contracts/RedeemMultipleAirdropsContract";
-import { AirdropData } from "pages/Airdrops/types";
+import { DropData } from "pages/Airdrops/types";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNetwork, useWaitForTransaction } from "wagmi";
@@ -16,7 +16,7 @@ import { AirdropRedeemModalContext, IAirdropRedeemModalContext } from "./store";
 import { StyledAirdropRedeemModal } from "./styles";
 
 type AirdropRedeemModalProps = {
-  airdropsData: AirdropData[];
+  airdropsData: DropData[];
   airdropFactory: string;
   addressToCheck: string;
   chainId: number;
@@ -84,6 +84,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
     onSuccess: async () => {
       updateAirdropsElegibility();
       updateAirdropsRedeemedData();
+      nextStep();
     },
   });
 

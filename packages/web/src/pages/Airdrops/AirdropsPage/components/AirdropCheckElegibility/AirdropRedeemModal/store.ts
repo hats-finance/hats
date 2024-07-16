@@ -1,10 +1,10 @@
-import { AirdropData } from "pages/Airdrops/types";
+import { DropData } from "pages/Airdrops/types";
 import { AirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
 import { AirdropRedeemData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { createContext } from "react";
 
 export interface IAirdropRedeemModalContext {
-  airdropsData: AirdropData[];
+  airdropsData: DropData[];
   addressToCheck: string;
   airdropsElegibility: (AirdropElegibility | false | undefined)[];
   airdropsRedeemData: (AirdropRedeemData | undefined)[];

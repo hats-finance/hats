@@ -1,22 +1,22 @@
 import { AirdropFactoryConfig, HATAirdropFactory_abi, HATToken_abi } from "@hats.finance/shared";
 import { Amount } from "utils/amounts.utils";
 import { getContract, getProvider, readContract } from "wagmi/actions";
-import { AirdropData } from "./types";
+import { DropData } from "./types";
 import { getGeneralAirdropData } from "./utils/getGeneralAirdropData";
 
 export type IDelegateeInfo = {
   icon?: string;
   address: string;
-  name: string;
-  twitterProfile: string;
-  description: string;
+  name?: string;
+  twitterProfile?: string;
+  description?: string;
   votes?: number;
 };
 
 /**
  * Gets the delegatees
  */
-export async function getDelegatees(token: string, chainId: number): Promise<IDelegateeInfo[]> {
+export async function getDelegatees(token: string | undefined, chainId: number | undefined): Promise<IDelegateeInfo[]> {
   try {
     const delegatees = [
       {
@@ -91,6 +91,8 @@ export async function getDelegatees(token: string, chainId: number): Promise<IDe
       },
     ];
 
+    if (!token || !chainId) return delegatees;
+
     const withVotingPower = await Promise.all(
       delegatees.map(async (delegatee) => {
         try {
@@ -116,7 +118,7 @@ export async function getDelegatees(token: string, chainId: number): Promise<IDe
   }
 }
 
-export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): Promise<AirdropData[]> {
+export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): Promise<DropData[]> {
   try {
     type AirdropCreatedEventArgs = {
       _hatAirdrop: string;
@@ -142,7 +144,7 @@ export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): P
           return airdropData;
         })
       )
-    ).filter((data) => data !== undefined) as AirdropData[];
+    ).filter((data) => data !== undefined) as DropData[];
 
     return airdropsData;
   } catch (error) {
