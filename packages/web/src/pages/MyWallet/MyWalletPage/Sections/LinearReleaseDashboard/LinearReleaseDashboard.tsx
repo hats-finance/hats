@@ -1,5 +1,5 @@
 import { Alert } from "components";
-import { LinearReleaseAirdropControls } from "pages/Airdrops/AirdropsPage/components/AirdropCheckElegibility/AirdropCard/LinearReleaseAirdropControls/LinearReleaseAirdropControls";
+import { LinearReleaseAirdropControls } from "pages/Airdrops/AirdropsPage/components/AirdropCheckEligibility/AirdropCard/LinearReleaseAirdropControls/LinearReleaseAirdropControls";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { useTokenLocksByEnv } from "./hooks";

@@ -4,7 +4,7 @@ import { DropData } from "pages/Airdrops/types";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNetwork, useWaitForTransaction } from "wagmi";
-import { AirdropElegibility, getAirdropElegibility } from "../../../../utils/getAirdropElegibility";
+import { AirdropEligibility, getAirdropEligibility } from "../../../../utils/getAirdropEligibility";
 import { AirdropRedeemData, getAirdropRedeemedData } from "../../../../utils/getAirdropRedeemedData";
 import { AirdropRedeemCompleted } from "./steps/AirdropRedeemCompleted";
 import { AirdropRedeemDelegatee } from "./steps/AirdropRedeemDelegatee";
@@ -43,7 +43,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
   const { t } = useTranslation();
   const { chain: connectedChain } = useNetwork();
 
-  const [airdropsElegibility, setAirdropsElegibility] = useState<(AirdropElegibility | undefined)[]>([]);
+  const [airdropsEligibility, setAirdropsEligibility] = useState<(AirdropEligibility | undefined)[]>([]);
   const [airdropsRedeemData, setAidropsRedeemData] = useState<(AirdropRedeemData | undefined)[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -60,14 +60,14 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
     setCurrentStep((prev) => (prev === 0 ? prev : prev - 1));
   };
 
-  const updateAirdropsElegibility = useCallback(async () => {
+  const updateAirdropsEligibility = useCallback(async () => {
     if (!addressToCheck) return [];
 
-    const elegibilities = await Promise.all(
-      airdropsData.map((airdrop) => getAirdropElegibility(addressToCheck, airdrop.descriptionData))
+    const eligibilities = await Promise.all(
+      airdropsData.map((airdrop) => getAirdropEligibility(addressToCheck, airdrop.descriptionData))
     );
-    setAirdropsElegibility(elegibilities);
-    return elegibilities;
+    setAirdropsEligibility(eligibilities);
+    return eligibilities;
   }, [addressToCheck, airdropsData]);
 
   const updateAirdropsRedeemedData = useCallback(async () => {
@@ -78,26 +78,26 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
     return redeemed;
   }, [addressToCheck, airdropsData]);
 
-  const redeemAirdropsCall = RedeemMultipleAirdropsContract.hook(airdropsData, airdropsElegibility, airdropFactory, chainId);
+  const redeemAirdropsCall = RedeemMultipleAirdropsContract.hook(airdropsData, airdropsEligibility, airdropFactory, chainId);
   const waitingRedeemAirdropsCall = useWaitForTransaction({
     hash: redeemAirdropsCall.data?.hash as `0x${string}`,
     onSuccess: async () => {
-      updateAirdropsElegibility();
+      updateAirdropsEligibility();
       updateAirdropsRedeemedData();
       nextStep();
     },
   });
 
-  useEffect(() => setAirdropsElegibility([]), [addressToCheck, connectedChain]);
+  useEffect(() => setAirdropsEligibility([]), [addressToCheck, connectedChain]);
   useEffect(() => {
     const init = async () => {
       setIsLoading(true);
-      await updateAirdropsElegibility();
+      await updateAirdropsEligibility();
       await updateAirdropsRedeemedData();
       setIsLoading(false);
     };
     init();
-  }, [updateAirdropsElegibility, updateAirdropsRedeemedData]);
+  }, [updateAirdropsEligibility, updateAirdropsRedeemedData]);
 
   useEffect(() => {
     // if (!isLoading && airdropsRedeemData.some((air) => !!air)) setCurrentStep(redeemSteps[stepsType].length - 1);
@@ -110,11 +110,11 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
   const airdropRedeemModalContext = {
     airdropsData,
     addressToCheck,
-    airdropsElegibility,
+    airdropsEligibility,
     nextStep,
     prevStep,
     airdropsRedeemData,
-    updateAirdropsElegibility,
+    updateAirdropsEligibility,
     updateAirdropsRedeemedData,
     selectedDelegatee,
     setSelectedDelegatee,
@@ -123,7 +123,7 @@ export const AirdropRedeemModal = ({ airdropsData, addressToCheck, airdropFactor
   } satisfies IAirdropRedeemModalContext;
 
   // If the user is not eligible or already redeemed, we don't show the modal
-  if (!isLoading && airdropsElegibility.some((elegibility) => !elegibility)) return null;
+  if (!isLoading && airdropsEligibility.some((eligibility) => !eligibility)) return null;
 
   return (
     <StyledAirdropRedeemModal>

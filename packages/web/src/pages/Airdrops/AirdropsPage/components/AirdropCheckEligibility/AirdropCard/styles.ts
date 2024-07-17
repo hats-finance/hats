@@ -91,7 +91,7 @@ export const StyledAidropCard = styled.div`
   }
 `;
 
-export const StyledElegibilityBreakdown = styled.div`
+export const StyledEligibilityBreakdown = styled.div`
   margin: 0 auto;
   width: 100%;
   margin-top: ${getSpacing(6)};
@@ -111,7 +111,7 @@ export const StyledElegibilityBreakdown = styled.div`
     }
   }
 
-  .elegibility-breakdown {
+  .eligibility-breakdown {
     .breakdown {
       display: flex;
       flex-direction: column;

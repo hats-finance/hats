@@ -8,7 +8,7 @@ import { AirdropRedeemModalContext } from "../store";
 
 export const AirdropRedeemStart = () => {
   const { t } = useTranslation();
-  const { nextStep, onlyTokenLocks, airdropsData, airdropsElegibility } = useContext(AirdropRedeemModalContext);
+  const { nextStep, onlyTokenLocks, airdropsData, airdropsEligibility } = useContext(AirdropRedeemModalContext);
 
   return (
     <div className="content-modal">
@@ -25,10 +25,10 @@ export const AirdropRedeemStart = () => {
         <p className="mt-2">{t("Airdrop.youWillRedeemNAirdrops", { quantity: airdropsData.length })}:</p>
         <ul>
           {airdropsData.map((airdrop, i) => {
-            const elegibility = airdropsElegibility[i];
-            if (!elegibility) return null;
+            const eligibility = airdropsEligibility[i];
+            if (!eligibility) return null;
 
-            const total = new Amount(BigNumber.from(elegibility.total), 18, "$HAT").formatted();
+            const total = new Amount(BigNumber.from(eligibility.total), 18, "$HAT").formatted();
             const daysLocked = moment(airdrop.lockEndDate).format("MMMM Do 24'");
 
             return (

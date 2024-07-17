@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledAirdropCheckElegibility = styled.div`
+export const StyledAirdropCheckEligibility = styled.div`
   border: 1px solid var(--primary-light);
   padding: ${getSpacing(4)};
   display: flex;

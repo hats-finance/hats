@@ -7,7 +7,7 @@ import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
 import { readContract } from "wagmi/actions";
 import { DropData } from "../types";
-import { AirdropElegibility } from "../utils/getAirdropElegibility";
+import { AirdropEligibility } from "../utils/getAirdropEligibility";
 import { getAirdropMerkelTree, hashToken } from "../utils/getAirdropMerkelTree";
 import { generateDelegationSig } from "./getDelegationSignature";
 
@@ -19,7 +19,7 @@ export class RedeemMultipleAirdropsContract {
    */
   static hook = (
     airdrops: DropData[],
-    airdropsElegibility: (AirdropElegibility | false | undefined)[],
+    airdropsEligibility: (AirdropEligibility | false | undefined)[],
     factory: string,
     chainId: number
   ) => {
@@ -52,25 +52,25 @@ export class RedeemMultipleAirdropsContract {
         delegatee: string | "self" | undefined
       ) => {
         try {
-          if (airdropsElegibility.some((elegibility) => !elegibility)) return;
+          if (airdropsEligibility.some((eligibility) => !eligibility)) return;
           if (!account || !connectedChain) return;
           await switchNetworkAndValidate(connectedChain.id, chainId);
 
           const addresses = airdrops.map((airdrop) => airdrop.address as `0x${string}`);
-          const amounts = airdropsElegibility.map((elegibility) =>
-            !!elegibility ? BigNumber.from(elegibility.total) : BigNumber.from(0)
+          const amounts = airdropsEligibility.map((eligibility) =>
+            !!eligibility ? BigNumber.from(eligibility.total) : BigNumber.from(0)
           );
-          const proofsPromises = airdropsElegibility.map(async (elegibility, index) => {
+          const proofsPromises = airdropsEligibility.map(async (eligibility, index) => {
             const merkelTree = await getAirdropMerkelTree(airdrops[index].descriptionData.merkeltree);
-            const amount = !!elegibility ? BigNumber.from(elegibility.total) : BigNumber.from(0);
+            const amount = !!eligibility ? BigNumber.from(eligibility.total) : BigNumber.from(0);
             const proof = merkelTree.getHexProof(hashToken(account, amount)) as `0x${string}`[];
             return proof;
           });
           const proofs = await Promise.all(proofsPromises);
           const vaults = airdrops.map((_) => (vaultToDeposit ?? 0x0000000000000000000000000000000000000000) as `0x${string}`);
-          const deposits = airdropsElegibility.map((elegibility) => {
-            if (!elegibility) return BigNumber.from(0);
-            const total = +formatUnits(elegibility.total, 18);
+          const deposits = airdropsEligibility.map((eligibility) => {
+            if (!eligibility) return BigNumber.from(0);
+            const total = +formatUnits(eligibility.total, 18);
             const toDeposit = percentageToDeposit ? percentageToDeposit * total : 0;
             return parseUnits(toDeposit.toString(), 18);
           });

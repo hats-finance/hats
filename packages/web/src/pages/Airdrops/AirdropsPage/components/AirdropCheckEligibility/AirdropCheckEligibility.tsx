@@ -11,9 +11,9 @@ import { IS_PROD } from "settings";
 import { useAccount, useNetwork } from "wagmi";
 import { AirdropCard } from "./AirdropCard/AirdropCard";
 import { AirdropRedeemModal } from "./AirdropRedeemModal/AirdropRedeemModal";
-import { StyledAirdropCheckElegibility } from "./styles";
+import { StyledAirdropCheckEligibility } from "./styles";
 
-export const AirdropCheckElegibility = () => {
+export const AirdropCheckEligibility = () => {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const { chain: connectedChain } = useNetwork();
@@ -21,7 +21,7 @@ export const AirdropCheckElegibility = () => {
   const [showPastAidrops, setShowPastAidrops] = useState<boolean>(false);
   const [addressToCheck, setAddressToCheck] = useState<string>("");
   const [airdropsToClaim, setAirdropsToClaim] = useState<DropData[]>([]);
-  const [checkElegibility, setCheckElegibility] = useState<boolean>();
+  const [checkEligibility, setCheckEligibility] = useState<boolean>();
 
   const isTestnet = !IS_PROD && connectedChain?.testnet;
   const env = isTestnet ? "test" : "prod";
@@ -40,10 +40,10 @@ export const AirdropCheckElegibility = () => {
 
   if (isLoading) {
     return (
-      <StyledAirdropCheckElegibility id="check-elegibility">
-        <h3 className="mb-4">{t("Airdrop.checkingElegibility")}</h3>
+      <StyledAirdropCheckEligibility id="check-eligibility">
+        <h3 className="mb-4">{t("Airdrop.checkingEligibility")}</h3>
         <HatSpinner text={`${t("Airdrop.loadingAirdrops")}...`} />
-      </StyledAirdropCheckElegibility>
+      </StyledAirdropCheckEligibility>
     );
   }
 
@@ -57,41 +57,41 @@ export const AirdropCheckElegibility = () => {
     airdropsData?.filter((airdrop) => !airdrop.isLive && !airdrop.redeemedBy.includes(addressToCheck.toLowerCase())) ?? [];
 
   return (
-    <StyledAirdropCheckElegibility id="check-elegibility">
-      <h3 className="mb-4">{checkElegibility ? t("Airdrop.checkingElegibility") : t("Airdrop.checkElegibility")}</h3>
+    <StyledAirdropCheckEligibility id="check-eligibility">
+      <h3 className="mb-4">{checkEligibility ? t("Airdrop.checkingEligibility") : t("Airdrop.checkEligibility")}</h3>
 
       <FormInput
         value={addressToCheck}
-        label={t("Airdrop.checkElegibility")}
+        label={t("Airdrop.checkEligibility")}
         placeholder={t("Airdrop.addressToCheck")}
-        disabled={checkElegibility}
+        disabled={checkEligibility}
         onChange={(e) => {
           setAddressToCheck(e.target.value as string);
-          setCheckElegibility(false);
+          setCheckEligibility(false);
         }}
       />
 
       <div className="buttons">
-        {!checkElegibility && (
+        {!checkEligibility && (
           <>
             {account && (
               <Button styleType="outlined" onClick={() => setAddressToCheck(account)}>
                 {t("Airdrop.useConnectedWallet")}
               </Button>
             )}
-            <Button disabled={!addressToCheck || !isAddress(addressToCheck)} onClick={() => setCheckElegibility(true)}>
-              {t("Airdrop.checkElegibility")} <NextArrowIcon className="ml-1 " />
+            <Button disabled={!addressToCheck || !isAddress(addressToCheck)} onClick={() => setCheckEligibility(true)}>
+              {t("Airdrop.checkEligibility")} <NextArrowIcon className="ml-1 " />
             </Button>
           </>
         )}
-        {checkElegibility && (
-          <Button styleType="outlined" onClick={() => setCheckElegibility(false)}>
+        {checkEligibility && (
+          <Button styleType="outlined" onClick={() => setCheckEligibility(false)}>
             {t("Airdrop.checkAnotherAddress")}
           </Button>
         )}
       </div>
 
-      {checkElegibility && addressToCheck && liveAirdrops.length > 0 && (
+      {checkEligibility && addressToCheck && liveAirdrops.length > 0 && (
         <div className="mt-5">
           <h2 className="underline">{t("Airdrop.liveAirdrops")}</h2>
           {liveAirdrops.map((airdropData, idx) => (
@@ -106,7 +106,7 @@ export const AirdropCheckElegibility = () => {
         </div>
       )}
 
-      {liveAirdrops.length > 0 && checkElegibility && isEligibleForSomeAirdrop && (
+      {liveAirdrops.length > 0 && checkEligibility && isEligibleForSomeAirdrop && (
         <div className="buttons mt-2">
           <Button
             disabled={!areRedeemableAirdrops}
@@ -129,7 +129,7 @@ export const AirdropCheckElegibility = () => {
         </div>
       )}
 
-      {checkElegibility && addressToCheck && redeemedAirdrops.length > 0 && (
+      {checkEligibility && addressToCheck && redeemedAirdrops.length > 0 && (
         <div className="mt-5">
           <h2 className="underline">{t("Airdrop.redeemedAirdrops")}</h2>
           {redeemedAirdrops.map((airdropData, idx) => (
@@ -144,7 +144,7 @@ export const AirdropCheckElegibility = () => {
         </div>
       )}
 
-      {checkElegibility && addressToCheck && pastAirdrops.length > 0 && (
+      {checkEligibility && addressToCheck && pastAirdrops.length > 0 && (
         <div className="mt-5">
           <h2 className="underline selectable" onClick={() => setShowPastAidrops((prev) => !prev)}>
             <ArrowIcon className="arrow" /> {t("Airdrop.pastAirdrops")}
@@ -172,6 +172,6 @@ export const AirdropCheckElegibility = () => {
           />
         </Modal>
       )}
-    </StyledAirdropCheckElegibility>
+    </StyledAirdropCheckEligibility>
   );
 };

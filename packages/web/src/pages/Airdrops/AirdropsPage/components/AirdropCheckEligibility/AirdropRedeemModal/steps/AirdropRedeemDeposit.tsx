@@ -7,7 +7,7 @@ import { useVaultApy } from "hooks/vaults/useVaultApy";
 import millify from "millify";
 import moment from "moment";
 import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
-import { AirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
+import { AirdropEligibility } from "pages/Airdrops/utils/getAirdropEligibility";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { shortenAddress } from "utils/addresses.utils";
@@ -25,16 +25,16 @@ export const AirdropRedeemDeposit = () => {
 
   const [percentageToDeposit, setPercentageToDeposit] = useState<number>(0.5);
 
-  const { prevStep, addressToCheck, airdropsElegibility, airdropsData, handleClaimAirdrops, onlyTokenLocks } =
+  const { prevStep, addressToCheck, airdropsEligibility, airdropsData, handleClaimAirdrops, onlyTokenLocks } =
     useContext(AirdropRedeemModalContext);
 
-  if (airdropsElegibility.some((airdrop) => !airdrop || !airdrop.eligible)) return null;
+  if (airdropsEligibility.some((airdrop) => !airdrop || !airdrop.eligible)) return null;
 
   const isReceiverConnected = addressToCheck.toLowerCase() === address?.toLowerCase();
 
   const depositableAmount = new Amount(
-    airdropsElegibility.reduce(
-      (prev, airdrop, i) => prev.add(!airdropsData[i].isLocked ? BigNumber.from((airdrop as AirdropElegibility).total) : 0),
+    airdropsEligibility.reduce(
+      (prev, airdrop, i) => prev.add(!airdropsData[i].isLocked ? BigNumber.from((airdrop as AirdropEligibility).total) : 0),
       BigNumber.from(0)
     ),
     18

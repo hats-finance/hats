@@ -122,7 +122,7 @@ export const StyledAirdropRedeemModal = styled.div`
       }
     }
 
-    .elegibility-breakdown {
+    .eligibility-breakdown {
       .breakdown {
         display: flex;
         flex-direction: column;

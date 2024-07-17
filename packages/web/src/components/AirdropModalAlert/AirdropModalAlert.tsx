@@ -23,10 +23,10 @@ export const AirdropModalAlert = ({ onRedirect }: AirdropModalAlertProps) => {
         <img src={require("assets/images/vault-opening.gif")} alt="vault opening" />
       </div>
       <h3>{t("Airdrop.hatsAirdropIsLive")}</h3>
-      <h4>{t("Airdrop.checkElegibilityNow")}</h4>
-      <p>{t("Airdrop.checkElegibilityNowDescription")}</p>
+      <h4>{t("Airdrop.checkEligibilityNow")}</h4>
+      <p>{t("Airdrop.checkEligibilityNowDescription")}</p>
 
-      <Button onClick={goToAirdrop}>{t("Airdrop.checkElegibility")}</Button>
+      <Button onClick={goToAirdrop}>{t("Airdrop.checkEligibility")}</Button>
     </StyledAirdropModalAlert>
   );
 };

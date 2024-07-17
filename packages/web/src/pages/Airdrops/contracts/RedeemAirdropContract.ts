@@ -3,7 +3,7 @@ import { BigNumber } from "ethers";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
 import { DropData } from "../types";
-import { AirdropElegibility } from "../utils/getAirdropElegibility";
+import { AirdropEligibility } from "../utils/getAirdropEligibility";
 import { getAirdropMerkelTree, hashToken } from "../utils/getAirdropMerkelTree";
 
 export class RedeemAirdropContract {
@@ -12,7 +12,7 @@ export class RedeemAirdropContract {
    *
    * @param vault - The selected vault to deposit staking token
    */
-  static hook = (airdrop: DropData, airdropElegibility: AirdropElegibility | false | undefined) => {
+  static hook = (airdrop: DropData, airdropEligibility: AirdropEligibility | false | undefined) => {
     const { address: account } = useAccount();
     const { chain: connectedChain } = useNetwork();
 
@@ -30,15 +30,15 @@ export class RedeemAirdropContract {
       ...redeemAirdrop,
       send: async () => {
         try {
-          if (!airdropElegibility) return;
+          if (!airdropEligibility) return;
           if (!account || !connectedChain) return;
           await switchNetworkAndValidate(connectedChain.id, airdropChainId);
 
           const merkelTree = await getAirdropMerkelTree(airdrop.descriptionData.merkeltree);
-          const proof = merkelTree.getHexProof(hashToken(account, BigNumber.from(airdropElegibility.total))) as `0x${string}`[];
+          const proof = merkelTree.getHexProof(hashToken(account, BigNumber.from(airdropEligibility.total))) as `0x${string}`[];
 
           return redeemAirdrop.write({
-            recklesslySetUnpreparedArgs: [account, BigNumber.from(airdropElegibility.total), proof],
+            recklesslySetUnpreparedArgs: [account, BigNumber.from(airdropEligibility.total), proof],
           });
         } catch (error) {
           console.log(error);

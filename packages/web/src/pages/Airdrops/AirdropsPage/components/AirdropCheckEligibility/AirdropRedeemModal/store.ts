@@ -1,18 +1,18 @@
 import { DropData } from "pages/Airdrops/types";
-import { AirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
+import { AirdropEligibility } from "pages/Airdrops/utils/getAirdropEligibility";
 import { AirdropRedeemData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { createContext } from "react";
 
 export interface IAirdropRedeemModalContext {
   airdropsData: DropData[];
   addressToCheck: string;
-  airdropsElegibility: (AirdropElegibility | false | undefined)[];
+  airdropsEligibility: (AirdropEligibility | false | undefined)[];
   airdropsRedeemData: (AirdropRedeemData | undefined)[];
   selectedDelegatee: string | undefined;
   onlyTokenLocks: boolean;
   setSelectedDelegatee: (delegatee: string | "self") => void;
   updateAirdropsRedeemedData: () => Promise<(AirdropRedeemData | undefined)[]>;
-  updateAirdropsElegibility: () => Promise<(false | AirdropElegibility | undefined)[]>;
+  updateAirdropsEligibility: () => Promise<(false | AirdropEligibility | undefined)[]>;
   nextStep: () => Promise<void>;
   prevStep: () => Promise<void>;
   handleClaimAirdrops: (percentageToDeposit: number | undefined, vaultToDeposit: string | undefined) => Promise<void>;

@@ -15,7 +15,7 @@ export const useAccountConvertibleTokens = () => {
   const isTestnet = !IS_PROD && connectedChain?.testnet;
   const env = isTestnet ? "test" : "prod";
   const { data: pointdropsData, isLoading } = useAirdropsByFactories(AirdropFactoriesChainConfig[env].pointdrop);
-  const elegiblePointdrops = useMemo(
+  const eligiblePointdrops = useMemo(
     () => (account && pointdropsData?.filter((airdrop) => airdrop.descriptionData.merkeltree[account])) ?? [],
     [account, pointdropsData]
   );
@@ -25,10 +25,10 @@ export const useAccountConvertibleTokens = () => {
 
   // Check if the address has redeemed the airdrops
   useEffect(() => {
-    if (isLoading || !elegiblePointdrops || !account) return;
+    if (isLoading || !eligiblePointdrops || !account) return;
     const fetchRedeemedData = async () => {
       const redeemedData = await Promise.all(
-        elegiblePointdrops.map(async (pointdrop) => {
+        eligiblePointdrops.map(async (pointdrop) => {
           const redeemedData = await getAirdropRedeemedData(account, pointdrop);
           return { [pointdrop.address]: redeemedData };
         })
@@ -39,11 +39,11 @@ export const useAccountConvertibleTokens = () => {
     };
 
     fetchRedeemedData();
-  }, [elegiblePointdrops, isLoading, account]);
+  }, [eligiblePointdrops, isLoading, account]);
 
   const redeemablePointdrops =
-    elegiblePointdrops?.filter((pointdrop) => !wasRedeemed(pointdrop.address) && pointdrop.isLive) ?? [];
-  const redeemedPointdrops = elegiblePointdrops?.filter((pointdrop) => wasRedeemed(pointdrop.address)) ?? [];
+    eligiblePointdrops?.filter((pointdrop) => !wasRedeemed(pointdrop.address) && pointdrop.isLive) ?? [];
+  const redeemedPointdrops = eligiblePointdrops?.filter((pointdrop) => wasRedeemed(pointdrop.address)) ?? [];
 
   const getPointdropsBreakdown = (pointdrops: DropData[]) => {
     return (

@@ -5,7 +5,7 @@ import { Button } from "components";
 import { ethers } from "ethers";
 import { useTranslation } from "react-i18next";
 import { getAirdropMerkelTree } from "../utils/getAirdropMerkelTree";
-import { AirdropCheckElegibility } from "./components/AirdropCheckElegibility/AirdropCheckElegibility";
+import { AirdropCheckEligibility } from "./components/AirdropCheckEligibility/AirdropCheckEligibility";
 import { AirdropFAQ } from "./components/AirdropFAQ/AirdropFAQ";
 import { HatsTokenInfo } from "./components/HatsTokenInfo/HatsTokenInfo";
 import { StyledAirdropsPage } from "./styles";
@@ -42,16 +42,16 @@ export const AirdropsPage = () => {
           <source src={AirdropVideoMobile} type="video/mp4" />
         </video>
         <div className="buttons">
-          <a href="#check-elegibility">
+          <a href="#check-eligibility">
             <Button bigHorizontalPadding size="big">
-              {t("Airdrop.checkElegibility")}
+              {t("Airdrop.checkEligibility")}
             </Button>
           </a>
         </div>
       </div>
 
       <HatsTokenInfo />
-      <AirdropCheckElegibility />
+      <AirdropCheckEligibility />
       <AirdropFAQ />
     </StyledAirdropsPage>
   );
