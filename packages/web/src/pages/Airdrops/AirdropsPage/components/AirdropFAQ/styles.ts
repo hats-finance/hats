@@ -3,6 +3,8 @@ import { getSpacing } from "styles";
 
 export const StyledFAQ = styled.div`
   margin-bottom: ${getSpacing(12)};
+  width: 100%;
+  max-width: 900px;
 
   ul {
     padding-left: ${getSpacing(3)};
