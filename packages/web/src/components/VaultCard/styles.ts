@@ -278,7 +278,7 @@ export const ApyPill = styled.div`
   padding: ${getSpacing(0.05)} ${getSpacing(0.1)};
   border-radius: ${getSpacing(10)};
 
-  .content {
+  .content-apy {
     color: var(--white);
     position: relative;
     z-index: 1;

@@ -16,6 +16,14 @@ export const utilityClasses = css`
     text-transform: uppercase;
   }
 
+  .capitalize {
+    text-transform: capitalize;
+  }
+
+  .italic {
+    font-style: italic;
+  }
+
   .hidden {
     visibility: hidden;
   }

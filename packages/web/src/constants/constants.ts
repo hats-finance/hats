@@ -11,6 +11,7 @@ export enum LocalStorage {
   SelectedSubmissions = "HATS_USER_SELECTED_SUBMISSIONS",
   CoingeckoPrices = "HATS_COINGECKO_PRICES",
   CompetitionStreak = "HATS_HAS_SEEN_COMPETITION_STREAK",
+  AirdropModalSeen = "HATS_HAS_SEEN_AIRDROP_MODAL",
 }
 
 export enum EncryptedStorage {
@@ -53,6 +54,7 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   color: "var(--white)",
   background: "var(--purple-blue)",
   border: "1px solid var(--field-blue)",
+  whiteSpace: "break-spaces",
 };
 
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
