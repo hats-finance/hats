@@ -187,60 +187,6 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
           )}
         </StyledEligibilityBreakdown>
       )}
-
-      {/* {!isLoading && (
-        <div className="buttons">
-          {isLive && eligibilityData?.eligible && (
-            <Button styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
-              {redeemedData ? (
-                t("Airdrop.redeemed")
-              ) : (
-                <>
-                  {t("Airdrop.startClaim")} <NextArrowIcon className="ml-1 " />
-                </>
-              )}
-            </Button>
-          )}
-
-          {redeemedData && !redeemedData?.delegator && <Button onClick={onOpenDelegateModal}>{t("Airdrop.delegate")}</Button>}
-        </div>
-      )} */}
-
-      {/* <h4>{airdrop.address}</h4>
-      <p>{airdrop.chain.name}</p>
-      {isLoading ? (
-        <>Loading...</>
-      ) : (
-        <>
-          {eligibilityData ? (
-            <p>Eligible [{new Amount(BigNumber.from(eligibilityData.total), 18, "$HAT").formatted()}]</p>
-          ) : (
-            <p>Not Eligible</p>
-          )}
-          {redeemedData && <p>Redeemed. Votes: {new Amount(redeemedData.currentVotes, 18).formatted()}</p>}
-          {redeemedData?.tokenLock && <p>Token Lock: {redeemedData.tokenLock.address}</p>}
-          {redeemedData?.delegator && (
-            <p>
-              Delegator: {redeemedData.delegator.delegatee} [{new Amount(redeemedData.delegator.votes, 18).formatted()} votes]
-            </p>
-          )}
-
-          {eligibilityData && (
-            <Button size="small" styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
-              {redeemedData ? "Claimed" : "Claim airdrop"}
-            </Button>
-          )}
-
-          {redeemedData && (
-            <Button size="small" onClick={onOpenDelegateModal}>
-              {redeemedData?.delegator ? "Re-delegate" : "Delegate"}
-            </Button>
-          )}
-        </>
-      )} */}
-      {/* <Button size="small" styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
-        {redeemedData ? "Claimed" : "Claim airdrop"}
-      </Button> */}
     </StyledAidropCard>
   );
 };
