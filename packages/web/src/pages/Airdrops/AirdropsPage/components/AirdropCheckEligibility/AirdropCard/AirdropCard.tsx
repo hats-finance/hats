@@ -121,7 +121,7 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
               </div>
               <div className="pills">{getStatusInfo().pills}</div>
             </div>
-            <p className="blurb mt-4">{airdropData.descriptionData.description}</p>
+            {airdropData.descriptionData.description && <p className="blurb mt-4">{airdropData.descriptionData.description}</p>}
           </div>
 
           <div className="status-amount">
