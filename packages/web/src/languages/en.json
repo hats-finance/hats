@@ -789,6 +789,8 @@
       "treasury_hunt_desc": "Users who participated in official Treasure Hunt campaigns on TaskOn, Galxe, and Warpcast before the snapshot.",
       "monad_contributor": "Security Researcher",
       "monad_contributor_desc": "Top whitelisted Monad contributors who have been whitelisted for this airdrop.",
+      "security_contributor": "Security contributor",
+      "security_contributor_desc": "Individuals who contributed to improve security.",
       "linearlyReleased": "Linearly released",
       "linearlyReleasedExplanation": "Your linearly released will be available to claim during the next {{daysLocked}}. To claim please go to 'Airdrop' section and you will see all the information about the linear release.",
       "claimingAirdrop": "Claiming airdrop",
