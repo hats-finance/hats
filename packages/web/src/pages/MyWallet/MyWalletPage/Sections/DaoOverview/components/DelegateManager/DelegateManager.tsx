@@ -25,8 +25,8 @@ export const DelegateManager = () => {
   const [isEditingDelegate, setIsEditingDelegate] = useState(false);
   const [delegateToSet, setDelegateToSet] = useState<string>();
 
-  const isTestnet = !IS_PROD && connectedChain?.testnet;
-  const env = isTestnet ? "test" : "prod";
+  const isTestnet = connectedChain?.testnet;
+  const env = isTestnet && !IS_PROD ? "test" : "prod";
 
   const tokenInfo = Object.entries(HATTokensConfig[env]).find(([chainId]) => Number(chainId) === connectedChain?.id);
   const hatInChains = Object.keys(HATTokensConfig[env]).map((chainId: string) => appChains[Number(chainId)].chain);

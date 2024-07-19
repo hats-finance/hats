@@ -28,8 +28,8 @@ export const getAirdropDescriptionJSON = async (airdropData: {
 
   if (!args) throw new Error("MerkleTreeSet event not found");
 
-  const merkelTreeRes = await fetch(ipfsTransformUri(args?._merkleTreeIPFSRef));
-  const merkelTreeJson = (await merkelTreeRes.json()) as AirdropDescriptionData;
+  const merkleTreeRes = await fetch(ipfsTransformUri(args?._merkleTreeIPFSRef));
+  const merkleTreeJson = (await merkleTreeRes.json()) as AirdropDescriptionData;
 
-  return merkelTreeJson;
+  return merkleTreeJson;
 };

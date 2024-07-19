@@ -4,7 +4,7 @@ import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
 import { DropData } from "../types";
 import { AirdropEligibility } from "../utils/getAirdropEligibility";
-import { getAirdropMerkelTree, hashToken } from "../utils/getAirdropMerkelTree";
+import { getAirdropMerkleTree, hashToken } from "../utils/getAirdropMerkleTree";
 
 export class RedeemAirdropContract {
   /**
@@ -34,8 +34,8 @@ export class RedeemAirdropContract {
           if (!account || !connectedChain) return;
           await switchNetworkAndValidate(connectedChain.id, airdropChainId);
 
-          const merkelTree = await getAirdropMerkelTree(airdrop.descriptionData.merkeltree);
-          const proof = merkelTree.getHexProof(hashToken(account, BigNumber.from(airdropEligibility.total))) as `0x${string}`[];
+          const merkleTree = await getAirdropMerkleTree(airdrop.descriptionData.merkletree);
+          const proof = merkleTree.getHexProof(hashToken(account, BigNumber.from(airdropEligibility.total))) as `0x${string}`[];
 
           return redeemAirdrop.write({
             recklesslySetUnpreparedArgs: [account, BigNumber.from(airdropEligibility.total), proof],

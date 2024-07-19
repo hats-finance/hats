@@ -1,5 +1,5 @@
 import { HATAirdropFactory_abi } from "@hats.finance/shared";
-import { getAirdropMerkelTree, hashToken } from "pages/Airdrops/utils/getAirdropMerkelTree";
+import { getAirdropMerkleTree, hashToken } from "pages/Airdrops/utils/getAirdropMerkleTree";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
 import { DropDataConvertible } from "../types";
@@ -37,8 +37,8 @@ export class RedeemPointdropsContract {
       //     const pointdropsAmounts = pointdrops.map((pointdrop) => pointdrop.tokens);
       //     const pointdropsProofs = await Promise.all(
       //       pointdrops.map(async (pointdrop) => {
-      //         const merkelTree = await getAirdropMerkelTree(pointdrop.descriptionData.merkeltree);
-      //         return merkelTree.getHexProof(hashToken(account, pointdrop.tokens)) as `0x${string}`[];
+      //         const merkleTree = await getAirdropMerkleTree(pointdrop.descriptionData.merkletree);
+      //         return merkleTree.getHexProof(hashToken(account, pointdrop.tokens)) as `0x${string}`[];
       //       })
       //     );
 
