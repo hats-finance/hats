@@ -6,7 +6,7 @@ interface DropDescriptionDataBase {
 
 export interface AirdropDescriptionData extends DropDescriptionDataBase {
   type: "airdrop";
-  merkeltree: {
+  merkletree: {
     [address: string]: {
       token_eligibility: {
         committee_member: string;
@@ -23,7 +23,7 @@ export interface PointdropDescriptionData extends DropDescriptionDataBase {
   type: "pointdrop";
   total_tokens: string;
   total_points: string;
-  merkeltree: {
+  merkletree: {
     [address: string]: {
       converted_points: string;
       token_eligibility: {

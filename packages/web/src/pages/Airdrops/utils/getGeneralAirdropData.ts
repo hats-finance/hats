@@ -34,7 +34,7 @@ export const getGeneralAirdropData = async (address: string, chainId: number, fa
       .filter((address) => !!address)
       .map((address) => (address as string).toLowerCase());
 
-    const eligibleFor = Object.keys(airdropDescription.merkeltree).map((key) => key.toLowerCase());
+    const eligibleFor = Object.keys(airdropDescription.merkletree).map((key) => key.toLowerCase());
 
     return {
       address,

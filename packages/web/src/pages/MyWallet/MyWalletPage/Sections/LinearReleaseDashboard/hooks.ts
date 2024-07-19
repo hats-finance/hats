@@ -11,8 +11,8 @@ export const useTokenLocksByEnv = () => {
   const { address } = useAccount();
   const { chain: connectedChain } = useNetwork();
 
-  const isTestnet = !IS_PROD && connectedChain?.testnet;
-  const env = isTestnet ? "test" : "prod";
+  const isTestnet = connectedChain?.testnet;
+  const env = isTestnet && !IS_PROD ? "test" : "prod";
 
   const factories = Object.entries(HATTokenLockFactoriesConfig[env]).map(([chainId, factory]) => ({
     chainId: Number(chainId),

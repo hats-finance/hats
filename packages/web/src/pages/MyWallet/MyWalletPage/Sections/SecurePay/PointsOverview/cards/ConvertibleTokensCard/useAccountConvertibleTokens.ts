@@ -12,11 +12,12 @@ export const useAccountConvertibleTokens = () => {
   const { address: account } = useAccount();
   const { chain: connectedChain } = useNetwork();
 
-  const isTestnet = !IS_PROD && connectedChain?.testnet;
-  const env = isTestnet ? "test" : "prod";
+  const isTestnet = connectedChain?.testnet;
+  const env = isTestnet && !IS_PROD ? "test" : "prod";
+
   const { data: pointdropsData, isLoading } = useAirdropsByFactories(AirdropFactoriesChainConfig[env].pointdrop);
   const eligiblePointdrops = useMemo(
-    () => (account && pointdropsData?.filter((airdrop) => airdrop.descriptionData.merkeltree[account])) ?? [],
+    () => (account && pointdropsData?.filter((airdrop) => airdrop.descriptionData.merkletree[account])) ?? [],
     [account, pointdropsData]
   );
 
@@ -49,11 +50,11 @@ export const useAccountConvertibleTokens = () => {
     return (
       (account &&
         pointdrops.map((pointdrop) => {
-          const merkeltree = (pointdrop.descriptionData as PointdropDescriptionData).merkeltree[account];
+          const merkletree = (pointdrop.descriptionData as PointdropDescriptionData).merkletree[account];
           return {
             ...pointdrop,
-            points: Number(merkeltree.converted_points),
-            tokens: BigNumber.from(merkeltree.token_eligibility.converted_from_points),
+            points: Number(merkletree.converted_points),
+            tokens: BigNumber.from(merkletree.token_eligibility.converted_from_points),
           } as DropDataConvertible;
         })) ??
       []

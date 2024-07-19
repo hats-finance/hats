@@ -23,8 +23,8 @@ export const AirdropCheckEligibility = () => {
   const [airdropsToClaim, setAirdropsToClaim] = useState<DropData[]>([]);
   const [checkEligibility, setCheckEligibility] = useState<boolean>();
 
-  const isTestnet = !IS_PROD && connectedChain?.testnet;
-  const env = isTestnet ? "test" : "prod";
+  const isTestnet = connectedChain?.testnet;
+  const env = isTestnet && !IS_PROD ? "test" : "prod";
   const { data: airdropsData, isLoading } = useAirdropsByFactories(AirdropFactoriesChainConfig[env].airdrop);
 
   const isEligibleForSomeAirdrop =

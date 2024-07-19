@@ -145,7 +145,6 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     // Get prices from CoinGecko
     try {
       const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
-      console.log(tokensLeft);
       const coingeckoTokenPrices = await getCoingeckoTokensPrices(tokensLeft);
 
       if (coingeckoTokenPrices) {

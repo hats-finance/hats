@@ -26,6 +26,7 @@ type AirdropCardProps = {
 };
 
 export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onOpenDelegateModal }: AirdropCardProps) => {
+  console.log(airdropData);
   const { t } = useTranslation();
   const [eligibilityData, setEligibilityData] = useState<AirdropEligibility | undefined>();
   const [redeemedData, setRedeemedData] = useState<AirdropRedeemData>();
@@ -121,7 +122,7 @@ export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onO
               </div>
               <div className="pills">{getStatusInfo().pills}</div>
             </div>
-            <p className="blurb mt-4">{airdropData.descriptionData.description}</p>
+            {airdropData.descriptionData.description && <p className="blurb mt-4">{airdropData.descriptionData.description}</p>}
           </div>
 
           <div className="status-amount">

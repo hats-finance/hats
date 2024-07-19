@@ -8,7 +8,7 @@ import { useAccount, useContractWrite, useNetwork } from "wagmi";
 import { readContract } from "wagmi/actions";
 import { DropData } from "../types";
 import { AirdropEligibility } from "../utils/getAirdropEligibility";
-import { getAirdropMerkelTree, hashToken } from "../utils/getAirdropMerkelTree";
+import { getAirdropMerkleTree, hashToken } from "../utils/getAirdropMerkleTree";
 import { generateDelegationSig } from "./getDelegationSignature";
 
 export class RedeemMultipleAirdropsContract {
@@ -61,9 +61,9 @@ export class RedeemMultipleAirdropsContract {
             !!eligibility ? BigNumber.from(eligibility.total) : BigNumber.from(0)
           );
           const proofsPromises = airdropsEligibility.map(async (eligibility, index) => {
-            const merkelTree = await getAirdropMerkelTree(airdrops[index].descriptionData.merkeltree);
+            const merkleTree = await getAirdropMerkleTree(airdrops[index].descriptionData.merkletree);
             const amount = !!eligibility ? BigNumber.from(eligibility.total) : BigNumber.from(0);
-            const proof = merkelTree.getHexProof(hashToken(account, amount)) as `0x${string}`[];
+            const proof = merkleTree.getHexProof(hashToken(account, amount)) as `0x${string}`[];
             return proof;
           });
           const proofs = await Promise.all(proofsPromises);
