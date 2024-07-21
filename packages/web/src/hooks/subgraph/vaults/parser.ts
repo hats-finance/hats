@@ -234,7 +234,9 @@ export const fixPayoutVaultFees = (payouts: IPayoutGraph[]): IPayoutGraph[] => {
 
     return {
       ...payout,
-      totalPaidOut: !!payout.approvedAt ? parseUnits(`${paidOutHackers}`, vault.stakingTokenDecimals).toString() : undefined,
+      totalPaidOut: !!payout.approvedAt
+        ? parseUnits(`${paidOutHackers.toFixed(8)}`, vault.stakingTokenDecimals).toString()
+        : undefined,
     };
   });
 };
