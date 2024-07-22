@@ -5,6 +5,7 @@ import { Button, FormInput } from "components";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import Tooltip from "rc-tooltip";
 import { useContext, useEffect, useState } from "react";
@@ -73,7 +74,8 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
 
   const isGov = useIsGovMember();
   const isReviewer = useIsReviewer();
-  const canEditFixed = isGov || isReviewer;
+  const isGrowthMember = useIsGrowthMember();
+  const canEditFixed = isGov || isReviewer || isGrowthMember;
 
   const version = useWatch({ control: methodsToUse.control as Control<FormType>, name: "version" });
 
