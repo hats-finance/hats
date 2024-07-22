@@ -20,6 +20,8 @@ export function vaultEditorRoleToIntlKey(role: IAddressRoleInVault): string {
       return "addressRoleCommitteeMultisig";
     case "reviewer":
       return "addressRoleReviewer";
+    case "growth":
+      return "addressRoleGrowth";
     case "none":
       return "";
   }

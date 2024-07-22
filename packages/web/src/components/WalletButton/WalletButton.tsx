@@ -4,6 +4,7 @@ import { Dot, DropdownSelector, WithTooltip } from "components";
 import { Colors } from "constants/constants";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { useCallback, useEffect, useState } from "react";
@@ -34,6 +35,7 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   >();
   const [showConnectors, setShowConnectors] = useState(false);
   const isGovMember = useIsGovMember();
+  const isGrowthMember = useIsGrowthMember();
   const isReviewer = useIsReviewer();
 
   const { isAuthenticated, updateProfile } = useSiweAuth();
@@ -73,6 +75,7 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
     const getTitle = () => {
       if (isReviewer) return "[Rev]";
       if (isGovMember) return "[Gov]";
+      if (isGrowthMember) return "[Growth]";
       return "";
     };
 

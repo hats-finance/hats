@@ -3,6 +3,7 @@ import { Alert, Button, HackerProfileImage, Loading, Pill, WithTooltip } from "c
 import { ReleasablePaymentSplitter, ReleasePaymentSplitContract, ReleasedPaymentSplitter } from "contracts";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import millify from "millify";
 import { RoutePaths } from "navigation";
@@ -31,12 +32,13 @@ export const VaultLeaderboardSection = ({ vault, auditPayout, hideClaimRewardsAc
 
   const isGovMember = useIsGovMember();
   const isReviewer = useIsReviewer();
+  const isGrowthMember = useIsGrowthMember();
   const leaderboardData = useAuditPayoutLeaderboardData(vault, auditPayout);
 
   const chainId = Number(chain?.id);
   const govMultisig = appChains[Number(chainId)]?.govMultisig;
 
-  const isGov = isGovMember || isReviewer;
+  const isGov = isGovMember || isReviewer || isGrowthMember;
   const isDepositor =
     auditPayout?.payoutData?.depositors?.find((depositor) => depositor.address.toLowerCase() === address?.toLowerCase()) &&
     vault.version === "v3" &&

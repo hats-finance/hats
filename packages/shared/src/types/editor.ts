@@ -176,7 +176,7 @@ export interface ICreateVaultOnChainCall {
   isTokenLockRevocable: boolean; // New in v3
 }
 
-export type IAddressRoleInVault = "gov" | "committee" | "committee-multisig" | "reviewer" | "none";
+export type IAddressRoleInVault = "gov" | "growth" | "committee" | "committee-multisig" | "reviewer" | "none";
 
 export interface IVaultStatusData {
   descriptionHash: string;

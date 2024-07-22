@@ -12,13 +12,15 @@ import { IVaultGovActionsForm } from "./GovActionsStatusCard";
 export const createVaultGovActionsProposalOnSafe = async (
   govActions: IVaultGovActionsForm,
   vault: IVault,
+  multisig: "growth" | "gov",
   extra: { signer: Signer; chain: Chain; account: string }
 ): Promise<boolean> => {
   try {
     await switchNetworkAndValidate(extra.chain.id, vault.chainId);
 
-    const govAddress = utils.getAddress(appChains[vault.chainId].govMultisig ?? "");
-    if (!govAddress) {
+    let multisigAddress = multisig === "growth" ? appChains[vault.chainId].growthMultisig : appChains[vault.chainId].govMultisig;
+    multisigAddress = utils.getAddress(multisigAddress ?? "");
+    if (!multisigAddress) {
       alert("No gov multisig address for this chain. Please contact Hats team with this error.");
       return false;
     }
@@ -26,7 +28,7 @@ export const createVaultGovActionsProposalOnSafe = async (
     const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: extra.signer as Signer });
     const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
     const safeService = new SafeApiKit({ txServiceUrl, ethAdapter });
-    const safeSdk = await Safe.create({ ethAdapter, safeAddress: govAddress });
+    const safeSdk = await Safe.create({ ethAdapter, safeAddress: multisigAddress });
 
     const timelockContractInterface = new ethers.utils.Interface(HATTimelockController_abi);
 
@@ -65,7 +67,7 @@ export const createVaultGovActionsProposalOnSafe = async (
       });
     }
 
-    const nonce = await safeService.getNextNonce(govAddress);
+    const nonce = await safeService.getNextNonce(multisigAddress);
     const safeTransaction = await safeSdk.createTransaction({
       safeTransactionData,
       options: { nonce },
@@ -73,7 +75,7 @@ export const createVaultGovActionsProposalOnSafe = async (
     const safeTxHash = await safeSdk.getTransactionHash(safeTransaction);
     const senderSignature = await safeSdk.signTypedData(safeTransaction);
     await safeService.proposeTransaction({
-      safeAddress: govAddress,
+      safeAddress: multisigAddress,
       safeTransactionData: safeTransaction.data,
       safeTxHash,
       senderAddress: extra.account,

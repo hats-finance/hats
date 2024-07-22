@@ -12,6 +12,7 @@ import { ReactComponent as VaultEditorIcon } from "assets/icons/custom/vault_edi
 import { utils } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import useOnClickOutside from "hooks/useOnClickOutside";
 import { RoutePaths } from "navigation";
@@ -33,6 +34,7 @@ export default function NavLinks() {
 
   const isGovMember = useIsGovMember();
   const isReviewer = useIsReviewer();
+  const isGrowthMember = useIsGrowthMember();
   const [isInvitedToPrivateAudits, setIsInvitedToPrivateAudits] = useState(false);
   const [isCommitteeAddress, setIsCommitteeAddress] = useState(false);
   const [showCommitteeToolsSubroutes, setshowCommitteeToolsSubroutes] = useState(false);
@@ -105,7 +107,7 @@ export default function NavLinks() {
         <p className="collapsed">{t("competitions")}</p>
       </StyledNavLink>
       <StyledNavLink
-        hidden={!isInvitedToPrivateAudits && !isGovMember && !isReviewer}
+        hidden={!isInvitedToPrivateAudits && !isGovMember && !isReviewer && !isGrowthMember}
         className="audits"
         to={`${HoneypotsRoutePaths.privateAudits}`}
         onClick={handleClick}
@@ -131,7 +133,7 @@ export default function NavLinks() {
       </StyledNavLink>
       <div className="committee-tools">
         <StyledNavLinkNoRouter
-          hidden={!isCommitteeAddress && !isGovMember && !isReviewer}
+          hidden={!isCommitteeAddress && !isGovMember && !isReviewer && !isGrowthMember}
           className={`${location.pathname.includes(`${RoutePaths.committee_tools}`) ? "active" : ""}`}
           onClick={() => setshowCommitteeToolsSubroutes((prev) => !prev)}
         >
