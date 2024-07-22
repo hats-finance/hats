@@ -3,6 +3,7 @@ import { CopyToClipboard, Loading, Seo } from "components";
 import DOMPurify from "dompurify";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -38,6 +39,7 @@ export const VaultStatusPage = () => {
   const [userPermissionData, setUserPermissionData] = useState<{ canEditVault: boolean; role: IAddressRoleInVault }>();
   const isGovMember = useIsGovMember();
   const isReviewer = useIsReviewer();
+  const isGrowthMember = useIsGrowthMember();
 
   const loadVaultData = useCallback(
     async (address: string, chainId: number) => {
@@ -113,12 +115,12 @@ export const VaultStatusPage = () => {
           <VaultStatusContext.Provider value={vaultStatusContext}>
             <CongratsStatusCard />
             <EditVaultStatusCard />
-            {(isGovMember || isReviewer) && <GenerateNftsAssetsCard />}
+            {(isGovMember || isReviewer || isGrowthMember) && <GenerateNftsAssetsCard />}
             <CheckInStatusCard />
             <DepositStatusCard />
             <OnChainDataStatusCard />
             <GovApprovalStatusCard />
-            {isGovMember && <GovActionsStatusCard />}
+            {(isGovMember || isGrowthMember) && <GovActionsStatusCard />}
           </VaultStatusContext.Provider>
         </div>
       </StyledVaultStatusPage>

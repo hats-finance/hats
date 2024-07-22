@@ -26,7 +26,8 @@ export interface IChainConfiguration {
   arbitratorContract: string;
   paymentSplitterFactory: string;
   rewardController?: string;
-  govMultisig?: string;
+  govMultisig: string;
+  growthMultisig: string;
   whitelistedReviewers?: string[];
   chain: wagmiChains.Chain;
   subgraph: string;
@@ -53,6 +54,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
       "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
     coingeckoId: "ethereum",
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
+    growthMultisig: "0x53E9152417EcD338E7e85cCFBc1F5eDA053C910c",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
     paymentSplitterFactory: "0x0aA1464dB005857Db8FC3E0470d306FB9E54b908",
@@ -71,6 +73,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
       "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/6q8vE8znoVRd2AqdGcgaF7j99Gtrrki4HwYDVMK8qaCf",
     coingeckoId: undefined,
     govMultisig: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
+    growthMultisig: "0xA5BA173Cf84D532FE368690D37eff843678E0bFF",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     uniswapSubgraph: undefined,
     paymentSplitterFactory: "0x09959581544511916A80185FFe3De3Df11D623D7",
@@ -89,6 +92,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
       "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/vMkoKYXdwa5dww7FD6ra9EdLgA2E3hmz2Q3BxF8DEAW",
     coingeckoId: "optimistic-ethereum",
     govMultisig: "0x5A6910528b047d3371970dF764ba4046b7DfAd6a",
+    growthMultisig: "0x862966C9e09a3058DF47a29d30a429565E176D8B",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
     paymentSplitterFactory: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
@@ -107,6 +111,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
       "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/GXUgxLXF1Ad2dmmxF5J24JUGKj6ko22t6esPkdLhKAz4",
     coingeckoId: "arbitrum-one",
     govMultisig: "0x022B95b4c02bbA85604506E6114485615b0aD09A",
+    growthMultisig: "0xBCa8856B5995092Df3f100436b0Ee8056A2E065a",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
     paymentSplitterFactory: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
@@ -125,6 +130,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
       "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/GH7Cv6XKuWYTMUrXcAfcqRmJRERPxFThyHtz1AeNCZQa",
     coingeckoId: "polygon-pos",
     govMultisig: "0xa5c6d757ca69c92eea05b22924d9774658e10c62",
+    growthMultisig: "0xa5c6d757ca69c92eea05b22924d9774658e10c62",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
     paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
@@ -143,6 +149,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
       "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/HPwWDxud8fSarSK8XfwSxcTkyKMQf7RwFmS7kPmTX9dD",
     coingeckoId: "xdai",
     govMultisig: "0xE650ba24115AE0260d8f723F89603DaF63b496cA",
+    growthMultisig: "0xE650ba24115AE0260d8f723F89603DaF63b496cA",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0x878Cab06E6f4a85D90E5f236d326a41Ef6f44F9f",
     // infuraKey: "polygon-mainnet",
@@ -160,6 +167,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
       "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/4TWs2Y9gCpUPh1vMSogFuRbBqsUzE4FXgYFAoJmcx9Fc",
     coingeckoId: "binance-smart-chain",
     govMultisig: "0xbFBC2Ab80bD0A12258db952739238e403Be01ece",
+    growthMultisig: "0x6C4654Fe6Efe491D601ca2ff1842e179A5612c38",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
     provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
@@ -174,6 +182,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.goldsky.com/api/public/project_clx0j1z1v44iz01wb4qol83tv/subgraphs/hats_oasis/0.0.1/gn",
     coingeckoId: "oasis-sapphire",
     govMultisig: "0xf2935671015c896D5E1fE4c97caF111F5eEe2b3c",
+    growthMultisig: "0xf2935671015c896D5E1fE4c97caF111F5eEe2b3c",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0xe198CBb727758b9Ad38a12E1ad475a843e5e730F",
     provider: "https://sapphire.oasis.io",

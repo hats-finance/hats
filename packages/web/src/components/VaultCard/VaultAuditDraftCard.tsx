@@ -7,6 +7,7 @@ import { useAuditFrameGame } from "hooks/auditFrameGame";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import useModal from "hooks/useModal";
 import millify from "millify";
@@ -45,6 +46,7 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
 
   const isGovMember = useIsGovMember();
   const isReviewer = useIsReviewer();
+  const isGrowthMember = useIsGrowthMember();
 
   const isOptInOpen = useMemo(() => {
     const startTime = vaultDraft.editedDescription["project-metadata"].starttime;
@@ -121,7 +123,7 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
   };
 
   const goToEditSession = async () => {
-    if (!isGovMember && !isReviewer) return;
+    if (!isGovMember && !isReviewer && !isGrowthMember) return;
     if (!vaultDraft._id) return;
 
     navigate(`${RoutePaths.vault_editor}/${vaultDraft._id}`);
@@ -196,7 +198,7 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
           </div>
         </div>
 
-        {(isGovMember || isReviewer) && (
+        {(isGovMember || isReviewer || isGrowthMember) && (
           <div className="draft-actions">
             <Button className="mt-3" size="medium" onClick={goToEditSession}>
               {t("goToEditSession")}

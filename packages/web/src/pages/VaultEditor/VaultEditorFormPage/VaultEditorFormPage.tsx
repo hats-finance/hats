@@ -25,6 +25,7 @@ import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import moment from "moment";
 import { RoutePaths } from "navigation";
@@ -75,6 +76,7 @@ const VaultEditorFormPage = () => {
 
   const isGovMember = useIsGovMember();
   const isReviewer = useIsReviewer();
+  const isGrowthMember = useIsGrowthMember();
   const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
   const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
   const [savingEditSession, setSavingEditSession] = useState(false); // Is the edit session being saved?
@@ -133,7 +135,7 @@ const VaultEditorFormPage = () => {
   const showPublishDraftOption =
     vaultType === "audit" &&
     currentStepInfo?.id === "details" &&
-    (isGovMember || isReviewer) &&
+    (isGovMember || isReviewer || isGrowthMember) &&
     !isVaultCreated &&
     !isEditingExistingVault;
 
@@ -354,7 +356,7 @@ const VaultEditorFormPage = () => {
   };
 
   const publishAuditDraft = async () => {
-    if (!isGovMember && !isReviewer) return;
+    if (!isGovMember && !isReviewer && !isGrowthMember) return;
     if (!editSessionId) return;
 
     const isFormValid = await trigger((currentStepInfo?.formFields ?? []) as any);
@@ -385,7 +387,7 @@ const VaultEditorFormPage = () => {
   };
 
   const deleteAuditDraft = async () => {
-    if (!isGovMember && !isReviewer) return;
+    if (!isGovMember && !isReviewer && !isGrowthMember) return;
     if (!editSessionId) return;
 
     const signedIn = await tryAuthentication();

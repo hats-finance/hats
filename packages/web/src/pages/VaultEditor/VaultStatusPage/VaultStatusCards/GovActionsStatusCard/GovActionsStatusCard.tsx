@@ -2,6 +2,7 @@ import { IEditedSessionResponse, getBaseSafeAppUrl, getGnosisChainPrefixByChainI
 import { Alert, Button, FormInput, Loading } from "components";
 import { useEnhancedForm } from "hooks/form";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
+import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { appChains } from "settings";
@@ -28,6 +29,8 @@ export const GovActionsStatusCard = () => {
   const { chain } = useNetwork();
   const { data: signer } = useSigner();
   const { address: account } = useAccount();
+
+  const isGrowthMember = useIsGrowthMember();
 
   const [proposalCreatedSuccessfully, setProposalCreatedSuccessfully] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>();
@@ -81,7 +84,11 @@ export const GovActionsStatusCard = () => {
 
     setIsLoading(true);
     const formData = getValues();
-    const isOk = await createVaultGovActionsProposalOnSafe(formData, vault, { chain, signer, account });
+    const isOk = await createVaultGovActionsProposalOnSafe(formData, vault, isGrowthMember ? "growth" : "gov", {
+      chain,
+      signer,
+      account,
+    });
     setProposalCreatedSuccessfully(isOk);
     setIsLoading(false);
   };
@@ -89,9 +96,9 @@ export const GovActionsStatusCard = () => {
   const goToSafeApp = () => {
     if (!vault) return;
 
-    const govAddress = appChains[vault.chainId].govMultisig;
+    const multisig = isGrowthMember ? appChains[vault.chainId].growthMultisig : appChains[vault.chainId].govMultisig;
     window.open(
-      `${getBaseSafeAppUrl(vault.chainId)}/transactions/queue?safe=${getGnosisChainPrefixByChainId(vault.chainId)}:${govAddress}`,
+      `${getBaseSafeAppUrl(vault.chainId)}/transactions/queue?safe=${getGnosisChainPrefixByChainId(vault.chainId)}:${multisig}`,
       "_blank"
     );
   };
@@ -139,7 +146,7 @@ export const GovActionsStatusCard = () => {
 
           <div className="status-card__button">
             <Button disabled={!isFormValid} onClick={handleGenerateProposal}>
-              {t("generateProposalOnSafe")}
+              {t("generateProposalOnSafe", { multisig: isGrowthMember ? "Growth" : "Gov" })}
             </Button>
           </div>
         </>
@@ -148,7 +155,7 @@ export const GovActionsStatusCard = () => {
           <>
             <span>{t("proposalCreatedSuccessfully")}</span>
             <Button styleType="text" onClick={goToSafeApp}>
-              {t("goToSafeApp")}
+              {t("goToSafeAppNamed", { multisig: isGrowthMember ? "Growth" : "Gov" })}
             </Button>
           </>
         </Alert>
