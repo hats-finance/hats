@@ -31,5 +31,9 @@ export const getAirdropDescriptionJSON = async (airdropData: {
   const merkleTreeRes = await fetch(ipfsTransformUri(args?._merkleTreeIPFSRef));
   const merkleTreeJson = (await merkleTreeRes.json()) as AirdropDescriptionData;
 
-  return merkleTreeJson;
+  return {
+    ...merkleTreeJson,
+    // Retro compatibility with old merkletree key (typo `merkeltree`)
+    merkletree: merkleTreeJson.merkletree ?? (merkleTreeJson as any).merkeltree,
+  };
 };

@@ -26,6 +26,9 @@ export const AirdropCheckEligibility = () => {
   const isTestnet = connectedChain?.testnet;
   const env = isTestnet && !IS_PROD ? "test" : "prod";
   const { data: airdropsData, isLoading } = useAirdropsByFactories(AirdropFactoriesChainConfig[env].airdrop);
+  const eligibilityChain =
+    airdropsData?.find((airdrop) => airdrop.isLive && airdrop.eligibleFor?.includes(addressToCheck.toLowerCase()))?.chainId ??
+    airdropsData?.[0].chainId;
 
   const isEligibleForSomeAirdrop =
     airdropsData?.some((airdrop) => airdrop.isLive && airdrop.eligibleFor?.includes(addressToCheck.toLowerCase())) ?? false;
@@ -47,9 +50,17 @@ export const AirdropCheckEligibility = () => {
     );
   }
 
+  console.log(airdropsData);
   // Airdrops that are live but not redeemed by the user
-  const liveAirdrops =
-    airdropsData?.filter((airdrop) => airdrop.isLive && !airdrop.redeemedBy.includes(addressToCheck.toLowerCase())) ?? [];
+  let liveAirdrops = JSON.parse(
+    JSON.stringify(
+      airdropsData?.filter((airdrop) => airdrop.isLive && !airdrop.redeemedBy.includes(addressToCheck.toLowerCase())) ?? []
+    )
+  ) as DropData[];
+  liveAirdrops = liveAirdrops.filter((airdrop) => (eligibilityChain ? airdrop.chainId === eligibilityChain : true));
+  // Sort liveAirdrops by redeemable
+  liveAirdrops.sort((a, b) => (a.eligibleFor.includes(addressToCheck.toLowerCase()) ? -1 : 1));
+
   // Airdrops that were redeemed by the user
   const redeemedAirdrops = airdropsData?.filter((airdrop) => airdrop.redeemedBy.includes(addressToCheck.toLowerCase())) ?? [];
   // Airdrops that are not live and were not redeemed by the user
