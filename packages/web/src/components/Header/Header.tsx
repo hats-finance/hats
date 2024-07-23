@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
 import { Button, HackerProfileImage, SafePeriodBar, WalletButton, WhereverWidget } from "components";
+import { isAirdropEnabled } from "constants/constants";
 import useModal from "hooks/useModal";
 import { RoutePaths } from "navigation";
 import { CreateProfileFormModal } from "pages/HackerProfile/components";
@@ -75,11 +76,13 @@ const Header = () => {
         <h1 className="page-title">{getPageTitle()}</h1>
 
         <div className="buttons">
-          <div className="airdrop-button">
-            <Button size="big" noRadius styleType="outlined" onClick={handleGoToAirdrop}>
-              {t("airdrop")}
-            </Button>
-          </div>
+          {isAirdropEnabled && (
+            <div className="airdrop-button">
+              <Button size="big" noRadius styleType="outlined" onClick={handleGoToAirdrop}>
+                {t("airdrop")}
+              </Button>
+            </div>
+          )}
 
           <div className="profile-button">
             {isSafeAddress !== undefined && !isSafeAddress && account && !isLoadingProfile && (
@@ -103,7 +106,7 @@ const Header = () => {
             )}
           </div>
 
-          {account && createdProfile && (
+          {isAirdropEnabled && account && createdProfile && (
             <Button size="big" noRadius styleType="outlined" onClick={handleGoToMyWallet}>
               {t("Header.myWallet")}
             </Button>
