@@ -1,9 +1,8 @@
-import { Loading } from "components";
 import { RoutePaths } from "navigation";
-import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
+import { shortenAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
 import { DaoOverview } from "./Sections/DaoOverview/DaoOverview";
 import { LinearReleaseDashboard } from "./Sections/LinearReleaseDashboard/LinearReleaseDashboard";
@@ -15,9 +14,9 @@ export const MyWalletPage = () => {
   const [selectedSection, setSelectedSection] = useState<"dao" | "linear_release" | "secure_pay">("dao");
 
   const { address: account } = useAccount();
-  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
+  // const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
 
-  if ((!createdProfile && !isLoadingProfile) || !account) return <Navigate to={RoutePaths.vaults} replace={true} />;
+  if (!account) return <Navigate to={RoutePaths.vaults} replace={true} />;
 
   const sections = {
     dao: <DaoOverview />,
@@ -27,9 +26,9 @@ export const MyWalletPage = () => {
 
   return (
     <>
-      {createdProfile && (
+      {account && (
         <StyledMyWalletPage className="content-wrapper">
-          <h2>Hello, @{createdProfile?.username}</h2>
+          <h2>Hello, {shortenAddress(account, { startLength: 6 })}</h2>
 
           <div className="sections-handler">
             {(["dao", "linear_release" /* "secure_pay"*/] as const).map((section) => (
@@ -45,7 +44,7 @@ export const MyWalletPage = () => {
           {sections[selectedSection]}
         </StyledMyWalletPage>
       )}
-      {isLoadingProfile && <Loading extraText={`${t("HackerProfile.loadingProfile")}...`} />}
+      {/* {isLoadingProfile && <Loading extraText={`${t("HackerProfile.loadingProfile")}...`} />} */}
     </>
   );
 };

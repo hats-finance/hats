@@ -884,6 +884,9 @@
       "hatsTokenomics": "$HAT tokenomics",
       "faqTitle": "FAQ",
       "forSecurityResearchers": "For security researchers",
+      "acceptLock": "Accept linear release",
+      "lockAccepted": "Linear release accepted",
+      "acceptingLock": "Accepting linear release",
       "FAQ": {
         "title-1": "What is the official contract address of $HAT?",
         "content-1": "$HAT main contract address is deployed on Ethereum, but a major portion of token supply will bridged and distributed to Arbitrum, where the token will be mainly traded. <br/><br/> The contract addresses are: <br/> <ul><li>Ethereum: 0x76c4ec0068923Da13Ee11527d6cF9b7521000049</li>  <li>Arbitrum: 0x4D22e37Eb4d71D1acc5f4889a65936D2a44A2f15</li></ul>",

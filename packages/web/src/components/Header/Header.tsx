@@ -58,7 +58,7 @@ const Header = () => {
   }
 
   function handleGoToMyWallet() {
-    if (!account || !createdProfile) return;
+    if (!account) return;
     navigate(`${RoutePaths.myWallet}`);
   }
 
@@ -106,7 +106,7 @@ const Header = () => {
             )}
           </div>
 
-          {isAirdropEnabled && account && createdProfile && (
+          {isAirdropEnabled && account && (
             <Button size="big" noRadius styleType="outlined" onClick={handleGoToMyWallet}>
               {t("Header.myWallet")}
             </Button>
