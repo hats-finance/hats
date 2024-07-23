@@ -21,9 +21,9 @@ const getSize = (size: IHackerProfileImageProps["size"]) => {
 
 export const StyledHackerProfileImage = styled.div<{ size: IHackerProfileImageProps["size"]; noMargin: boolean }>(
   ({ size, noMargin }) => css`
-    width: ${getSpacing(getSize(size))};
-    height: ${getSpacing(getSize(size))};
-    margin-bottom: ${noMargin ? 0 : getSpacing(4)};
+    width: ${size === "fit" ? "100%" : getSpacing(getSize(size))};
+    height: ${size === "fit" ? "100%" : getSpacing(getSize(size))};
+    margin-bottom: ${noMargin || size === "fit" ? 0 : getSpacing(4)};
 
     .avatar-preview {
       width: 100%;
