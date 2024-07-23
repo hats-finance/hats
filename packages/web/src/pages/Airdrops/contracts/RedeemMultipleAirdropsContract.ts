@@ -67,7 +67,7 @@ export class RedeemMultipleAirdropsContract {
             return proof;
           });
           const proofs = await Promise.all(proofsPromises);
-          const vaults = airdrops.map((_) => (vaultToDeposit ?? 0x0000000000000000000000000000000000000000) as `0x${string}`);
+          const vaults = airdrops.map((_) => (vaultToDeposit ?? "0x0000000000000000000000000000000000000000") as `0x${string}`);
           const deposits = airdropsEligibility.map((eligibility) => {
             if (!eligibility) return BigNumber.from(0);
             const total = +formatUnits(eligibility.total, 18);

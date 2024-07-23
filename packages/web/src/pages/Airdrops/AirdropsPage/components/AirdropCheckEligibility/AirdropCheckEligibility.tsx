@@ -50,7 +50,6 @@ export const AirdropCheckEligibility = () => {
     );
   }
 
-  console.log(airdropsData);
   // Airdrops that are live but not redeemed by the user
   let liveAirdrops = JSON.parse(
     JSON.stringify(

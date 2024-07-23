@@ -30,7 +30,7 @@ export const LinearReleaseAirdropControls = ({
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
   const { allVaults } = useVaults();
-  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT);
+  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT.address);
 
   const {
     data,
