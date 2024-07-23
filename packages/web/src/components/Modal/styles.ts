@@ -43,6 +43,7 @@ export const ModalContainer = styled.div<{
   withIcon: boolean;
   disableClose: boolean;
   overflowVisible: boolean;
+  hideCloseIcon: boolean;
 }>(
   ({
     withTitleDivider,
@@ -52,6 +53,7 @@ export const ModalContainer = styled.div<{
     disableClose,
     removeTopPadding,
     overflowVisible,
+    hideCloseIcon,
   }) => css`
     position: relative;
     max-width: calc(100vw - ${getSpacing(6)});
@@ -71,6 +73,11 @@ export const ModalContainer = styled.div<{
       justify-content: space-between;
       align-items: center;
       padding: ${getSpacing(1)} ${getSpacing(4)};
+
+      ${hideCloseIcon &&
+      css`
+        padding: ${getSpacing(3)} ${getSpacing(4)};
+      `}
 
       ${withIcon &&
       css`

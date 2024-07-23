@@ -32,7 +32,7 @@ export const AirdropRedeemStart = () => {
             const daysLocked = moment(airdrop.lockEndDate).format("MMMM Do 24'");
 
             return (
-              <li>
+              <li key={i}>
                 <strong className="italic">{airdrop.descriptionData.name}:</strong>
                 <br />
                 {`${total}, `}

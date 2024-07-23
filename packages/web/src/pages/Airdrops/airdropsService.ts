@@ -9,6 +9,7 @@ export type IDelegateeInfo = {
   address: string;
   name?: string;
   twitterProfile?: string;
+  hatsProfile?: string;
   description?: string;
   votes?: number;
 };
@@ -20,72 +21,135 @@ export async function getDelegatees(token: string | undefined, chainId: number |
   try {
     const delegatees = [
       {
-        address: "0xCC5BD779A1EACeEFA704315A1F504446B6D25a1F",
-        name: "Chapeu #1",
-        twitterProfile: "hatsfinance",
+        address: "0x0a5b058560e2Db597f57FedB910f3C2F50F4438C",
+        name: "mahdiRostami",
+        twitterProfile: "0xmahdirostami",
+        hatsProfile: "mahdirostami",
+        description: `
+        <ul>
+          <li>Holds a Master's in Computer Science.</li>
+          <li>Experienced in auditing dApp codebases.</li>
+          <li>Leads the Hats Finance all-time leaderboard.</li>
+        </ul>
+        `,
+      },
+      {
+        address: "0x83C85B50110062c7821AF2AC245DcCFB68F6dEB7",
+        name: "0xfuje",
+        twitterProfile: "0xfuje",
+        hatsProfile: "0xfuje",
         description: `
           <ul>
-            <li>Hats' lead developer</li>
-            <li>Ex-Prysmatic Labs</li>
-            <li>Web3 Dev since 2014</li>
-            <li>2nd Web3 Start-up</li>
+            <li>Smart contract security researcher & bounty hunter.</li>
+            <li>Active competitor on Hats, top 10 on leaderboard.</li>
+            <li>Frog working in crypto since 2022</li>
+            <p class="mt-1">Focus as a delegate:</p>
+            <ul>
+              <li>Improving judging standards & user experience as a competitor</li>
+              <li>find ways to attract more projects to host competitions with us</li>
+            </ul>
           </ul>
         `,
       },
       {
-        address: "0xaFd8C4f6f5f0d64f0e8bcE4C22DAa7b575506400",
-        name: "Chapeu #2",
-        twitterProfile: "hatsfinance",
+        address: "0x6386B0A730C4Be11575B51A7DB93134a3D4d2ddF",
+        name: "Atharv181",
+        twitterProfile: "atharv_181",
+        icon: "https://pbs.twimg.com/profile_images/1781747145868967936/gQsUoEJQ_400x400.jpg",
         description: `
           <ul>
-            <li>Hats' lead developer</li>
-            <li>Ex-Prysmatic Labs</li>
+          <li>Developed key infrastructure for blockchain platforms including Frontier Wallet and Manta Network.</li>
+          <li>Engaged in Ethereum ecosystem projects and blockchain education since college.</li>
+          <li>Recent focus on smart contract security, auditing diverse DeFi and infrastructure projects.</li>
+          </ul>
+          `,
+      },
+      {
+        address: "0x52661dc90C2D192c07CDc93e232b03d54b5d47D1",
+        name: "Rodion Trubnikov",
+        twitterProfile: "atharv_181",
+        hatsProfile: "ABAIKUNANBAEV",
+        description: `
+          <ul>
+            <li>Experienced auditor in Solidity, Rust, and Golang with 1.5 years of auditing experience.</li>
+            <li>Portfolio showcases a diverse range of audits: GitHub Audits.</li>
+            <li>Ranked top #12 all-time on Hats Finance and top #200 on C4 in 2024.</li>
           </ul>
         `,
       },
       {
-        address: "0x56E889664F5961452E5f4183AA13AF568198eaD2",
-        name: "Chapeu #3",
-        twitterProfile: "hatsfinance",
+        address: "0xABCDE0360aBCbA45098125E55437B005aE5DF46F",
+        name: "Nue",
+        twitterProfile: "chainNue",
+        hatsProfile: "chainNue",
+        description: `
+        <ul>
+          <li>Guardian of Decentralized Trust.</li>
+        </ul>
+        `,
+      },
+      {
+        address: "0x36A391B00c70e11F88Fd2F20dC5701Dd54B837e6",
+        name: "0xWeb3boy",
+        hatsProfile: "0xWeb3boy",
+        description: `
+        <ul>
+          <li>Passionate about blockchain and security as a whole.</li>
+          <li>Have been Auditing for over an year now.</li>
+          <li>I worked with renowned organization like ISRO, Income tax department, Ministry of defence.</li>
+          <li>Transitioning my career in web3 security and looking forward to growing with big names like Hats.</li>
+        </ul>
+        `,
+      },
+      {
+        address: "0xc9221e9ffed5277b7e0a62f5275fcf13c6b89b92",
+        name: "kn0t",
+        twitterProfile: "0xknot",
+        hatsProfile: "kn0t",
         description: `
           <ul>
-            <li>Hats' lead developer</li>
-            <li>Ex-Prysmatic Labs</li>
-            <li>Web3 Dev since 2014</li>
-            <li>2nd Web3 Start-up</li>
+            <li>Master's in Comp Eng, 17 yrs full-stack dev, 2 yrs blockchain sec.</li>
+            <li>Developed IDE for audit & defense; created Tera analyzer.</li>
+            <li>Won 1st in CodeQuest, 3rd in RuntimeVerification workshop.</li>
           </ul>
         `,
       },
       {
-        address: "0x0000000000000000000000000000000000000000",
-        name: "Zero #1",
-        twitterProfile: "hatsfinance",
+        address: "0x6940324206962242b15c2277Fb3E90B31f843C91",
+        name: "0xShax2nk_in",
+        twitterProfile: "0xShashanks_07",
+        hatsProfile: "0xShax2nk_in",
         description: `
-          <ul>
-            <li>Hats' lead developer</li>
-            <li>Ex-Prysmatic Labs</li>
-          </ul>
+        <ul>
+          <li>Security Researcher!</li>
+        </ul>
         `,
       },
       {
-        address: "0x0000000000000000000000000000000000000001",
-        name: "Zero #2",
-        twitterProfile: "hatsfinance",
+        address: "0x1D8a08c8C3Ce0A852Cb4Da902754991759F7F625",
+        name: "Rex Hygate",
+        twitterProfile: "rhygate",
+        icon: "https://pbs.twimg.com/profile_images/838595417545695232/gGEHwpB-_400x400.jpg",
         description: `
-          <ul>
-            <li>Web3 Dev since 2014</li>
-            <li>2nd Web3 Start-up</li>
-          </ul>
+        <ul>
+          <li>Started DeFiSafety in March 2020, looking at DeFi security from a process/OpSec perspective.</li>
+          <li>Helping DeFi users get impartial quality data of DeFi protocols and chains.</li>
+          <li>New focus is security consulting on good OpSec specifically mitigating lost keys and insider threats.</li>
+          <li>Through DeFiSafety reviews, we have read hundreds of audit reports and are very familiar with quality content within audits.</li>
+        </ul>
         `,
       },
       {
-        address: "0x0000000000000000000000000000000000000002",
-        name: "Zero #3",
-        twitterProfile: "hatsfinance",
+        address: "0xb7806Bb862A37317949D2009ABA80CD19d680B45",
+        name: "alp1n3.eth",
+        twitterProfile: "alp1n3_eth",
+        hatsProfile: "alp1n3.eth",
         description: `
           <ul>
-            <li>Web3 Dev since 2014</li>
-            <li>2nd Web3 Start-up</li>
+            <li>Current malware analyst for Army Cyber Command.</li>
+            <li>Previous web application security consultant (pentesting). Transitioning back into this role at the moment.</li>
+            <li>Certified bug bounty hunter from HackTheBox.</li>
+            <li>MS in Cyber Defense, BS in Cyber Ops from a DoD/NSA certified university.</li>
           </ul>
         `,
       },

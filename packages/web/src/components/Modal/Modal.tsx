@@ -82,6 +82,7 @@ export function Modal({
             removeHorizontalPadding={removeHorizontalPadding}
             overflowVisible={overflowVisible}
             capitalizeTitle={capitalizeTitle}
+            hideCloseIcon={hideCloseIcon}
           >
             <div className="header">
               <div className="title">
