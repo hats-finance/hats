@@ -749,7 +749,8 @@
       "delegatingYourTokens": "Delegating your tokens",
       "delegateSubmitted": "Delegate submitted",
       "delegateSubmittedExplanation": "Your selection has been submitted. You can edit your delegate selection at any time from the 'My Wallet' &gt; 'DAO' section.",
-      "youHaveNoTokenLocks": "You have no token locks"
+      "youHaveNoTokenLocks": "You have no token locks",
+      "myWalletDAOExplanation": "Explore and manage your linearly released tokens here, whether they're from airdrops, investor allocations, or team distributions. Track claimable amounts, view release schedules, and access your tokens as they become available. This section ensures you stay updated on the vesting progress and helps you plan your token management effectively."
     },
     "Airdrop": {
       "checkEligibility": "Check eligibility",
