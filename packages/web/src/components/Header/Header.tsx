@@ -3,7 +3,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
 import { Button, HackerProfileImage, SafePeriodBar, WalletButton, WhereverWidget } from "components";
-import { isAirdropEnabled } from "constants/constants";
 import useModal from "hooks/useModal";
 import { RoutePaths } from "navigation";
 import { CreateProfileFormModal } from "pages/HackerProfile/components";
@@ -14,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "reducers";
+import { isAirdropEnabled } from "settings";
 import { useAccount, useNetwork } from "wagmi";
 import { StyledHeader } from "./styles";
 

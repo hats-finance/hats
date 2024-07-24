@@ -1,9 +1,10 @@
 import { changeScreenSize } from "actions/index";
 import { AirdropModalAlert, CookiesBanner, Header, Modal, Sidebar } from "components";
-import { LocalStorage, SMALL_SCREEN_BREAKPOINT, ScreenSize, isAirdropEnabled } from "constants/constants";
+import { LocalStorage, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "constants/constants";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
+import { isAirdropEnabled } from "settings";
 import { AppContent, AppLayout, ContentWrapper, StyledApp } from "./styles";
 
 const BasicLayout = (): JSX.Element => {
