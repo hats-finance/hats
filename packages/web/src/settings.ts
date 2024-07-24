@@ -17,3 +17,6 @@ export const LOGROCKET_APP_ID = process.env.REACT_APP_LOGROCKET_APP_ID ?? "";
 export const defaultChain: IChainConfiguration = ChainsConfig[mainnet.id];
 
 export const appChains = ChainsConfig;
+
+const TGE_ENABLE_TIMESTAMP = IS_PROD ? 1721934000000 : 1721773234000;
+export const isAirdropEnabled = Date.now() > TGE_ENABLE_TIMESTAMP;
