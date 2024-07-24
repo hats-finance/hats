@@ -20,7 +20,7 @@ export const AirdropRedeemDeposit = () => {
   const { address } = useAccount();
 
   const { allVaults } = useVaults();
-  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT);
+  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT.address);
   const vaultApy = useVaultApy(vaultToDeposit);
 
   const [percentageToDeposit, setPercentageToDeposit] = useState<number>(0.5);
@@ -108,7 +108,7 @@ export const AirdropRedeemDeposit = () => {
         <Button
           size="medium"
           bigHorizontalPadding
-          onClick={() => handleClaimAirdrops(percentageToDeposit, VAULT_TO_DEPOSIT)}
+          onClick={() => handleClaimAirdrops(percentageToDeposit, VAULT_TO_DEPOSIT.address)}
           disabled={!isReceiverConnected}
         >
           {percentageToDeposit > 0 ? t("Airdrop.claimAndDeposit") : t("Airdrop.claim")}

@@ -12,17 +12,18 @@ export const useLinearReleaseAidropInfo = (addressToCheck: string, releaseContra
       signerOrProvider: provider,
     });
 
-    const [amountPerPeriod, currentPeriod, totalPeriods, releasable, released, total, endTime, startTime, token] =
+    const [amountPerPeriod, currentPeriod, totalPeriods, releasable, released, total, endTime, startTime, token, isAccepted] =
       await Promise.all([
         tokenLockContract.amountPerPeriod(),
         tokenLockContract.currentPeriod(),
         tokenLockContract.periods(),
         tokenLockContract.releasableAmount(),
         tokenLockContract.releasedAmount(),
-        tokenLockContract.vestedAmount(),
+        tokenLockContract.managedAmount(),
         tokenLockContract.endTime(),
         tokenLockContract.startTime(),
         tokenLockContract.token(),
+        tokenLockContract.isAccepted(),
       ]);
 
     const tokenContract = getContract({
@@ -43,6 +44,7 @@ export const useLinearReleaseAidropInfo = (addressToCheck: string, releaseContra
       endTime: new Date(+endTime.toString() * 1000),
       startTime: new Date(+startTime.toString() * 1000),
       pending: new Amount(total.sub(released).sub(releasable), decimals, symbol),
+      isAccepted,
       token: {
         address: token as `0x${string}`,
         decimals: +decimals.toString(),

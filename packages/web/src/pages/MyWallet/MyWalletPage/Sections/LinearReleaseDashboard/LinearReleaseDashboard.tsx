@@ -10,6 +10,7 @@ export const LinearReleaseDashboard = () => {
 
   const { address } = useAccount();
   const { data: tokenLocks } = useTokenLocksByEnv();
+  tokenLocks?.sort((a, b) => (a.address > b.address ? 1 : -1));
 
   if (!address || !tokenLocks) {
     return <div className="mt-4">Loading...</div>;

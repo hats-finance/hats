@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers";
+import { IS_PROD } from "settings";
 
 export enum LocalStorage {
   Cookies = "HATS_ACCEPTED_COOKIES",
@@ -125,3 +126,6 @@ export enum Transactions {
 export const HAT_TOKEN_ADDRESS_V1 = "0x436cA314A2e6FfDE52ba789b257b51DaCE778F1a";
 export const HAT_TOKEN_DECIMALS_V1 = "18";
 export const HAT_TOKEN_SYMBOL_V1 = "HAT";
+
+export const TGE_ENABLE_TIMESTAMP = IS_PROD ? 1721934000000 : 1721773234000;
+export const isAirdropEnabled = Date.now() > TGE_ENABLE_TIMESTAMP;

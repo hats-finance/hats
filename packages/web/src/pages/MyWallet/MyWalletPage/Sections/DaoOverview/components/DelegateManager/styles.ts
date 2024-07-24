@@ -21,15 +21,22 @@ export const StyledDelegateManager = styled.div`
   }
 `;
 
-export const StyledDelegateeCard = styled.div<{ selected: boolean }>(
-  ({ selected }) => css`
+export const StyledDelegateeCard = styled.div<{ selected: boolean; modal: boolean }>(
+  ({ selected, modal }) => css`
     border: 1px solid var(--primary);
     border-radius: ${getSpacing(1.5)};
     padding: ${getSpacing(2)} ${getSpacing(2.5)} ${getSpacing(0.5)};
     position: relative;
     cursor: pointer;
     transition: 0.1s;
-    width: fit-content;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+
+    ${modal &&
+    css`
+      width: 430px;
+    `}
 
     &:hover {
       background-color: var(--primary-light);
@@ -39,6 +46,11 @@ export const StyledDelegateeCard = styled.div<{ selected: boolean }>(
     css`
       background-color: var(--primary-light);
       border: 1px solid var(--secondary);
+
+      ${modal &&
+      css`
+        border-color: var(--primary);
+      `}
     `}
 
     .icon {
@@ -77,9 +89,21 @@ export const StyledDelegateeCard = styled.div<{ selected: boolean }>(
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--primary);
+
+      .socials {
+        display: flex;
+        gap: ${getSpacing(0.5)};
+      }
     }
 
     .description {
+      ${!modal &&
+      css`
+        max-height: 82px;
+        line-height: 16px;
+        overflow: hidden;
+      `}
+
       ol,
       ul {
         margin-top: 0;
@@ -94,6 +118,11 @@ export const StyledDelegateeCard = styled.div<{ selected: boolean }>(
           padding: 0;
         }
       }
+    }
+
+    .show-more {
+      align-self: center;
+      text-align: center;
     }
 
     .delegate-self {

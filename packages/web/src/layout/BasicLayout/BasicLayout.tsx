@@ -1,6 +1,6 @@
 import { changeScreenSize } from "actions/index";
 import { AirdropModalAlert, CookiesBanner, Header, Modal, Sidebar } from "components";
-import { LocalStorage, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "constants/constants";
+import { LocalStorage, SMALL_SCREEN_BREAKPOINT, ScreenSize, isAirdropEnabled } from "constants/constants";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
@@ -19,7 +19,7 @@ const BasicLayout = (): JSX.Element => {
   const getBannersAndModals = () => (
     <>
       {acceptedCookies !== "1" && <CookiesBanner onAcceptedCookies={() => setAcceptedCookies("1")} />}
-      {airdropModalSeen !== "1" && (
+      {isAirdropEnabled && airdropModalSeen !== "1" && (
         <Modal
           isShowing
           onHide={() => {

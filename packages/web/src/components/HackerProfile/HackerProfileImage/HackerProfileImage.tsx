@@ -5,7 +5,7 @@ import { StyledHackerProfileImage } from "./styles";
 
 export type IHackerProfileImageProps = {
   hackerProfile?: IHackerProfile;
-  size?: "xxsmall" | "xsmall" | "small" | "medium" | "large";
+  size?: "xxsmall" | "xsmall" | "small" | "medium" | "large" | "fit";
   noMargin?: boolean;
 };
 

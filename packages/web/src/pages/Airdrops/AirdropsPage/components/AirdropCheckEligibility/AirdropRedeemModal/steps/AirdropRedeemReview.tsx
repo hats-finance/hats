@@ -3,6 +3,7 @@ import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
 import { Alert, Button, FormInput } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
+import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
 import { AirdropEligibility } from "pages/Airdrops/utils/getAirdropEligibility";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,6 +21,7 @@ export const AirdropRedeemReview = () => {
 
   if (airdropsEligibility.some((airdrop) => !airdrop || !airdrop.eligible)) return null;
 
+  const airdropsChainId = airdropsData[0].chainId;
   const isReceiverConnected = addressToCheck.toLowerCase() === address?.toLowerCase();
   const totalEligibility = airdropsEligibility.reduce(
     (prev, airdrop) => prev.add(BigNumber.from((airdrop as AirdropEligibility).total)),
@@ -81,7 +83,11 @@ export const AirdropRedeemReview = () => {
         <Button
           size="medium"
           bigHorizontalPadding
-          onClick={onlyTokenLocks ? () => handleClaimAirdrops(undefined, undefined) : nextStep}
+          onClick={
+            onlyTokenLocks || airdropsChainId !== VAULT_TO_DEPOSIT.chain.id
+              ? () => handleClaimAirdrops(undefined, undefined)
+              : nextStep
+          }
           disabled={!isReceiverConnected}
         >
           {onlyTokenLocks ? t("Airdrop.claim") : t("Airdrop.continueToClaim")}

@@ -4,6 +4,7 @@ import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useModal from "hooks/useModal";
 import moment from "moment";
 import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
+import { AcceptTokenLockContract } from "pages/Airdrops/contracts/AcceptTokenLockContract";
 import { ReleaseTokenLockContract } from "pages/Airdrops/contracts/ReleaseTokenLockContract";
 import { VaultDepositWithdrawModal } from "pages/Honeypots/VaultDetailsPage/Sections/VaultDepositsSection/components";
 import { useTranslation } from "react-i18next";
@@ -30,7 +31,7 @@ export const LinearReleaseAirdropControls = ({
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
   const { allVaults } = useVaults();
-  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT);
+  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT.address);
 
   const {
     data,
@@ -73,6 +74,14 @@ export const LinearReleaseAirdropControls = ({
     onSuccess: async () => {
       refetchTokenLockInfo();
       showDepositModal();
+    },
+  });
+
+  const acceptTokenLockCall = AcceptTokenLockContract.hook(tokenLockAddress, chainId);
+  const waitingAcceptTokenLockCall = useWaitForTransaction({
+    hash: acceptTokenLockCall.data?.hash as `0x${string}`,
+    onSuccess: async () => {
+      refetchTokenLockInfo();
     },
   });
 
@@ -134,6 +143,19 @@ export const LinearReleaseAirdropControls = ({
       </div>
 
       <div className="buttons">
+        {standalone && (
+          <Button
+            styleType="outlined"
+            onClick={acceptTokenLockCall.send}
+            disabled={data?.isAccepted || waitingAcceptTokenLockCall.isLoading || acceptTokenLockCall.isLoading}
+          >
+            {waitingAcceptTokenLockCall.isLoading || acceptTokenLockCall.isLoading
+              ? `${t("Airdrop.acceptingLock")}...`
+              : data?.isAccepted
+              ? t("Airdrop.lockAccepted")
+              : t("Airdrop.acceptLock")}
+          </Button>
+        )}
         <Button onClick={releaseTokensCall.send} disabled={!areTokensToRelease}>
           {areTokensToRelease ? (
             <>

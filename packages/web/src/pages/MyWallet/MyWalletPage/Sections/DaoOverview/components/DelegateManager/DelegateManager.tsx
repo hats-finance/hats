@@ -1,10 +1,12 @@
 import { HATToken_abi, HATTokensConfig } from "@hats.finance/shared";
+import HatsLogo from "assets/icons/hats-logo-circle.svg";
 import TwitterIcon from "assets/icons/social/twitter.icon";
-import { Alert, Button, Loading, Modal, WithTooltip } from "components";
+import { Alert, Button, HackerProfileImage, Loading, Modal, WithTooltip } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import useModal from "hooks/useModal";
 import { IDelegateeInfo } from "pages/Airdrops/airdropsService";
 import { useDelegatees } from "pages/Airdrops/hooks";
+import { useCachedProfile } from "pages/HackerProfile/useCachedProfile";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
@@ -17,6 +19,8 @@ import { StyledDelegateManager, StyledDelegateeCard, StyledSuccessModal } from "
 
 export const DelegateManager = () => {
   const { t } = useTranslation();
+
+  const [showingMoreDelegate, setShowingMoreDelegate] = useState<IDelegateeInfo>();
 
   const { address: account } = useAccount();
   const { chain: connectedChain } = useNetwork();
@@ -84,6 +88,7 @@ export const DelegateManager = () => {
                             : currentDelegateOpt?.address.toLowerCase() === delegatee.address.toLowerCase()
                         }
                         onSelect={(address) => setDelegateToSet(address.toLowerCase())}
+                        onShowMore={!!delegatee ? () => setShowingMoreDelegate(delegatee as IDelegateeInfo) : undefined}
                       />
                     ))}
                   </div>
@@ -153,6 +158,26 @@ export const DelegateManager = () => {
           </Button>
         </StyledSuccessModal>
       </Modal>
+
+      <Modal isShowing={!!showingMoreDelegate} onHide={() => setShowingMoreDelegate(undefined)} hideCloseIcon>
+        <>
+          {showingMoreDelegate && (
+            <>
+              <DelegateeCard delegatee={showingMoreDelegate} modal />
+              <div style={{ display: "flex", justifyContent: "center" }} className="mt-2">
+                <Button
+                  size="small"
+                  className="show-more mb-1 mt-3"
+                  styleType="invisible"
+                  onClick={() => setShowingMoreDelegate(undefined)}
+                >
+                  {t("showLess")}
+                </Button>
+              </div>
+            </>
+          )}
+        </>
+      </Modal>
     </StyledDelegateManager>
   );
 };
@@ -161,21 +186,31 @@ const DelegateeCard = ({
   delegatee,
   selected = false,
   onSelect = undefined,
+  onShowMore,
+  modal = false,
 }: {
   delegatee: IDelegateeInfo | "self";
   selected?: boolean;
   onSelect?: (address: string) => void;
+  onShowMore?: () => void;
+  modal?: boolean;
 }) => {
   const { t } = useTranslation();
+  const hackerProfile = useCachedProfile(delegatee !== "self" ? delegatee.hatsProfile : undefined);
 
   const getDelegateeIcon = () => {
     if (!delegatee || delegatee === "self") return null;
+    if (hackerProfile) return <HackerProfileImage size="fit" hackerProfile={hackerProfile} />;
     if (delegatee.icon) return <img src={ipfsTransformUri(delegatee.icon, { isPinned: true })} alt="avatar" />;
     return <Identicon string={delegatee.address} bg="#fff" size={50} />;
   };
 
   return (
-    <StyledDelegateeCard onClick={() => onSelect?.(delegatee === "self" ? "self" : delegatee.address)} selected={selected}>
+    <StyledDelegateeCard
+      modal={modal}
+      onClick={() => onSelect?.(delegatee === "self" ? "self" : delegatee.address)}
+      selected={selected}
+    >
       {delegatee === "self" ? (
         <div className="delegate-self">
           <p>{t("Airdrop.delegateSelf")}</p>
@@ -188,14 +223,27 @@ const DelegateeCard = ({
           </WithTooltip>
           <div className="name">
             {delegatee.name && <span>{delegatee.name}</span>}
-            {delegatee.twitterProfile && (
-              <a {...defaultAnchorProps} href={`https://twitter.com/${delegatee.twitterProfile}`}>
-                <TwitterIcon />
-              </a>
-            )}
+            <div className="socials">
+              {delegatee.hatsProfile && (
+                <a {...defaultAnchorProps} href={`https://app.hats.finance/profile/${delegatee.hatsProfile}`}>
+                  <img width={25} height={25} src={HatsLogo} alt="hats logo" />
+                </a>
+              )}
+
+              {delegatee.twitterProfile && (
+                <a {...defaultAnchorProps} href={`https://twitter.com/${delegatee.twitterProfile}`}>
+                  <TwitterIcon />
+                </a>
+              )}
+            </div>
           </div>
 
           {delegatee.description && <div className="description" dangerouslySetInnerHTML={{ __html: delegatee.description }} />}
+          {!modal && (
+            <Button size="small" className="show-more mb-1 mt-3" styleType="invisible" onClick={onShowMore}>
+              {t("showMore")}
+            </Button>
+          )}
         </>
       )}
     </StyledDelegateeCard>
