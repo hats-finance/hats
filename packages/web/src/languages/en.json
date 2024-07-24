@@ -713,6 +713,7 @@
     "date": "Date",
     "points": "Points",
     "showMore": "Show more",
+    "showLess": "Show less",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",

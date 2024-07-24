@@ -80,7 +80,23 @@ export const AirdropRedeemDelegatee = () => {
       </div>
 
       <Modal isShowing={!!showingMoreDelegate} onHide={() => setShowingMoreDelegate(undefined)} hideCloseIcon>
-        <>{showingMoreDelegate && <DelegateeCard delegatee={showingMoreDelegate} modal />}</>
+        <>
+          {showingMoreDelegate && (
+            <>
+              <DelegateeCard delegatee={showingMoreDelegate} modal />
+              <div style={{ display: "flex", justifyContent: "center" }} className="mt-2">
+                <Button
+                  size="small"
+                  className="show-more mb-1 mt-3"
+                  styleType="invisible"
+                  onClick={() => setShowingMoreDelegate(undefined)}
+                >
+                  {t("showLess")}
+                </Button>
+              </div>
+            </>
+          )}
+        </>
       </Modal>
     </>
   );
