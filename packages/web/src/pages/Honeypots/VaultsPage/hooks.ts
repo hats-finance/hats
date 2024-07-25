@@ -9,7 +9,7 @@ import { useIsGovMember } from "hooks/useIsGovMember";
 import { useIsGrowthMember } from "hooks/useIsGrowthMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import { useEffect, useMemo } from "react";
-import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
+import { BASE_SERVICE_URL, HATS_STAKING_VAULT, IS_PROD, appChains } from "settings";
 import { useNetwork } from "wagmi";
 import * as auditDraftsService from "./auditDraftsService";
 
@@ -113,7 +113,14 @@ export const useBugBountiesVaults = () => {
         (vault) => !vault.description?.["project-metadata"].type || vault.description?.["project-metadata"].type === "normal"
       ) ?? [];
 
-  bugBounties.sort((a, b) => (b.amountsInfo?.maxRewardAmount.usd ?? 0) - (a.amountsInfo?.maxRewardAmount.usd ?? 0));
+  const topVault = HATS_STAKING_VAULT.address;
+
+  bugBounties.sort((a, b) => {
+    if (a.id.toLowerCase() === topVault.toLowerCase()) return -1;
+    if (b.id.toLowerCase() === topVault.toLowerCase()) return 1;
+
+    return (b.amountsInfo?.maxRewardAmount.usd ?? 0) - (a.amountsInfo?.maxRewardAmount.usd ?? 0);
+  });
 
   return bugBounties;
 };
