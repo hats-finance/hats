@@ -7,6 +7,7 @@ import { fetchToken } from "wagmi/actions";
 
 const COIN_GECKO_ENDPOINT = "https://api.coingecko.com/api/v3/simple/token_price";
 const BALANCER_SUBGRAPH_ENDPOINT = "https://api-v3.balancer.fi/graphql";
+const CAMELOT_ENDPOINT = "https://api.camelot.exchange/tokens";
 
 export const getTokenInfo = async (
   address: string,
@@ -123,6 +124,24 @@ export const getBalancerTokenPrices = async (tokens: { address: string; chainId:
       );
 
       if (tokenPrice) acc[token.address] = { usd: +tokenPrice.price };
+      return { ...acc };
+    }, {} as TokenPriceResponse);
+  } catch (err) {
+    console.error(err);
+    throw new Error(`Error getting prices: ${err}`);
+  }
+};
+
+export const getCamelotTokenPrices = async (tokens: { address: string; chainId: number }[]): Promise<TokenPriceResponse> => {
+  try {
+    const camelotResponse: AxiosResponse = await axios.get(CAMELOT_ENDPOINT);
+
+    return tokens.reduce((acc, token) => {
+      const tokenInfo = Object.entries(camelotResponse.data.data.tokens).find(
+        ([address]) => address.toLowerCase() === token.address.toLowerCase()
+      )?.[1] as any;
+
+      if (tokenInfo) acc[token.address] = { usd: +tokenInfo.price };
       return { ...acc };
     }, {} as TokenPriceResponse);
   } catch (err) {
