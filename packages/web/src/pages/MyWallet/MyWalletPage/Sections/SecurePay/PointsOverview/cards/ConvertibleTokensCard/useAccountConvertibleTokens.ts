@@ -17,7 +17,12 @@ export const useAccountConvertibleTokens = () => {
 
   const { data: pointdropsData, isLoading } = useAirdropsByFactories(AirdropFactoriesChainConfig[env].pointdrop);
   const eligiblePointdrops = useMemo(
-    () => (account && pointdropsData?.filter((airdrop) => airdrop.descriptionData.merkletree[account])) ?? [],
+    () =>
+      (account &&
+        pointdropsData?.filter((airdrop) =>
+          Object.keys(airdrop.descriptionData.merkletree).find((add) => add.toLowerCase() === account.toLowerCase())
+        )) ??
+      [],
     [account, pointdropsData]
   );
 
@@ -50,7 +55,10 @@ export const useAccountConvertibleTokens = () => {
     return (
       (account &&
         pointdrops.map((pointdrop) => {
-          const merkletree = (pointdrop.descriptionData as PointdropDescriptionData).merkletree[account];
+          const merkletree = Object.entries((pointdrop.descriptionData as PointdropDescriptionData).merkletree).find(
+            ([add]) => add.toLowerCase() === account.toLowerCase()
+          )?.[1]!;
+
           return {
             ...pointdrop,
             points: Number(merkletree.converted_points),
