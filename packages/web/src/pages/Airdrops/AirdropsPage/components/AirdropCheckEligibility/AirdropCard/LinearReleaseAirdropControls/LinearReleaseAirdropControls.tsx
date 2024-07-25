@@ -31,7 +31,9 @@ export const LinearReleaseAirdropControls = ({
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
   const { allVaults } = useVaults();
-  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT.address);
+  const vaultToDeposit = allVaults?.find(
+    (vault) => vault.id === VAULT_TO_DEPOSIT.address && chainId === VAULT_TO_DEPOSIT.chain.id
+  );
 
   const {
     data,
@@ -73,7 +75,7 @@ export const LinearReleaseAirdropControls = ({
     confirmations: 2,
     onSuccess: async () => {
       refetchTokenLockInfo();
-      showDepositModal();
+      if (vaultToDeposit) showDepositModal();
     },
   });
 
