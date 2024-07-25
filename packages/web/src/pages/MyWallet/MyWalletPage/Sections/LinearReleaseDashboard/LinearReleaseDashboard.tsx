@@ -18,6 +18,7 @@ export const LinearReleaseDashboard = () => {
 
   return (
     <StyledLinearReleaseDashboard>
+      <p className="mt-5 mb-5">{t("MyWallet.myWalletDAOExplanation")}</p>
       {tokenLocks.length === 0 ? (
         <>
           <Alert className="mb-3" type="info">
