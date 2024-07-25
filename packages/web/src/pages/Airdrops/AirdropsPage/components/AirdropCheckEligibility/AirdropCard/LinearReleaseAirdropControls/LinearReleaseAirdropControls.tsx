@@ -3,12 +3,11 @@ import { Button, CopyToClipboard, Loading, Modal } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useModal from "hooks/useModal";
 import moment from "moment";
-import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
 import { AcceptTokenLockContract } from "pages/Airdrops/contracts/AcceptTokenLockContract";
 import { ReleaseTokenLockContract } from "pages/Airdrops/contracts/ReleaseTokenLockContract";
 import { VaultDepositWithdrawModal } from "pages/Honeypots/VaultDetailsPage/Sections/VaultDepositsSection/components";
 import { useTranslation } from "react-i18next";
-import { appChains } from "settings";
+import { HATS_STAKING_VAULT, appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useWaitForTransaction } from "wagmi";
 import { useLinearReleaseAidropInfo } from "./hooks";
@@ -32,7 +31,7 @@ export const LinearReleaseAirdropControls = ({
 
   const { allVaults } = useVaults();
   const vaultToDeposit = allVaults?.find(
-    (vault) => vault.id === VAULT_TO_DEPOSIT.address && chainId === VAULT_TO_DEPOSIT.chain.id
+    (vault) => vault.id === HATS_STAKING_VAULT.address && chainId === HATS_STAKING_VAULT.chain.id
   );
 
   const {
