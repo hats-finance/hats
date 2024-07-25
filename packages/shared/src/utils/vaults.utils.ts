@@ -285,6 +285,7 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
           stakingToken
           stakingTokenDecimals
           descriptionHash
+          honeyPotBalance
         }
       }
     `;

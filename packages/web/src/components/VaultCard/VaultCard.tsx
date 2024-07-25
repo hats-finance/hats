@@ -208,7 +208,7 @@ export const VaultCard = ({
   const getAPYPill = () => {
     return (
       <ApyPill>
-        <div className="content">
+        <div className="content-apy">
           {t("apy")} <span>{`${numberWithThousandSeparator(vaultApy[0].apy)}%`}</span>
         </div>
         <div className="bg" />

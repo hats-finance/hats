@@ -118,7 +118,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
   };
 
   const renderWithTooltip = (text: string, children: JSX.Element) => (
-    <Tooltip placement="top" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={text} mouseLeaveDelay={0}>
+    <Tooltip placement="top" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE as any} overlay={text} mouseLeaveDelay={0}>
       {children}
     </Tooltip>
   );

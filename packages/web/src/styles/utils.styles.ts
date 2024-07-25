@@ -8,4 +8,8 @@ const getPrimaryGradient = () => {
   return `linear-gradient(90deg, var(--background-2) 0%, var(--primary) 100%);`;
 };
 
-export { getSpacing, getPrimaryGradient };
+const getPrimaryGradientVariant = () => {
+  return ` linear-gradient(114deg, #343B79 5.68%, #816FFF 49.92%, #502873 88.92%);`;
+};
+
+export { getSpacing, getPrimaryGradient, getPrimaryGradientVariant };

@@ -188,3 +188,21 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     provider: "https://sapphire.oasis.io",
   },
 };
+
+export type AirdropFactoryConfig = { chain: wagmiChains.Chain; address: string };
+export const AirdropFactoriesChainConfig: {
+  test: { airdrop: AirdropFactoryConfig[]; pointdrop: AirdropFactoryConfig[] };
+  prod: { airdrop: AirdropFactoryConfig[]; pointdrop: AirdropFactoryConfig[] };
+} = {
+  test: {
+    airdrop: [{ address: "0xcBd1763C9CD705DDf0b7aEbB7f36A7b00E890729", chain: wagmiChains.sepolia }],
+    pointdrop: [{ address: "0xCE94b023259E6a49EB37339aCaA3F8e711b88e04", chain: wagmiChains.sepolia }],
+  },
+  prod: {
+    airdrop: [
+      { address: "0xf4153be482582e4cD542E2214745a5D3cE5db128", chain: wagmiChains.arbitrum },
+      { address: "0xF419C60ac4d9a9d7ea46Deb24c6346bDA41C2a9d", chain: wagmiChains.mainnet },
+    ],
+    pointdrop: [],
+  },
+};

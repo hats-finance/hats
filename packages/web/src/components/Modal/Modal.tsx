@@ -15,6 +15,7 @@ interface ModalProps {
   removeHorizontalPadding?: boolean;
   capitalizeTitle?: boolean;
   disableClose?: boolean;
+  hideCloseIcon?: boolean;
   disableOnOverlayClose?: boolean;
   overflowVisible?: boolean;
   removeAnimation?: boolean;
@@ -35,6 +36,7 @@ export function Modal({
   capitalizeTitle = false,
   overflowVisible = false,
   removeAnimation = false,
+  hideCloseIcon = false,
 }: ModalProps) {
   const [localShowModal, setLocalShowModal] = useState(isShowing);
   // const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
@@ -80,6 +82,7 @@ export function Modal({
             removeHorizontalPadding={removeHorizontalPadding}
             overflowVisible={overflowVisible}
             capitalizeTitle={capitalizeTitle}
+            hideCloseIcon={hideCloseIcon}
           >
             <div className="header">
               <div className="title">
@@ -91,7 +94,7 @@ export function Modal({
                 {titleIcon && typeof titleIcon === "string" ? <img src={titleIcon} alt="icon" /> : titleIcon}
                 <span>{title && <span>{title}</span>}</span>
               </div>
-              {!disableClose && (
+              {!disableClose && !hideCloseIcon && (
                 <button disabled={inTransaction} type="button" className="close" onClick={handleOnHide}>
                   <span aria-hidden="true">&times;</span>
                 </button>

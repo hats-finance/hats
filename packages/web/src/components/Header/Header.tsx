@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "reducers";
+import { isAirdropEnabled } from "settings";
 import { useAccount, useNetwork } from "wagmi";
 import { StyledHeader } from "./styles";
 
@@ -56,6 +57,15 @@ const Header = () => {
     navigate(`${RoutePaths.profile}/${createdProfile.username}`);
   }
 
+  function handleGoToMyWallet() {
+    if (!account) return;
+    navigate(`${RoutePaths.myWallet}`);
+  }
+
+  function handleGoToAirdrop() {
+    navigate(`${RoutePaths.airdrop}`);
+  }
+
   return (
     <StyledHeader>
       <div className="safety-period-banner">
@@ -66,13 +76,21 @@ const Header = () => {
         <h1 className="page-title">{getPageTitle()}</h1>
 
         <div className="buttons">
+          {isAirdropEnabled && (
+            <div className="airdrop-button">
+              <Button size="big" noRadius styleType="outlined" onClick={handleGoToAirdrop}>
+                {t("airdrop")}
+              </Button>
+            </div>
+          )}
+
           <div className="profile-button">
             {isSafeAddress !== undefined && !isSafeAddress && account && !isLoadingProfile && (
               <>
                 {!!createdProfile ? (
                   <Button size="big" noRadius styleType="outlined" noPadding onClick={handleGoToProfile}>
                     <div className="inner-profile-button">
-                      <HackerProfileImage hackerProfile={createdProfile} size="xsmall" noMargin />
+                      <HackerProfileImage hackerProfile={createdProfile} size="xxsmall" noMargin />
                       <span>{createdProfile.username}</span>
                     </div>
                   </Button>
@@ -87,6 +105,12 @@ const Header = () => {
               </>
             )}
           </div>
+
+          {isAirdropEnabled && account && (
+            <Button size="big" noRadius styleType="outlined" onClick={handleGoToMyWallet}>
+              {t("Header.myWallet")}
+            </Button>
+          )}
 
           <WhereverWidget />
           <WalletButton />
