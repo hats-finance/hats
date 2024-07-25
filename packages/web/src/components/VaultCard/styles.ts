@@ -15,6 +15,7 @@ export const StyledVaultCard = styled.div<{
   hasActiveClaim: boolean;
   showIntendedAmount: boolean;
   fundingProtocolVault?: boolean;
+  isHatsVault?: boolean;
 }>(
   ({
     isAudit,
@@ -23,6 +24,7 @@ export const StyledVaultCard = styled.div<{
     hasActiveClaim,
     showIntendedAmount,
     fundingProtocolVault = false,
+    isHatsVault = false,
   }) => css`
     position: relative;
     display: flex;
@@ -35,6 +37,12 @@ export const StyledVaultCard = styled.div<{
     css`
       padding: ${getSpacing(6)} ${getSpacing(4)} ${getSpacing(4)} ${getSpacing(4)};
       border-color: var(--error-red);
+    `}
+
+    ${isHatsVault &&
+    css`
+      border-color: var(--secondary);
+      /* background: var(--background); */
     `}
 
     ${reducedStyles &&

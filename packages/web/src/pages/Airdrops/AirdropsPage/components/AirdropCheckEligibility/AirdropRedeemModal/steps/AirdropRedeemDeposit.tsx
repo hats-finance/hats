@@ -6,10 +6,10 @@ import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useVaultApy } from "hooks/vaults/useVaultApy";
 import millify from "millify";
 import moment from "moment";
-import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
 import { AirdropEligibility } from "pages/Airdrops/utils/getAirdropEligibility";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { HATS_STAKING_VAULT } from "settings";
 import { shortenAddress } from "utils/addresses.utils";
 import { Amount, numberWithThousandSeparator } from "utils/amounts.utils";
 import { useAccount } from "wagmi";
@@ -20,7 +20,7 @@ export const AirdropRedeemDeposit = () => {
   const { address } = useAccount();
 
   const { allVaults } = useVaults();
-  const vaultToDeposit = allVaults?.find((vault) => vault.id === VAULT_TO_DEPOSIT.address);
+  const vaultToDeposit = allVaults?.find((vault) => vault.id === HATS_STAKING_VAULT.address);
   const vaultApy = useVaultApy(vaultToDeposit);
 
   const [percentageToDeposit, setPercentageToDeposit] = useState<number>(0.5);
@@ -108,7 +108,7 @@ export const AirdropRedeemDeposit = () => {
         <Button
           size="medium"
           bigHorizontalPadding
-          onClick={() => handleClaimAirdrops(percentageToDeposit, VAULT_TO_DEPOSIT.address)}
+          onClick={() => handleClaimAirdrops(percentageToDeposit, HATS_STAKING_VAULT.address)}
           disabled={!isReceiverConnected}
         >
           {percentageToDeposit > 0 ? t("Airdrop.claimAndDeposit") : t("Airdrop.claim")}
