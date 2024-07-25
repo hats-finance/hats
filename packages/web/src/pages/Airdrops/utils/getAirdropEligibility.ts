@@ -1,5 +1,4 @@
 import { BigNumber } from "ethers";
-import { getAddress } from "ethers/lib/utils.js";
 import { DropDescriptionData } from "../types";
 
 export type AirdropEligibility = DropDescriptionData["merkletree"]["address"]["token_eligibility"] & {
@@ -12,7 +11,9 @@ export const getAirdropEligibility = async (
   airdropDescriptionData: DropDescriptionData
 ): Promise<AirdropEligibility | undefined> => {
   try {
-    const addressInfo = airdropDescriptionData.merkletree[getAddress(address)];
+    const addressInfo = Object.entries(airdropDescriptionData.merkletree).find(
+      ([add]) => add.toLowerCase() === address.toLowerCase()
+    )?.[1];
 
     const totalAllocatedToAddress = addressInfo
       ? Object.keys(addressInfo.token_eligibility)
