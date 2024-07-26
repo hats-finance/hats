@@ -54,7 +54,7 @@ const buildSitemap = async () => {
       })
   )
     .filter((res) => res != null)
-    .map((res) => res.data.vaults)
+    .map((res) => res.data?.vaults ?? [])
     .flat()
     .filter((vault) => vault.registered);
   const descriptionHashes = subgraphResults.map((vault) => vault.descriptionHash);
