@@ -12,7 +12,7 @@ export const getSinglePayoutDataYupSchema = (intl: TFunction, vault: IVault | un
       .test(getTestNumberInBetween(intl, 0, vault?.maxBounty ? Number(vault.maxBounty) / 100 : 100, true))
       .required(intl("required"))
       .typeError(intl("required")),
-    nftUrl: Yup.string().required(intl("required")),
+    nftUrl: Yup.string(),
     explanation: Yup.string(),
     additionalInfo: Yup.string(),
   });
@@ -59,7 +59,7 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
           );
           return +sumOfPercentages.toFixed(6) === 100;
         }),
-        nftUrl: Yup.string().required(intl("required")),
+        nftUrl: Yup.string(),
       })
     ),
     rewardsConstraints: Yup.array().of(

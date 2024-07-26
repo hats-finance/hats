@@ -11,7 +11,7 @@ export type IVaultApy = {
 };
 
 export const useVaultApy = (vault?: IVault): IVaultApy[] => {
-  const provider = useProvider();
+  const provider = useProvider({ chainId: vault?.chainId });
   const [vaultApys, setVaultApys] = useState<IVaultApy[]>([]);
   const { data: blockNumber } = useBlockNumber({ chainId: vault?.chainId, watch: false });
 
