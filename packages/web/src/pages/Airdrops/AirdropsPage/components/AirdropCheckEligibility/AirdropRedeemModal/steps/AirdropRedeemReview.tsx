@@ -61,7 +61,7 @@ export const AirdropRedeemReview = () => {
             const daysLocked = moment(airdrop.lockEndDate).format("MMMM Do 24'");
 
             return (
-              <li>
+              <li key={i}>
                 <strong>{airdrop.descriptionData.name}:</strong> {total}
                 {", "}
                 {airdrop.isLocked ? t("Airdrop.linearlyReleasedUntil", { date: daysLocked }) : t("Airdrop.immediatelyReleased")}

@@ -1,10 +1,10 @@
 import { formatUnits } from "@ethersproject/units";
-import { GoodDollar_abi, InsureDao_abi } from "@hats.finance/shared";
+import { GoodDollar_abi, HATTokensConfig, InsureDao_abi } from "@hats.finance/shared";
 import axios from "axios";
 import { BigNumber } from "ethers";
-import { getCoingeckoTokensPrices } from "utils/tokens.utils";
+import { getCamelotTokenPrices, getCoingeckoTokensPrices } from "utils/tokens.utils";
 import { readContract } from "wagmi/actions";
-import { mainnet } from "wagmi/chains";
+import { arbitrum, mainnet } from "wagmi/chains";
 
 const InsureDAOTokenMainnet = "0x22453153978D0C25f86010c0fd405527feD9764b";
 const GoodDollarPriceContractMainnet = "0xa150a825d425B36329D8294eeF8bD0fE68f8F6E0";
@@ -55,9 +55,17 @@ export const getUMAVotingPriceOP = async () => {
   return apiRes[UMATokenMainnet.toLowerCase()]?.["usd"] as number | undefined;
 };
 
+export const getHATPriceMainnet = async () => {
+  const HATArbitrum = HATTokensConfig.prod[arbitrum.id].address.toLowerCase();
+  const apiRes = await getCamelotTokenPrices([{ address: HATArbitrum, chainId: arbitrum.id }]);
+
+  return apiRes[HATArbitrum]?.["usd"] as number | undefined;
+};
+
 export const tokenPriceFunctions = {
   [InsureDAOTokenMainnet.toLowerCase()]: getInsureDAOPriceMainnet,
   [GoodDollarTokenMainnet.toLowerCase()]: getGoodDollarPriceMainnet,
   [SpiralDaoTokenMainnet.toLowerCase()]: getSpiralDaoPriceMainnet,
   [UMAVotingTokenOP.toLowerCase()]: getUMAVotingPriceOP,
+  [HATTokensConfig.prod[mainnet.id].address.toLowerCase()]: getHATPriceMainnet,
 };

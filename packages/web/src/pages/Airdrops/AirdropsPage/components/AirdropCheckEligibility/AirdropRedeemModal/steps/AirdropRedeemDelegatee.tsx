@@ -38,8 +38,9 @@ export const AirdropRedeemDelegatee = () => {
 
         <div className="delegatees-list">
           {!isLoading && delegateesToShow && delegateesToShow?.length > 0 ? (
-            delegateesToShow?.map((delegatee) => (
+            delegateesToShow?.map((delegatee, i) => (
               <DelegateeCard
+                key={i}
                 delegatee={delegatee as IDelegateeInfo | "self"}
                 onShowMore={delegatee !== "self" ? () => setShowingMoreDelegate(delegatee as IDelegateeInfo) : undefined}
               />

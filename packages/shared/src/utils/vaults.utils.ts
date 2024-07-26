@@ -9,8 +9,11 @@ import { fixObject } from "./vaultEditor.utils";
 
 export type IVaultInfoWithCommittee = IVaultInfo & { committee: string; registered: boolean };
 type IVaultInfoWithCommitteeNoHatsGovFee = Omit<IVaultInfoWithCommittee, "hatsGovFee">;
+export type IVaultInfoWithCommitteeAndRewardControllers = IVaultInfoWithCommitteeNoHatsGovFee & {
+  rewardControllers: { id: string; token: string; tokenSymbol: string; tokenDecimals: string }[];
+};
 
-export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCommitteeNoHatsGovFee[]> => {
+export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCommitteeAndRewardControllers[]> => {
   try {
     const GET_ALL_VAULTS = `
       query getVaults {
@@ -24,6 +27,12 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
           claimsManager
           master {
             address
+          }
+          rewardControllers {
+            id
+            token: rewardToken
+            tokenSymbol: rewardTokenSymbol
+            tokenDecimals: rewardTokenDecimals
           }
         }
       }
@@ -52,7 +61,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
       (res) => (res as PromiseFulfilledResult<{ chainId: number; request: AxiosResponse<any> }>).value
     );
 
-    const vaults: IVaultInfoWithCommitteeNoHatsGovFee[] = [];
+    const vaults: IVaultInfoWithCommitteeAndRewardControllers[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = subgraphsData[i].chainId;
 
@@ -69,6 +78,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
           registered: vault.registered,
           stakingToken: vault.stakingToken,
           claimsManager: vault.claimsManager,
+          rewardControllers: vault.rewardControllers,
         });
       }
     }
