@@ -3,10 +3,10 @@ import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
 import { Alert, Button, FormInput } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
-import { VAULT_TO_DEPOSIT } from "pages/Airdrops/constants";
 import { AirdropEligibility } from "pages/Airdrops/utils/getAirdropEligibility";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { HATS_STAKING_VAULT } from "settings";
 import { shortenAddress, shortenIfAddress } from "utils/addresses.utils";
 import { Amount } from "utils/amounts.utils";
 import { useAccount } from "wagmi";
@@ -61,7 +61,7 @@ export const AirdropRedeemReview = () => {
             const daysLocked = moment(airdrop.lockEndDate).format("MMMM Do 24'");
 
             return (
-              <li>
+              <li key={i}>
                 <strong>{airdrop.descriptionData.name}:</strong> {total}
                 {", "}
                 {airdrop.isLocked ? t("Airdrop.linearlyReleasedUntil", { date: daysLocked }) : t("Airdrop.immediatelyReleased")}
@@ -84,7 +84,7 @@ export const AirdropRedeemReview = () => {
           size="medium"
           bigHorizontalPadding
           onClick={
-            onlyTokenLocks || airdropsChainId !== VAULT_TO_DEPOSIT.chain.id
+            onlyTokenLocks || airdropsChainId !== HATS_STAKING_VAULT.chain.id
               ? () => handleClaimAirdrops(undefined, undefined)
               : nextStep
           }

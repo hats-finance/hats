@@ -21,6 +21,7 @@ import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { HATS_STAKING_VAULT } from "settings";
 import { ipfsTransformUri } from "utils";
 import { numberWithThousandSeparator } from "utils/amounts.utils";
 import { slugify } from "utils/slug.utils";
@@ -80,6 +81,7 @@ export const VaultCard = ({
   const showIntended = (vaultData && vaultData.amountsInfo?.showCompetitionIntendedAmount) ?? false;
   const vaultApy = useVaultApy(vault);
   const { isUserOptedIn, optIn, optOut } = useAuditFrameGame(vault?.id);
+  const isHatsVault = HATS_STAKING_VAULT.address.toLowerCase() === vault?.id;
 
   const isOptInOpen = useMemo(() => {
     const startTime = vault?.description?.["project-metadata"].starttime;
@@ -320,6 +322,7 @@ export const VaultCard = ({
       reducedStyles={reducedStyles}
       hasActiveClaim={!!activeClaim}
       showIntendedAmount={showIntended}
+      isHatsVault={isHatsVault}
     >
       {!hideStatusPill && (
         <div className="pills mb-5">

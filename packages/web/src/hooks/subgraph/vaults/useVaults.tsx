@@ -21,6 +21,7 @@ import { isValidIpfsHash } from "utils/ipfs.utils";
 import {
   getBackendTokenPrices,
   getBalancerTokenPrices,
+  getCamelotTokenPrices,
   getCoingeckoTokensPrices,
   getUniswapTokenPrices,
 } from "utils/tokens.utils";
@@ -111,7 +112,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     // Get prices from the backend
     try {
-      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
       const backendTokenPrices = await getBackendTokenPrices();
 
       if (backendTokenPrices) {
@@ -193,7 +194,23 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       console.error(error);
     }
 
-    console.log(foundTokenPrices);
+    // Get prices from Camelot
+    try {
+      const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
+      const camelotTokenPrices = await getCamelotTokenPrices(tokensLeft);
+
+      if (camelotTokenPrices) {
+        tokensLeft.forEach((token) => {
+          if (camelotTokenPrices.hasOwnProperty(token.address)) {
+            const price = camelotTokenPrices[token.address]?.["usd"];
+            if (price && +price > 0) foundTokenPrices[token.address] = +price;
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     return foundTokenPrices;
   };
 
