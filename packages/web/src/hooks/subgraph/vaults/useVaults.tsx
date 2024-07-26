@@ -112,7 +112,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     // Get prices from the backend
     try {
-      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
       const backendTokenPrices = await getBackendTokenPrices();
 
       if (backendTokenPrices) {
