@@ -8,3 +8,4 @@ export * from "./statistics.utils";
 export * from "./ipfs.utils";
 export * from "./getOldTokenPrice";
 export * from "./severityName";
+export * from "./tokenlocks.utils";
