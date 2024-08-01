@@ -26,7 +26,7 @@ export const getAllTokenLocks = async (): Promise<IHATTokenLock[]> => {
   try {
     const GET_ALL_TOKEN_LOCKS = `
       query getTokenLocks {
-        hattokenlocks {
+        hattokenLocks {
           id
           factory {
             id
@@ -77,9 +77,9 @@ export const getAllTokenLocks = async (): Promise<IHATTokenLock[]> => {
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = subgraphsData[i].chainId;
 
-      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data?.data?.hattokenlocks) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data?.data?.hattokenLocks) continue;
 
-      for (const tokneLock of subgraphsData[i].request.data.data.hattokenlocks) {
+      for (const tokneLock of subgraphsData[i].request.data.data.hattokenLocks) {
         tokenLocks.push({
           chainId,
           id: tokneLock.id,
@@ -115,7 +115,7 @@ export const getTokenLocksForToken = async (tokenAddress: string, chainId: numbe
   try {
     const GET_TOKEN_LOCKS_FOR_TOKEN = `
       query getTokenLocks($tokenAddress: Bytes) {
-        hattokenlocks(where: {token: $tokenAddress}) {
+        hattokenLocks(where: {token: $tokenAddress}) {
           id
           factory {
             id
@@ -154,9 +154,9 @@ export const getTokenLocksForToken = async (tokenAddress: string, chainId: numbe
     const subgraphData = (await subgraphResponse).data;
 
     const tokenLocks: IHATTokenLock[] = [];
-    if (!subgraphData.request.data || !subgraphData.request.data?.data?.hattokenlocks) return [];
+    if (!subgraphData.data || !subgraphData.data?.hattokenLocks) return [];
 
-    for (const tokneLock of subgraphData.request.data.data.hattokenlocks) {
+    for (const tokneLock of subgraphData.data.hattokenLocks) {
       tokenLocks.push({
         chainId,
         id: tokneLock.id,
