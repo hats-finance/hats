@@ -20,6 +20,7 @@ export type IHATTokenLock = {
   isCanceled: boolean;
   isRevoked: boolean;
   releasedAmount: number;
+  hatBalance: number;
 };
 
 export const getAllTokenLocks = async (): Promise<IHATTokenLock[]> => {
@@ -50,6 +51,9 @@ export const getAllTokenLocks = async (): Promise<IHATTokenLock[]> => {
             isCanceled
             isRevoked
             releasedAmount
+            hatData {
+              balance
+            }
           }
         }
       `;
@@ -101,7 +105,8 @@ export const getAllTokenLocks = async (): Promise<IHATTokenLock[]> => {
             isAccepted: tokneLock.isAccepted,
             isCanceled: tokneLock.isCanceled,
             isRevoked: tokneLock.isRevoked,
-            releasedAmount: tokneLock.releasedAmount
+            releasedAmount: tokneLock.releasedAmount,
+            hatBalance: tokneLock.hatData?.balance ?? 0
           });
         }
       }
@@ -145,6 +150,9 @@ export const getTokenLocksForToken = async (tokenAddress: string, chainId: numbe
             isCanceled
             isRevoked
             releasedAmount
+            hatData {
+              balance
+            }
           }
         }
       `;
@@ -184,7 +192,8 @@ export const getTokenLocksForToken = async (tokenAddress: string, chainId: numbe
           isAccepted: tokneLock.isAccepted,
           isCanceled: tokneLock.isCanceled,
           isRevoked: tokneLock.isRevoked,
-          releasedAmount: tokneLock.releasedAmount
+          releasedAmount: tokneLock.releasedAmount,
+          hatBalance: tokneLock.hatData?.balance ?? 0
         });
       }
 
