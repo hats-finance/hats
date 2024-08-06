@@ -42,9 +42,22 @@ export const overrideDescription = (vaultAddress: string, description?: IVaultDe
 export const overridePayoutVault = (payoutData: IPayoutData) => {
   let overridePart = {} as Partial<IVault>;
 
-  // Fix DAI price in HOPR payout
   const hoprId = "0x5833e804432bf15a35b9d37df815b419ad369003";
+  const palmeraId = "0x5fee7541ddcd51ba9f4af606f87b2c42eea655be";
+
+  // Fix DAI price in HOPR payout
   if (hoprId === payoutData.vault?.id.toLowerCase() && payoutData.vault?.amountsInfo) {
+    const tokenPriceUsd = 1;
+    const amountsInfoData = payoutData.vault.amountsInfo;
+    overridePart = {
+      amountsInfo: {
+        ...amountsInfoData,
+        tokenPriceUsd,
+        depositedAmount: { ...amountsInfoData?.depositedAmount, usd: amountsInfoData?.depositedAmount.tokens * tokenPriceUsd },
+        maxRewardAmount: { ...amountsInfoData?.maxRewardAmount, usd: amountsInfoData?.maxRewardAmount.tokens * tokenPriceUsd },
+      },
+    };
+  } else if (palmeraId === payoutData.vault?.id.toLowerCase() && payoutData.vault?.amountsInfo) {
     const tokenPriceUsd = 1;
     const amountsInfoData = payoutData.vault.amountsInfo;
     overridePart = {

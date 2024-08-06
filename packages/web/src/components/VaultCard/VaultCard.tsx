@@ -358,7 +358,13 @@ export const VaultCard = ({
               <>
                 {auditPayout ? (
                   <>
-                    <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.depositedAmount.usd) : "-"}</h3>
+                    <h3 className="value">
+                      {vault.amountsInfo
+                        ? vault.amountsInfo.depositedAmount.usd !== 0
+                          ? `~$${millify(vault.amountsInfo.depositedAmount.usd)}`
+                          : `${vault.stakingTokenSymbol} ${millify(vault.amountsInfo.depositedAmount.tokens)}`
+                        : "-"}
+                    </h3>
                     <div className="sub-value">{t("maxRewards")}</div>
                   </>
                 ) : (
@@ -383,12 +389,13 @@ export const VaultCard = ({
                 <>
                   <WithTooltip text={showIntended ? t("intendedValueExplanation") : undefined}>
                     <h3 className="value">
-                      ~$
                       {auditPayout
-                        ? millify(totalPaidOutOnAudit?.usd ?? 0)
+                        ? `${totalPaidOutOnAudit?.usd !== 0 ? "~$" : `${vault.stakingTokenSymbol} `}${millify(
+                            (totalPaidOutOnAudit?.usd || totalPaidOutOnAudit?.tokens) ?? 0
+                          )}`
                         : showIntended
-                        ? millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)
-                        : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
+                        ? `~$${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}`
+                        : `~$${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}`}
                     </h3>
                   </WithTooltip>
                   <div className="sub-value">

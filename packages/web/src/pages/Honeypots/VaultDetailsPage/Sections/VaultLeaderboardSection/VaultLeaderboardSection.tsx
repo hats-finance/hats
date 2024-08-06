@@ -152,7 +152,7 @@ type ILeaderboardEntryProps = {
   severitiesToShow: string[];
 };
 
-const LeaderboardEntry = ({ leaderboardEntry, idx, severitiesToShow }: ILeaderboardEntryProps) => {
+const LeaderboardEntry = ({ leaderboardEntry, idx, severitiesToShow, vault }: ILeaderboardEntryProps) => {
   const hackerProfile = useCachedProfile(leaderboardEntry.beneficiary);
   return (
     <>
@@ -174,7 +174,11 @@ const LeaderboardEntry = ({ leaderboardEntry, idx, severitiesToShow }: ILeaderbo
       </WithTooltip>
       <div className="content prize">
         <WithTooltip text={`${millify(leaderboardEntry.totalRewards.tokens)} ${leaderboardEntry.rewardToken}`}>
-          <p>${millify(leaderboardEntry.totalRewards.usd)}</p>
+          <p>
+            {leaderboardEntry.totalRewards.usd !== 0
+              ? `$${millify(leaderboardEntry.totalRewards.usd)}`
+              : `${vault.stakingTokenSymbol} ${millify(leaderboardEntry.totalRewards.tokens)}`}
+          </p>
         </WithTooltip>
       </div>
       {severitiesToShow.map((severity: string) => {
