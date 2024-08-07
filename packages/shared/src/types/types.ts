@@ -139,6 +139,8 @@ interface IBaseVaultDescription {
     type?: IVaultType;
     isPrivateAudit?: boolean;
     isContinuousAudit?: boolean;
+    requireMessageSignature?: boolean;
+    messageToSign?: string;
     whitelist: { address: string }[];
     endtime?: number;
     starttime?: number;
