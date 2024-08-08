@@ -720,6 +720,7 @@
     "collectingMessageSignature": "Collecting message signature",
     "youNeedToSignMessageToSubmit": "You need to sign a message",
     "youNeedToSignMessageToSubmitExplanation": "In order to submit a vulnerability in this vault you need to agree and sign a message. Please go to the vault details page and sign it before proceding.",
+    "submitter": "Submitter",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",
