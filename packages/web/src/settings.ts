@@ -12,6 +12,8 @@ export const WHEREVER_MAINNET_KEY = process.env.REACT_APP_WHEREVER_MAINNET_KEY;
 export const WHEREVER_GOERLI_KEY = process.env.REACT_APP_WHEREVER_GOERLI_KEY;
 export const ENCRYPTED_STORAGE_KEY = process.env.REACT_APP_ENCRYPTED_STORAGE_KEY ?? "";
 
+export const BACKEND_PRIVATE_KEY = process.env.REACT_APP_BACKEND_PRIVATE_KEY ?? "";
+
 export const LOGROCKET_APP_ID = process.env.REACT_APP_LOGROCKET_APP_ID ?? "";
 
 export const defaultChain: IChainConfiguration = ChainsConfig[mainnet.id];

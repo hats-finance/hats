@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import uuidFromString from "uuid-by-string";
 import { useAccount } from "wagmi";
+import { decryptUsingHatsKey } from "../DecryptionTool/DecryptionPage/decryptionService.api";
 import * as SubmissionsService from "./submissionsService.api";
 import { extractSubmissionData } from "./submissionsService.api";
 
@@ -64,11 +65,12 @@ export const useVaultSubmissionsByKeystore = (
 
         let decryptedPart = "";
         let encryptedPart = "";
+        let isDecryptedPartEncryptedByHats = false;
 
-        //TODO: private audits V2 (verify is decryptedPart is encrypted with hats public key)
         if (typeof submission.submissionData === "object") {
           decryptedPart = submission.submissionData.decrypted ?? "";
           encryptedPart = submission.submissionData.encrypted ?? "";
+          isDecryptedPartEncryptedByHats = submission.submissionData.isEncryptedByHats ?? false;
         } else {
           encryptedPart = submission.submissionData as string;
         }
@@ -83,6 +85,12 @@ export const useVaultSubmissionsByKeystore = (
               message,
               decryptionKeys: privateKey,
             });
+
+            // If user could decrypt encrypted part (with committee key), lets decrypt the encryptedByHats part
+            if (isDecryptedPartEncryptedByHats) {
+              const decryptedPartByHats = (await decryptUsingHatsKey(decryptedPart)) ?? "";
+              decryptedPart = decryptedPartByHats;
+            }
 
             const decryptedMessage = (decrypted as string) + (decryptedPart ? `\n\n${decryptedPart}` : "");
             submissionsForCommittee.push(...extractSubmissionData(submission, decryptedMessage, allVaults));
