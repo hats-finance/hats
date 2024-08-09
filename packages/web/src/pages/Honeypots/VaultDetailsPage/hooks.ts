@@ -40,9 +40,13 @@ export const useUserHasCollectedSignature = (vault: IVault | undefined): UseQuer
     queryKey: ["vault-message-signatures", vault?.id, account],
     queryFn: async () => {
       if (!vault?.description?.["project-metadata"].requireMessageSignature) return false;
-      const messageSignatures = await messageSignaturesService.getMessageSignatures(vault?.id);
 
-      return messageSignatures.some((signature) => signature.address.toLowerCase() === account?.toLowerCase());
+      try {
+        const messageSignatures = await messageSignaturesService.getMessageSignatures(vault?.id);
+        return messageSignatures.some((signature) => signature.address.toLowerCase() === account?.toLowerCase());
+      } catch (error) {
+        return [];
+      }
     },
     refetchOnWindowFocus: false,
     enabled: !!vault && !!account,

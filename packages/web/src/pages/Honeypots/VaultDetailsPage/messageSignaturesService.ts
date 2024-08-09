@@ -28,10 +28,15 @@ export async function collectMessageSignature(
 ): Promise<boolean> {
   if (!vaultId) return false;
 
-  const response = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session/message-sigs/${vaultId}`, {
-    signature,
-    expectedAddress,
-  });
+  try {
+    const response = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session/message-sigs/${vaultId}`, {
+      signature,
+      expectedAddress,
+    });
 
-  return response.status === 200;
+    return response.status === 200;
+  } catch (error) {
+    console.error("Error collecting message signature:", error);
+    return false;
+  }
 }

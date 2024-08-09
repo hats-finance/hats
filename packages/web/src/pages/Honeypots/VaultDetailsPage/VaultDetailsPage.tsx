@@ -139,7 +139,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
         return (
           <div className="mt-5">
             <Alert className="mt-5 mb-5" type="warning">
-              {t("youNeedToSingMessageToParticipate", { vaultType: isAudit ? t("auditCompetition") : t("bugBounty") })}
+              {t("youNeedToSignMessageToParticipate", { vaultType: isAudit ? t("auditCompetition") : t("bugBounty") })}
             </Alert>
 
             <Button onClick={onMessageSignatureRequest}>{t("signMessageToParticipate")}</Button>
