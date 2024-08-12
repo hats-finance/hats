@@ -49,7 +49,7 @@ export const useUserHasCollectedSignature = (vault: IVault | undefined): UseQuer
       }
     },
     refetchOnWindowFocus: false,
-    enabled: !!vault && !!account,
+    enabled: !!vault,
   });
 };
 
