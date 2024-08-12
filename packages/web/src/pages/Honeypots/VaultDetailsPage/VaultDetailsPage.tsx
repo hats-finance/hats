@@ -57,19 +57,19 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const isAudit = vault?.description?.["project-metadata"].type === "audit";
   const requireMessageSignature = vault?.description?.["project-metadata"].requireMessageSignature;
 
-  // Extra check
-  useEffect(() => {
-    if (!account) return;
+  // // Extra check: Eurler CTF
+  // useEffect(() => {
+  //   if (!account) return;
 
-    // Euler CTF
-    if (vault?.id.toLowerCase() === "0xb526415bf0b6742c0538135ce096cdfdfe3688a2") {
-      const checkEuler = async () => {
-        const res = await axios.post("https://data.euler.finance/trm-address-checker-hatsfinancectf", { address: account });
-        console.log(res.data);
-      };
-      checkEuler();
-    }
-  }, [vault, account]);
+  //   // Euler CTF
+  //   if (vault?.id.toLowerCase() === "0xb526415bf0b6742c0538135ce096cdfdfe3688a2") {
+  //     const checkEuler = async () => {
+  //       const res = await axios.post("https://data.euler.finance/trm-address-checker-hatsfinancectf", { address: account });
+  //       console.log(res.data);
+  //     };
+  //     checkEuler();
+  //   }
+  // }, [vault, account]);
 
   const { data: userHasCollectedSignature, isLoading } = useUserHasCollectedSignature(vault);
   const {
