@@ -1,17 +1,20 @@
 import { IVulnerabilitySeverity } from "@hats.finance/shared";
 import ErrorIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ClearIcon from "@mui/icons-material/HighlightOffOutlined";
-import { Button, Seo } from "components";
+import { Button, Loading, Seo } from "components";
 import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
+import { useUserHasCollectedSignature } from "pages/Honeypots/VaultDetailsPage/hooks";
+import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { calcCid } from "pages/Submissions/SubmissionFormPage/encrypt";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { IS_PROD } from "settings";
 import { getAppVersion } from "utils";
+import { slugify } from "utils/slug.utils";
 import { useNetwork, useWaitForTransaction } from "wagmi";
 import {
   SubmissionContactInfo,
@@ -36,6 +39,7 @@ export const SubmissionFormPage = () => {
   const { t } = useTranslation();
   const confirm = useConfirm();
 
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { chain } = useNetwork();
   const [currentStep, setCurrentStep] = useState<number>();
@@ -45,6 +49,9 @@ export const SubmissionFormPage = () => {
 
   const { activeVaults, vaultsReadyAllChains } = useVaults();
   const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
+
+  const requireMessageSignature = vault?.description?.["project-metadata"].requireMessageSignature;
+  const { data: userHasCollectedSignature, isLoading: isLoadingCollectedSignature } = useUserHasCollectedSignature(vault);
 
   const steps = useMemo(
     () => [
@@ -184,7 +191,30 @@ export const SubmissionFormPage = () => {
   );
 
   const submitSubmission = useCallback(async () => {
+    if (!vault) return;
     if (!submissionData?.submissionsDescriptions?.submission) return;
+
+    // Check if vault requires message signature to submit
+    if (requireMessageSignature && !userHasCollectedSignature) {
+      const wantsToBeRedirected = await confirm({
+        title: t("youNeedToSignMessageToSubmit"),
+        titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+        description: t("youNeedToSignMessageToSubmitExplanation"),
+        cancelText: t("close"),
+        confirmText: t("gotIt"),
+      });
+
+      if (!wantsToBeRedirected) return;
+
+      const isAudit = vault?.description?.["project-metadata"].type === "audit";
+      const name = vault?.description?.["project-metadata"].name ?? "";
+
+      const mainRoute = `/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+      const vaultSlug = slugify(name);
+
+      return navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
+    }
+
     const submission = submissionData?.submissionsDescriptions?.submission;
     const calculatedCid = await calcCid(submission);
 
@@ -214,7 +244,7 @@ export const SubmissionFormPage = () => {
     }
 
     sendVulnerabilityOnChain(calculatedCid);
-  }, [sendVulnerabilityOnChain, submissionData, confirm, t]);
+  }, [sendVulnerabilityOnChain, submissionData, confirm, requireMessageSignature, userHasCollectedSignature, navigate, vault, t]);
 
   const handleClearSubmission = async () => {
     const wantsToClear = await confirm({
@@ -366,6 +396,8 @@ export const SubmissionFormPage = () => {
           </SubmissionFormContext.Provider>
         </div>
       </StyledSubmissionFormPage>
+
+      {isLoadingCollectedSignature && <Loading fixed extraText={`${t("loading")}...`} />}
     </>
   );
 };

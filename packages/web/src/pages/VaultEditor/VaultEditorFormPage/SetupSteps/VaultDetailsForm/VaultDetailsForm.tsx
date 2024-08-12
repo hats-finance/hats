@@ -29,6 +29,7 @@ export function VaultDetailsForm() {
   const vaultType = useWatch({ control, name: "project-metadata.type" });
   const isPrivateAudit = useWatch({ control, name: "project-metadata.isPrivateAudit" });
   const isContinuousAudit = useWatch({ control, name: "project-metadata.isContinuousAudit" });
+  const requireMessageSignature = useWatch({ control, name: "project-metadata.requireMessageSignature" });
 
   useEffect(() => {
     if (isContinuousAudit) return setValue("project-metadata.isPrivateAudit", false);
@@ -148,6 +149,15 @@ export function VaultDetailsForm() {
                 label={t("isContinuousAuditQuestion")}
               />
             ) : null}
+            {isAdvancedMode || requireMessageSignature ? (
+              <FormInput
+                {...register("project-metadata.requireMessageSignature")}
+                noMargin
+                disabled={isEditingExistingVault || allFormDisabled}
+                type="toggle"
+                label={t("requireMessageSignature")}
+              />
+            ) : null}
           </div>
         </div>
 
@@ -179,6 +189,20 @@ export function VaultDetailsForm() {
           label={t("VaultEditor.vault-details.oneLiner")}
           helper={watch("project-metadata.oneLiner") ? `${watch("project-metadata.oneLiner")?.length ?? 0} characters` : ""}
         />
+
+        {requireMessageSignature && (
+          <>
+            <p className="mb-3 helper-text">{t("VaultEditor.vault-details.messageToSign-explanation")}</p>
+            <FormInput
+              {...register("project-metadata.messageToSign")}
+              type="textarea"
+              colorable
+              disabled={allFormDisabled || isEditingExistingVault}
+              placeholder={t("VaultEditor.vault-details.messageToSign-placeholder")}
+              label={t("VaultEditor.vault-details.messageToSign")}
+            />
+          </>
+        )}
       </div>
 
       {isPrivateAudit && (

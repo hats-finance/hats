@@ -8,3 +8,8 @@ export interface IGithubIssue {
   issueData: ISubmitSubmissionRequest["createIssueRequests"][0];
   severity?: string;
 }
+
+export type MessageSignature = {
+  address: string;
+  signature: string;
+};

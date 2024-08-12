@@ -89,6 +89,9 @@ export const SubmissionCard = ({
               submissionData?.twitterUsername !== "--" &&
               submissionData?.twitterUsername !== "---" && <span>Twitter (X): {submissionData?.twitterUsername}</span>}
           </div>
+          <div className="hacker-details">
+            {t("submitter")}: {submission.submitter}
+          </div>
         </div>
         <div className="date">{moment(createdAt).format("Do MMM YYYY - hh:mma")}</div>
         <div className="details" onClick={() => inPayout && openSubmissionNewTab()}>

@@ -40,6 +40,7 @@ type VaultCardProps = {
   hideAmounts?: boolean;
   hideStatusPill?: boolean;
   hideLogo?: boolean;
+  hideSubmit?: boolean;
 };
 
 /**
@@ -53,6 +54,7 @@ type VaultCardProps = {
  * @param hideAmounts - Hide the amounts. (used on vault details page)
  * @param hideStatusPill - Hide the status pill.
  * @param hideLogo - Hide the logo.
+ * @param hideSubmit - Hide the submit vulnerability button.
  *
  * @remarks
  * For bug bounties and live/upcoming audit competitions, the vault data is passed as `vaultData`.
@@ -67,6 +69,7 @@ export const VaultCard = ({
   hideAmounts = false,
   hideStatusPill = false,
   hideLogo = false,
+  hideSubmit = false,
 }: VaultCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -411,7 +414,7 @@ export const VaultCard = ({
             </div>
           )}
 
-          {reducedStyles && (
+          {reducedStyles && !hideSubmit && (
             <>
               {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && (
                 <div className="stats__stat">
@@ -450,7 +453,7 @@ export const VaultCard = ({
                 {t("deposits")}
               </Button>
             )}
-            {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && (
+            {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && !hideSubmit && (
               <Button
                 disabled={noActions}
                 size="medium"

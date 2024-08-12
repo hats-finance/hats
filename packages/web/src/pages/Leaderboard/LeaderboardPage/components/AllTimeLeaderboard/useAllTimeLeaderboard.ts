@@ -4,6 +4,7 @@ import { usePayoutsGroupedByAddress } from "hooks/leaderboard";
 import { IPayoutsTimeframe } from "hooks/leaderboard/usePayoutsGroupedByAddress";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useAddressesStreak } from "pages/HackerProfile/useAddressesStreak";
+import { useAllProfiles } from "pages/HackerProfile/useCachedProfile";
 import { useMemo, useState } from "react";
 
 export type IAllTimeLeaderboardSortKey = "streak" | "totalAmount" | "totalFindings";
@@ -24,11 +25,12 @@ export const useAllTimeLeaderboard = (
   const payoutsGroupedByAddress = usePayoutsGroupedByAddress(timeframe);
   const { getAddressesStreakCount } = useAddressesStreak();
   const { vaultsReadyAllChains } = useVaults();
+  const { data: profiles } = useAllProfiles();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const payoutsWithStats = useMemo(() => {
-    if (!vaultsReadyAllChains) return [];
+    if (!vaultsReadyAllChains || !profiles) return [];
 
     // Iterate over each entry on payoutsGroupedByAddress and calculate stats (total amount, total submissions and highest severity)
     const payoutsGroupedByAddressWithStats = Object.entries(payoutsGroupedByAddress).map(([address, payouts]) => {
@@ -56,7 +58,18 @@ export const useAllTimeLeaderboard = (
                 : acc.highestSeverity;
           } else if (payout.payoutData?.type === "split") {
             for (const ben of payout.payoutData.beneficiaries) {
-              if (address.toLowerCase() !== ben.beneficiary.toLowerCase()) continue;
+              const profileAddresses =
+                profiles.find((prof) =>
+                  prof.addresses.map((address) => address.toLowerCase()).includes(ben.beneficiary.toLowerCase())
+                )?.addresses ?? [];
+              const isSameProfile = profileAddresses.map((address) => address.toLowerCase()).includes(address.toLowerCase());
+
+              if (profileAddresses.length === 0) {
+                if (address.toLowerCase() !== ben.beneficiary.toLowerCase()) continue;
+              } else {
+                if (profileAddresses.length !== 0 && !isSameProfile) continue;
+              }
+
               // Total percentage paid out to all beneficiaries (usually 100%)
               const totalPercentage = payout.payoutData.beneficiaries.reduce(
                 (acc, curr) => acc + Number(curr.percentageOfPayout),
@@ -105,7 +118,7 @@ export const useAllTimeLeaderboard = (
         (a, b) => (b.streak ?? 0) - (a.streak ?? 0) || b.totalAmount.usd - a.totalAmount.usd
       );
     }
-  }, [payoutsGroupedByAddress, vaultsReadyAllChains, getAddressesStreakCount, sortKey]);
+  }, [payoutsGroupedByAddress, vaultsReadyAllChains, getAddressesStreakCount, sortKey, profiles]);
 
   return { leaderboard: payoutsWithStats, isLoading };
 };
