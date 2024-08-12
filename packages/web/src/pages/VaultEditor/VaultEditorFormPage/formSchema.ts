@@ -26,6 +26,10 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       type: Yup.string().required(intl("required")).typeError(intl("required")),
       isPrivateAudit: Yup.boolean(),
       isContinuousAudit: Yup.boolean(),
+      requireMessageSignature: Yup.boolean(),
+      messageToSign: Yup.string().when("requireMessageSignature", (requireMessageSignature: boolean, schema: any) => {
+        if (requireMessageSignature) return schema.required(intl("required")).typeError(intl("required"));
+      }),
       whitelist: Yup.array()
         .of(
           Yup.object({

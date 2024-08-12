@@ -1,14 +1,18 @@
 import { IVault } from "@hats.finance/shared";
-import { Alert, Loading, Seo, VaultCard } from "components";
+import axios from "axios";
+import { Alert, Button, Loading, Seo, VaultCard } from "components";
+import { axiosClient } from "config/axiosClient";
+import { queryClient } from "config/reactQuery";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAccount, useSignMessage } from "wagmi";
 import { useAuditCompetitionsVaults, useOldAuditCompetitions } from "../VaultsPage/hooks";
 import { HoneypotsRoutePaths } from "../router";
 import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection, VaultSubmissionsSection } from "./Sections";
 import { VaultLeaderboardSection } from "./Sections/VaultLeaderboardSection/VaultLeaderboardSection";
-import { useSavedSubmissions } from "./hooks";
+import { useCollectMessageSignature, useSavedSubmissions, useUserHasCollectedSignature } from "./hooks";
 import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
 const DETAILS_SECTIONS = [
@@ -42,6 +46,8 @@ type VaultDetailsPageProps = {
 
 export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = false }: VaultDetailsPageProps) => {
   const { t } = useTranslation();
+  const { address: account } = useAccount();
+  const { signMessageAsync } = useSignMessage();
 
   const { allVaults } = useVaults();
   const navigate = useNavigate();
@@ -49,6 +55,28 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const vaultId = vaultSlug?.split("-").pop();
   const vault = vaultToUse ?? allVaults?.find((vault) => vault.id === vaultId);
   const isAudit = vault?.description?.["project-metadata"].type === "audit";
+  const requireMessageSignature = vault?.description?.["project-metadata"].requireMessageSignature;
+
+  // // Extra check: Eurler CTF
+  // useEffect(() => {
+  //   if (!account) return;
+
+  //   // Euler CTF
+  //   if (vault?.id.toLowerCase() === "0xb526415bf0b6742c0538135ce096cdfdfe3688a2") {
+  //     const checkEuler = async () => {
+  //       const res = await axios.post("https://data.euler.finance/trm-address-checker-hatsfinancectf", { address: account });
+  //       console.log(res.data);
+  //     };
+  //     checkEuler();
+  //   }
+  // }, [vault, account]);
+
+  const { data: userHasCollectedSignature, isLoading } = useUserHasCollectedSignature(vault);
+  const {
+    mutateAsync: collectMessageSignature,
+    isLoading: isCollectingMessageSignature,
+    error: errorCollectingSig,
+  } = useCollectMessageSignature();
 
   const { data: savedSubmissions } = useSavedSubmissions(vault);
   const { finished: finishedAuditPayouts } = useAuditCompetitionsVaults();
@@ -71,7 +99,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
     [noActions, isAudit, auditPayout, savedSubmissions]
   );
 
-  if (allVaults?.length === 0) return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
+  if (allVaults?.length === 0 || isLoading) return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
   if (!vault || !vault.description) {
     return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
   }
@@ -93,8 +121,77 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
     }
   };
 
+  const onMessageSignatureRequest = async () => {
+    if (!account) return;
+    if (!vault.description?.["project-metadata"].requireMessageSignature) return;
+
+    const messageToSign = vault.description?.["project-metadata"].messageToSign;
+    if (!messageToSign) return alert("No message to sign. Please contact Hats Finance Team.");
+
+    const signature = await signMessageAsync({ message: messageToSign });
+
+    try {
+      await collectMessageSignature({ vaultAddress: vault.id, signature, expectedAddress: account });
+      queryClient.invalidateQueries({ queryKey: ["vault-message-signatures", vault.id] });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const SectionToRender =
     DETAILS_SECTIONS.find((section) => section.title === openSectionId)?.component ?? DETAILS_SECTIONS[0].component;
+
+  const getMainContent = () => {
+    if (requireMessageSignature) {
+      if (!account) {
+        return (
+          <Alert className="mt-5 mb-5" type="warning">
+            {t("pleaseConnectYourWallet")}
+          </Alert>
+        );
+      }
+
+      if (!userHasCollectedSignature) {
+        return (
+          <div className="mt-5">
+            <Alert className="mt-5 mb-5" type="warning">
+              {t("youNeedToSignMessageToParticipate", { vaultType: isAudit ? t("auditCompetition") : t("bugBounty") })}
+            </Alert>
+
+            <Button onClick={onMessageSignatureRequest}>{t("signMessageToParticipate")}</Button>
+
+            {errorCollectingSig && (
+              <Alert className="mt-5 mb-5" type="error">
+                <>
+                  {t("error")}: {(errorCollectingSig.response?.data as any)?.error}
+                </>
+              </Alert>
+            )}
+          </div>
+        );
+      }
+    }
+
+    return (
+      <>
+        <div className="sections-tabs">
+          {DETAILS_SECTIONS_TO_SHOW.map((section) => (
+            <StyledSectionTab
+              onClick={() => changeDetailsSection(section.title)}
+              active={openSectionId === section.title}
+              key={section.title}
+            >
+              <h4>{t(section.title)}</h4>
+            </StyledSectionTab>
+          ))}
+        </div>
+
+        <div className="section-container">
+          {SectionToRender && <SectionToRender vault={vault} noDeployed={noDeployed} auditPayout={auditPayout} />}
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
@@ -116,24 +213,19 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
         )}
 
         <div className="mt-5">
-          <VaultCard noActions={noActions} reducedStyles vaultData={vault} noDeployed={noDeployed} hideAmounts={!!auditPayout} />
+          <VaultCard
+            noActions={noActions}
+            reducedStyles
+            vaultData={vault}
+            noDeployed={noDeployed}
+            hideAmounts={!!auditPayout}
+            hideSubmit={requireMessageSignature && !userHasCollectedSignature}
+          />
         </div>
 
-        <div className="sections-tabs">
-          {DETAILS_SECTIONS_TO_SHOW.map((section) => (
-            <StyledSectionTab
-              onClick={() => changeDetailsSection(section.title)}
-              active={openSectionId === section.title}
-              key={section.title}
-            >
-              <h4>{t(section.title)}</h4>
-            </StyledSectionTab>
-          ))}
-        </div>
+        {getMainContent()}
 
-        <div className="section-container">
-          {SectionToRender && <SectionToRender vault={vault} noDeployed={noDeployed} auditPayout={auditPayout} />}
-        </div>
+        {isCollectingMessageSignature && <Loading fixed extraText={`${t("collectingMessageSignature")}...`} />}
       </StyledVaultDetailsPage>
     </>
   );
