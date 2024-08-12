@@ -1,1 +1,11 @@
-export const severitiesOrder = ["formal verification", "gas saving", "low", "medium", "high", "critical"];
+export const severitiesOrder = [
+  "formal verification",
+  "gas saving",
+  "base-fee",
+  "lead-auditor",
+  "minor",
+  "low",
+  "medium",
+  "high",
+  "critical",
+];
