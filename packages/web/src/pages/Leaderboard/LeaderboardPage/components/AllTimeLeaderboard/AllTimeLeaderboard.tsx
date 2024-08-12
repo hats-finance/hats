@@ -77,7 +77,7 @@ const LeaderboardEntry = ({ leaderboardEntry, idx, severityColors }: ILeaderboar
   return (
     <>
       <div className="content">{idx + 1}.</div>
-      <WithTooltip text={leaderboardEntry.address}>
+      <WithTooltip text={hackerProfile?.addresses.join("\n")}>
         <div className="content sr-data">
           {hackerProfile ? (
             <NavLink to={`${RoutePaths.profile}/${hackerProfile.username}`} className="address profile">
