@@ -31,7 +31,9 @@ export const useAuditPayoutLeaderboardData = (
       const totalPercentage = payoutData.beneficiaries.reduce((acc, curr) => acc + Number(curr.percentageOfPayout), 0);
 
       const auditLeaderboard: IAuditPayoutLeaderboardData[] = payoutData.beneficiaries.reduce((acc, curr) => {
-        const existingBeneficiary = acc.find((beneficiary) => beneficiary.beneficiary === curr.beneficiary);
+        const existingBeneficiary = acc.find(
+          (beneficiary) => beneficiary.beneficiary.toLowerCase() === curr.beneficiary.toLowerCase()
+        );
 
         const findingRewardUsd = (Number(curr.percentageOfPayout) / totalPercentage) * totalRewardInUSD;
         const findingRewardTokens = (Number(curr.percentageOfPayout) / totalPercentage) * totalRewardInToken;
@@ -55,7 +57,7 @@ export const useAuditPayoutLeaderboardData = (
           }
         } else {
           acc.push({
-            beneficiary: curr.beneficiary,
+            beneficiary: curr.beneficiary.toLowerCase(),
             rewardToken: auditPayout.payoutData?.vault?.stakingTokenSymbol ?? "",
             totalRewards: { usd: findingRewardUsd, tokens: findingRewardTokens },
             findings: [
