@@ -942,7 +942,7 @@
       "createProfileCta": "Create profile",
       "updateProfileCta": "Update profile",
       "soundGreatLetsGo": "Sounds great, let's go!",
-      "welcomeTitle": "Welcome to the White Hats Community!",
+      "welcomeTitle": "Welcome to the Hats Community!",
       "welcomeContent": "Greetings to all White Hat Hackers, Security Researchers, and Auditors! \n\n New to Hats? No problem.\nJoin us now and start your hacking journey later.",
       "introTitle": "Your wallet = Your White Hat profile",
       "introContent": "On Hats you submit vulnerabilities, get paid and arbitrate on-chain.<br/><br/>Create your White Hat prodile using your wallet.<br/><br/> <ul><li>List all your socials and add a short bio.</li> <li>Track your stats.</li> <li>Explore your audit competition history and OnChain discoveries in a detailed timeline view.</li></ul>",
@@ -995,7 +995,21 @@
       "cannotUnlinkLastAddress": "You can't unlink your last address from your profile.",
       "allTime": "All time",
       "streakExplanationTitle": "<p><strong>Introducing</strong> <i>Streak</i></p>",
-      "streakExplanationDescription": "<p>Build Your Streak with Consistent Engagement</p><br/><p><strong>Start Your Streak:</strong> Initiate a streak by submitting valid findings.</p><br/><p><strong>Reflect Your Dedication:</strong> Your streak is a testament to your consistent engagement in the community.</p><br/><p><strong>Maintain Your Momentum:</strong> Keep your streak alive by submitting at least one valid finding each month.</p>"
+      "streakExplanationDescription": "<p>Build Your Streak with Consistent Engagement</p><br/><p><strong>Start Your Streak:</strong> Initiate a streak by submitting valid findings.</p><br/><p><strong>Reflect Your Dedication:</strong> Your streak is a testament to your consistent engagement in the community.</p><br/><p><strong>Maintain Your Momentum:</strong> Keep your streak alive by submitting at least one valid finding each month.</p>",
+      "applyForCurator": "Apply for curator role",
+      "loadingCuratorApplication": "Loading curator application"
+    },
+    "CuratorForm": {
+      "welcomeTitle": "Join Hats growth curator Program",
+      "welcomeContent": "<p>A curator functions essentially as a growth ambassador of Hats Finance and a proponent of DeSec. Curators introduce projects for audit competitions and depending on the tier, help support and curate their audit competition journey and experience on Hats Finance. Upon successful curation of audit competitions, curators can receive a fee for their services.</p> </br> <p>Other than acting as referrals, curators should ideally be able to help pitch and support customers through the process, offering a value-adding experience to Hats Finance customers.</p> </br> <p>If you fall under this category, and want to become a growth curator for DeSec, press next and review the roles.</p>",
+      "selectARole": "Select a role",
+      "selectARoleDesc": "Select the role you are willing to provide as a curator.",
+      "growthSeeker": "Growth Seeker",
+      "growthSeekerDesc": "The Growth Seeker plays a pivotal role in expanding our outreach by bringing quality leads to Hats Finance. This entry-level position is perfect for those eager to dive into the blockchain community and generate impactful connections.",
+      "growthGenius": "Growth Genius",
+      "growthGeniusDesc": "As a Growth Genius, your task is to ensure the smooth progression of competitions from conception to deployment. This role requires a keen eye for detail and strong project management skills.",
+      "growthWizard": "Growth Wizard",
+      "growthWizardDesc": "The Growth Wizard is crucial for the end-to-end management of competitions, from promotion to the resolution of disputes. This role is suited for those with deep understanding and experience in managing blockchain competitions."
     },
     "PGPTool": {
       "title": "PGP tool",
@@ -1341,7 +1355,7 @@
     },
     "Header": {
       "myProfile": "My Profile",
-      "createHackerProfile": "Create White Hat Profile",
+      "createHackerProfile": "Create Hats Profile",
       "updateHackerProfile": "Update Profile Data",
       "myWallet": "My Wallet",
       "MyAccount": {

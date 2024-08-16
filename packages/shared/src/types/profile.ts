@@ -13,4 +13,15 @@ export interface IHackerProfile {
     twitter?: { id: string; name: string; username: string };
     github?: { id: string; name: string; username: string };
   };
+  curatorApplication?: {
+    roles: string[];
+    services: string[];
+    whyInterested: string;
+    workedWithweb3Security: boolean;
+    workedWithweb3SecurityDescription?: string;
+    shortBio: string;
+    termsAndConditions: boolean;
+    telegramHandle: string;
+    discordHandle: string;
+  };
 }

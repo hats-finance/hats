@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatNumber } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
-import { CreateProfileFormModal } from "../components";
+import { CreateProfileFormModal, CuratorFormModal } from "../components";
 import { useLinkNewAddress, useProfileByUsername, useUnlinkAddress } from "../hooks";
 import { useAddressesStats } from "../useAddressesStats";
 import { useAddressesStreak } from "../useAddressesStreak";
@@ -37,6 +37,7 @@ export const HackerProfilePage = () => {
 
   const [showSettings, setShowSettings] = useState(false);
   const { isShowing: isShowingUpdateProfile, show: showUpdateProfile, hide: hideUpdateProfile } = useModal();
+  const { isShowing: isShowingCuratorModal, show: showCuratorModal, hide: hideCuratorModal } = useModal();
   const [ownerSiweData, setOwnerSiweData] = useState<ISiweData>();
 
   const { data: profileFound, isLoading: isLoadingProfile } = useProfileByUsername(username);
@@ -210,6 +211,10 @@ export const HackerProfilePage = () => {
                       ))}
                     </div>
                   </div>
+
+                  <Button size="medium" styleType="outlined" onClick={showCuratorModal}>
+                    {t("HackerProfile.applyForCurator")}
+                  </Button>
                 </div>
               )}
             </div>
@@ -261,6 +266,7 @@ export const HackerProfilePage = () => {
       </StyledHackerProfilePage>
 
       <CreateProfileFormModal isShowing={isShowingUpdateProfile} onHide={hideUpdateProfile} />
+      <CuratorFormModal isShowing={isShowingCuratorModal} onHide={hideCuratorModal} />
     </>
   );
 };
