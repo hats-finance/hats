@@ -11,6 +11,7 @@ import { useAuditCompetitionsVaults, useOldAuditCompetitions } from "../VaultsPa
 import { HoneypotsRoutePaths } from "../router";
 import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection, VaultSubmissionsSection } from "./Sections";
 import { VaultLeaderboardSection } from "./Sections/VaultLeaderboardSection/VaultLeaderboardSection";
+import { EulerCTFTAndC } from "./extra/EulerCTFTAndC";
 import { useCollectMessageSignature, useSavedSubmissions, useUserHasCollectedSignature } from "./hooks";
 import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
@@ -57,18 +58,19 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const requireMessageSignature = vault?.description?.["project-metadata"].requireMessageSignature;
 
   // Extra check: Euler CTF
+  const isEulerCTF = vault?.id.toLowerCase() === "0x8899a84b1807c78db09c1ccd0812946d18986151";
   useEffect(() => {
     if (!account) return;
 
     // Euler CTF
-    if (vault?.id.toLowerCase() === "0x8899a84b1807c78db09c1ccd0812946d18986151") {
+    if (isEulerCTF) {
       const checkEuler = async () => {
         const res = await axios.post("https://data.euler.finance/trm-address-checker-hatsfinancectf", { address: account });
         console.log("Euler Check", res.data);
       };
       checkEuler();
     }
-  }, [vault, account]);
+  }, [isEulerCTF, account]);
 
   const { data: userHasCollectedSignature, isLoading } = useUserHasCollectedSignature(vault);
   const {
@@ -153,9 +155,13 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
       if (!userHasCollectedSignature) {
         return (
           <div className="mt-5">
-            <Alert className="mt-5 mb-5" type="warning">
-              {t("youNeedToSignMessageToParticipate", { vaultType: isAudit ? t("auditCompetition") : t("bugBounty") })}
-            </Alert>
+            {isEulerCTF ? (
+              <EulerCTFTAndC />
+            ) : (
+              <Alert className="mt-5 mb-5" type="warning">
+                {t("youNeedToSignMessageToParticipate", { vaultType: isAudit ? t("auditCompetition") : t("bugBounty") })}
+              </Alert>
+            )}
 
             <Button onClick={onMessageSignatureRequest}>{t("signMessageToParticipate")}</Button>
 
