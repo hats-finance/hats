@@ -1,7 +1,6 @@
 import { IVault } from "@hats.finance/shared";
 import axios from "axios";
 import { Alert, Button, Loading, Seo, VaultCard } from "components";
-import { axiosClient } from "config/axiosClient";
 import { queryClient } from "config/reactQuery";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useEffect, useMemo, useState } from "react";
@@ -57,19 +56,19 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const isAudit = vault?.description?.["project-metadata"].type === "audit";
   const requireMessageSignature = vault?.description?.["project-metadata"].requireMessageSignature;
 
-  // // Extra check: Eurler CTF
-  // useEffect(() => {
-  //   if (!account) return;
+  // Extra check: Euler CTF
+  useEffect(() => {
+    if (!account) return;
 
-  //   // Euler CTF
-  //   if (vault?.id.toLowerCase() === "0xb526415bf0b6742c0538135ce096cdfdfe3688a2") {
-  //     const checkEuler = async () => {
-  //       const res = await axios.post("https://data.euler.finance/trm-address-checker-hatsfinancectf", { address: account });
-  //       console.log(res.data);
-  //     };
-  //     checkEuler();
-  //   }
-  // }, [vault, account]);
+    // Euler CTF
+    if (vault?.id.toLowerCase() === "0x8899a84b1807c78db09c1ccd0812946d18986151") {
+      const checkEuler = async () => {
+        const res = await axios.post("https://data.euler.finance/trm-address-checker-hatsfinancectf", { address: account });
+        console.log("Euler Check", res.data);
+      };
+      checkEuler();
+    }
+  }, [vault, account]);
 
   const { data: userHasCollectedSignature, isLoading } = useUserHasCollectedSignature(vault);
   const {

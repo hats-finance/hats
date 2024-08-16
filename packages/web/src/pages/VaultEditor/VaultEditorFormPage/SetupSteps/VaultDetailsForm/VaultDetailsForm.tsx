@@ -153,7 +153,7 @@ export function VaultDetailsForm() {
               <FormInput
                 {...register("project-metadata.requireMessageSignature")}
                 noMargin
-                disabled={isEditingExistingVault || allFormDisabled}
+                disabled={allFormDisabled}
                 type="toggle"
                 label={t("requireMessageSignature")}
               />
@@ -197,7 +197,7 @@ export function VaultDetailsForm() {
               {...register("project-metadata.messageToSign")}
               type="textarea"
               colorable
-              disabled={allFormDisabled || isEditingExistingVault}
+              disabled={allFormDisabled}
               placeholder={t("VaultEditor.vault-details.messageToSign-placeholder")}
               label={t("VaultEditor.vault-details.messageToSign")}
             />
