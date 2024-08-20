@@ -108,7 +108,7 @@ const fixVaultsData = (vaults: IVault[]) => {
     eulerCTFVault.stakingToken = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
     eulerCTFVault.stakingTokenDecimals = "6";
     eulerCTFVault.stakingTokenSymbol = "USDC";
-    eulerCTFVault.honeyPotBalance = "4000000000000";
+    eulerCTFVault.honeyPotBalance = "3500000000000";
   }
 
   return newVaults;
