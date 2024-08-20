@@ -721,6 +721,7 @@
     "youNeedToSignMessageToSubmit": "You need to sign a message",
     "youNeedToSignMessageToSubmitExplanation": "In order to submit a vulnerability in this vault you need to agree and sign a message. Please go to the vault details page and sign it before proceeding.",
     "submitter": "Submitter",
+    "youAreNotAllowedToParticipateInThisCompetition": "You are not allowed to participate in this competition.",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",

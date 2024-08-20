@@ -1,0 +1,1060 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Hats Euler CTF Terms final</title>
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+        text-indent: 0;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      h1 {
+        color: white;
+        font-style: normal;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 11pt;
+      }
+      .p,
+      p {
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 11pt;
+        margin: 0pt;
+      }
+      .s1 {
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 8.5pt;
+      }
+      .h2 {
+        color: white;
+        font-style: normal;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 8.5pt;
+      }
+      .s2 {
+        color: white;
+        font-style: normal;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 8.5pt;
+      }
+      .s4 {
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 8.5pt;
+      }
+      .s5 {
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 11pt;
+      }
+      .s8 {
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 11pt;
+      }
+      .a {
+        color: #24e8c5;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: underline;
+        font-size: 11pt;
+      }
+      .s9 {
+        color: #24e8c5;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 11pt;
+      }
+      li {
+        display: block;
+      }
+      #l1 {
+        padding-left: 0pt;
+        counter-reset: c1 1;
+      }
+      #l1 > li > *:first-child:before {
+        counter-increment: c1;
+        content: counter(c1, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l1 > li:first-child > *:first-child:before {
+        counter-increment: c1 0;
+      }
+      #l2 {
+        padding-left: 0pt;
+        counter-reset: c2 1;
+      }
+      #l2 > li > *:first-child:before {
+        counter-increment: c2;
+        content: counter(c1, decimal) "." counter(c2, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l2 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+      #l3 {
+        padding-left: 0pt;
+        counter-reset: c2 1;
+      }
+      #l3 > li > *:first-child:before {
+        counter-increment: c2;
+        content: counter(c1, decimal) "." counter(c2, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l3 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+      #l4 {
+        padding-left: 0pt;
+        counter-reset: c2 1;
+      }
+      #l4 > li > *:first-child:before {
+        counter-increment: c2;
+        content: counter(c1, decimal) "." counter(c2, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l4 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+      #l5 {
+        padding-left: 0pt;
+        counter-reset: c2 1;
+      }
+      #l5 > li > *:first-child:before {
+        counter-increment: c2;
+        content: counter(c1, decimal) "." counter(c2, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l5 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+      #l6 {
+        padding-left: 0pt;
+        counter-reset: c3 1;
+      }
+      #l6 > li > *:first-child:before {
+        counter-increment: c3;
+        content: counter(c1, decimal) "." counter(c2, decimal) "." counter(c3, lower-latin) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 11pt;
+      }
+      #l6 > li:first-child > *:first-child:before {
+        counter-increment: c3 0;
+      }
+      #l7 {
+        padding-left: 0pt;
+        counter-reset: d1 5;
+      }
+      #l7 > li > *:first-child:before {
+        counter-increment: d1;
+        content: counter(d1, decimal) " ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l7 > li:first-child > *:first-child:before {
+        counter-increment: d1 0;
+      }
+      #l8 {
+        padding-left: 0pt;
+        counter-reset: d2 3;
+      }
+      #l8 > li > *:first-child:before {
+        counter-increment: d2;
+        content: counter(d1, decimal) "." counter(d2, decimal) " ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l8 > li:first-child > *:first-child:before {
+        counter-increment: d2 0;
+      }
+      #l9 {
+        padding-left: 0pt;
+        counter-reset: d3 1;
+      }
+      #l9 > li > *:first-child:before {
+        counter-increment: d3;
+        content: counter(d1, decimal) "." counter(d2, decimal) "." counter(d3, lower-latin) " ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l9 > li:first-child > *:first-child:before {
+        counter-increment: d3 0;
+      }
+      #l10 {
+        padding-left: 0pt;
+        counter-reset: d4 1;
+      }
+      #l10 > li > *:first-child:before {
+        counter-increment: d4;
+        content: counter(d1, decimal) "." counter(d2, decimal) "." counter(d3, lower-latin) "." counter(d4, lower-roman) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 10pt;
+      }
+      #l10 > li:first-child > *:first-child:before {
+        counter-increment: d4 0;
+      }
+      #l11 {
+        padding-left: 0pt;
+        counter-reset: d5 1;
+      }
+      #l11 > li > *:first-child:before {
+        counter-increment: d5;
+        content: counter(d5, decimal) ") ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 10pt;
+      }
+      #l11 > li:first-child > *:first-child:before {
+        counter-increment: d5 0;
+      }
+      #l12 {
+        padding-left: 0pt;
+        counter-reset: c2 1;
+      }
+      #l12 > li > *:first-child:before {
+        counter-increment: c2;
+        content: counter(c1, decimal) "." counter(c2, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l12 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+      #l13 {
+        padding-left: 0pt;
+        counter-reset: c3 1;
+      }
+      #l13 > li > *:first-child:before {
+        counter-increment: c3;
+        content: counter(c1, decimal) "." counter(c2, decimal) "." counter(c3, lower-latin) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 11pt;
+      }
+      #l13 > li:first-child > *:first-child:before {
+        counter-increment: c3 0;
+      }
+      #l14 {
+        padding-left: 0pt;
+        counter-reset: e1 6;
+      }
+      #l14 > li > *:first-child:before {
+        counter-increment: e1;
+        content: counter(e1, decimal) " ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l14 > li:first-child > *:first-child:before {
+        counter-increment: e1 0;
+      }
+      #l15 {
+        padding-left: 0pt;
+        counter-reset: e2 2;
+      }
+      #l15 > li > *:first-child:before {
+        counter-increment: e2;
+        content: counter(e1, decimal) "." counter(e2, decimal) " ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l15 > li:first-child > *:first-child:before {
+        counter-increment: e2 0;
+      }
+      #l16 {
+        padding-left: 0pt;
+        counter-reset: e3 1;
+      }
+      #l16 > li > *:first-child:before {
+        counter-increment: e3;
+        content: counter(e1, decimal) "." counter(e2, decimal) "." counter(e3, lower-latin) " ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l16 > li:first-child > *:first-child:before {
+        counter-increment: e3 0;
+      }
+      #l17 {
+        padding-left: 0pt;
+        counter-reset: e4 1;
+      }
+      #l17 > li > *:first-child:before {
+        counter-increment: e4;
+        content: counter(e1, decimal) "." counter(e2, decimal) "." counter(e3, lower-latin) "." counter(e4, lower-roman) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 10pt;
+      }
+      #l17 > li:first-child > *:first-child:before {
+        counter-increment: e4 0;
+      }
+      #l18 {
+        padding-left: 0pt;
+        counter-reset: c2 1;
+      }
+      #l18 > li > *:first-child:before {
+        counter-increment: c2;
+        content: counter(c1, decimal) "." counter(c2, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l18 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+      #l19 {
+        padding-left: 0pt;
+        counter-reset: c2 1;
+      }
+      #l19 > li > *:first-child:before {
+        counter-increment: c2;
+        content: counter(c1, decimal) "." counter(c2, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l19 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+      #l20 {
+        padding-left: 0pt;
+        counter-reset: c2 1;
+      }
+      #l20 > li > *:first-child:before {
+        counter-increment: c2;
+        content: counter(c1, decimal) "." counter(c2, decimal) ". ";
+        color: white;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #l20 > li:first-child > *:first-child:before {
+        counter-increment: c2 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="padding-top: 4pt; text-indent: 0pt; text-align: center">CAPTURE THE FLAG TERMS AND CONDITIONS</h1>
+    <p style="padding-top: 5pt; text-indent: 0pt; text-align: left"><br /></p>
+    <p style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
+      Please read these Capture the Flag Terms and Conditions (these “<b>Terms and Conditions</b>”) carefully. These Terms and
+      Conditions are by and between you and Hats Finance. By clicking accept, agree, clicking a check box or agreeing to a similar
+      term indicating consent to these terms or otherwise participating in the Program, you herby agree to the terms of these
+      Terms and Conditions.
+    </p>
+    <p style="padding-top: 11pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
+      By participating in the Program, you affirm that you are of legal age to enter into these Terms and Conditions.
+    </p>
+    <p style="padding-top: 2pt; text-indent: 0pt; text-align: left"><br /></p>
+    <p style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
+      I<span class="s1">F YOU ARE AN INDIVIDUAL PARTICIPATING IN THE PROGRAM ON BEHALF OF</span>,
+      <span class="s1">OR FOR THE BENEFIT OF</span>, <span class="s1">ANY CORPORATION</span>,
+      <span class="s1">PARTNERSHIP OR OTHER ENTITY WITH WHICH YOU ARE ASSOCIATED </span>(<span class="s1">AN </span>“<b>O</b
+      ><span class="h2">RGANIZATION</span>”), <span class="s1">THEN YOU ARE AGREEING TO THESE </span>T<span class="s1"
+        >ERMS AND </span
+      >C<span class="s1">ONDITIONS ON BEHALF OF YOURSELF AND SUCH </span>O<span class="s1">RGANIZATION</span>,
+      <span class="s1">AND YOU REPRESENT AND WARRANT THAT YOU HAVE THE LEGAL AUTHORITY TO BIND SUCH </span>O<span class="s1"
+        >RGANIZATION TO THESE </span
+      >T<span class="s1">ERMS AND </span>C<span class="s1">ONDITIONS</span>. I<span class="s1">N SUCH CASE</span>,
+      <span class="s1">REFERENCES TO </span>“<b>P</b><span class="h2">ARTICIPANT</span>” “<span class="s2">YOU</span>”
+      <span class="s1">AND </span>“<span class="s2">YOUR</span><b>” </b><span class="s4">IN THESE </span><span class="s5">T</span
+      ><span class="s4">ERMS AND </span><span class="s5">C</span><span class="s4">ONDITIONS WILL REFER TO THE </span
+      ><span class="s5">O</span><span class="s4">RGANIZATION</span><span class="s5">.</span>
+    </p>
+    <p style="padding-top: 1pt; text-indent: 0pt; text-align: left"><br /></p>
+    <ol id="l1">
+      <li data-list-text="1.">
+        <h1 style="padding-left: 13pt; text-indent: -8pt; text-align: left">
+          <a name="bookmark0">&zwnj;</a>Definitions<span class="p">.</span>
+        </h1>
+        <p style="padding-top: 11pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
+          <a name="bookmark1">&zwnj;</a>Unless otherwise defined in the body of these Terms and Conditions, defined terms have the
+          following meanings:
+        </p>
+        <ol id="l2">
+          <li data-list-text="1.1.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: left">
+              <a name="bookmark2">&zwnj;</a>“<b>Affiliated Entities</b>” means a party and their respective shareholders,
+              directors, officers, employees, affiliates, agents, representatives, licensors, suppliers and service providers.
+            </p>
+          </li>
+          <li data-list-text="1.2.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark3">&zwnj;</a>“<b>Applicable Laws</b>” means all laws, statutes, ordinances, regulations, and rules
+              of any governmental authority, regulatory body, or agency having jurisdiction over the parties or the subject matter
+              of these Terms and Conditions. This specifically includes the United States Department of the Treasury’s Office of
+              Foreign Assets Control (OFAC), the United Nations Security Council, the European Union, and other laws and
+              regulations relating to economic sanctions, restrictions, trade embargoes, and export controls imposed by any
+              government or international organization, including those imposed by the United Kingdom and the Cayman Islands.
+            </p>
+          </li>
+          <li data-list-text="1.3.">
+            <p style="padding-top: 11pt; padding-left: 43pt; text-indent: -16pt; text-align: justify">
+              <a name="bookmark4">&zwnj;</a>“<b>Euler</b>” means The Euler Foundation, the entity sponsoring the Program.
+            </p>
+          </li>
+          <li data-list-text="1.4.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark5">&zwnj;</a>“<b>Euler Protocol</b>” means Euler’s or its applicable affiliates’ protocol,
+              software, products, applications, systems, platform, hardware, equipment, or services, including Euler’s live
+              contracts.
+            </p>
+          </li>
+          <li data-list-text="1.5.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark6">&zwnj;</a>“<b>Participant Data</b>” means information, data, and other content, in any form or
+              medium, that is submitted, posted, or otherwise transmitted or made available by or on behalf of Participant in
+              connection with the Program.
+            </p>
+          </li>
+          <li data-list-text="1.6.">
+            <p style="padding-top: 11pt; padding-left: 43pt; text-indent: -16pt; text-align: justify">
+              <a name="bookmark7">&zwnj;</a>“<b>Participant</b>” means the person or entity participating in the Program.
+            </p>
+          </li>
+          <li data-list-text="1.7.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark8">&zwnj;</a>“<b>Program</b>” means the security initiative called Euler CTF Challenge; a “capture
+              the flag” security event aimed at motivating participants to rigorously test Euler’s smart contracts in exchange for
+              a Reward to a successful Submission. During the Program Period, Participant will seek to exploit the USDC/ETH and
+              WETH/USDC pools within Euler’s live contracts to claim the Reward.
+            </p>
+          </li>
+          <li data-list-text="1.8.">
+            <p style="padding-top: 4pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark9">&zwnj;</a>“<b>Reward(s)</b>” means the financial reward that may be awarded to a Participant
+              that meets the applicable requirements set forth in these Terms and Conditions.
+            </p>
+          </li>
+          <li data-list-text="1.9.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark10">&zwnj;</a>“<b>Sanctioned Jurisdictions</b>” means the following jurisdictions: (a) Russia; (b)
+              Iran; (c) Cuba; (d) North Korea; (e) Syria; (f) Myanmar (Burma); and (g) Crimea, Donetsk, and (f) Luhansk regions in
+              Ukraine.
+            </p>
+          </li>
+          <li data-list-text="1.10.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark11">&zwnj;</a>“<b>Submission</b>” means documents and related materials evidencing Participant’s
+              activities related to a Program, including Vulnerability Reports.
+            </p>
+          </li>
+          <li data-list-text="1.11.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark12">&zwnj;</a>“<b>Vulnerability Report</b>” means bug reports or other vulnerability information,
+              in text, graphics, image, software, works of authorship of any kind, and information or other material that a
+              Participant may provide or otherwise make available through the Program to Hats and Euler resulting from
+              participation in a Program.
+            </p>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="2.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark13">&zwnj;</a>Changes<span class="p"
+            >. We may change these Terms and Conditions from time to time by notifying you of such changes, including by posting a
+            revised Agreement through the Program. Any such changes will not apply to any dispute between you and us arising prior
+            to the date on which we posted the revised Agreement incorporating such changes, or otherwise notified you of such
+            changes.</span
+          >
+        </h1>
+        <p style="padding-top: 11pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
+          Your participation in the Program following any changes to these Terms and Conditions will constitute your acceptance of
+          such changes. The “<i>Last Updated</i>” legend above indicates when these Terms and Conditions was last changed. We may,
+          at any time and without liability, modify or discontinue all or part of the Program (including access to the Program via
+          any third-party links); or offer opportunities to some or all Participants.
+        </p>
+      </li>
+      <li data-list-text="3.">
+        <h1 style="padding-top: 11pt; padding-left: 13pt; text-indent: -8pt; text-align: justify">
+          <a name="bookmark14">&zwnj;</a>Program Terms<span class="p">.</span>
+        </h1>
+        <ol id="l3">
+          <li data-list-text="3.1.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark15">&zwnj;</a><u>Objective</u>. Euler aims to reward those who are able to exploit the USDC/ETH and
+              WETH/USDC pools within Euler’s live contracts. To be eligible for a Reward, a Participant must meet all of the
+              applicable requirements set forth in these Term and Conditions and not violate any Applicable Laws.
+            </p>
+          </li>
+          <li data-list-text="3.2.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark16">&zwnj;</a><u>Program Duration.</u> The Program commences on at noon ET on August 21, 2024, and
+              ends at noon ET on September 2, 2024. (the “<b>Program Period</b>”).
+            </p>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="4.">
+        <h1 style="padding-top: 11pt; padding-left: 13pt; text-indent: -8pt; text-align: justify">
+          <a name="bookmark17">&zwnj;</a>Participant Eligibility<span class="p">.</span>
+        </h1>
+        <ol id="l4">
+          <li data-list-text="4.1.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark18">&zwnj;</a><u>KYC</u
+              ><a href="#bookmark52" class="s8"
+                >. Prior to receiving a Reward and within forty eight (48) hours of providing notification that it Accessed the
+                Funds in accordance with Section </a
+              >§ 6.2(a)(ii), Participant must successfully start a (a) KYC process conducted in accordance with Applicable Laws;
+              and (b) screening to ensure regulatory compliance and sanctions screening under Applicable Law, including against
+              the U.S. Office of Foreign Assets Control (OFAC) sanctions list.
+            </p>
+          </li>
+          <li data-list-text="4.2.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark19">&zwnj;</a><u>Sanctioned&nbsp; Jurisdictions</u>. In order to claim a Reward, Participants must
+              not be from any Sanctioned Jurisdiction.
+            </p>
+          </li>
+          <li data-list-text="4.3.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark20">&zwnj;</a><u>Failure to Complete KYC</u>. Participant will comply with all KYC requests and
+              agrees that any failure to complete the KYC process and sanctions screening in accordance with these Terms and
+              Conditions may result in legal actions and forfeiture of any Funds (defined below) Accessed (defined below) in
+              connection with the Program.
+            </p>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="5.">
+        <h1 style="padding-top: 11pt; padding-left: 13pt; text-indent: -8pt; text-align: justify">
+          <a name="bookmark21">&zwnj;</a>Scope of Program<span class="p">.</span>
+        </h1>
+        <ol id="l5">
+          <li data-list-text="5.1.">
+            <p style="padding-top: 4pt; padding-left: 26pt; text-indent: 0pt; text-align: left">
+              <a name="bookmark22">&zwnj;</a><u>Wallet</u>. You must participate in the Program with the same wallet address used
+              to sign these Terms and Conditions.
+            </p>
+          </li>
+          <li data-list-text="5.2.">
+            <p style="padding-top: 11pt; padding-left: 43pt; text-indent: -16pt; text-align: left">
+              <a name="bookmark23">&zwnj;</a><u>Program Scope</u>. To be eligible for a Reward, the situation must involve:
+            </p>
+            <ol id="l6">
+              <li data-list-text="5.2.a.">
+                <p style="padding-top: 11pt; padding-left: 48pt; text-indent: 0pt; text-align: left">
+                  <a name="bookmark24">&zwnj;</a>Funds in the following smart contracts, limited to 575 ETH and $2 million USDC
+                  in: Vault eWETH-2, Vault eUSDC-2. The specific smart contract addresses will be provided upon acceptance of
+                  these Terms and Conditions.
+                </p>
+                <p style="text-indent: 0pt; text-align: left"><br /></p>
+              </li>
+            </ol>
+          </li>
+          <li data-list-text="5.3.">
+            <p style="padding-left: 43pt; text-indent: -16pt; text-align: left">
+              <a name="bookmark25">&zwnj;</a><u>Program Out of Scope</u>. Explicitly out of scope scenarios:
+            </p>
+            <ol id="l7">
+              <ol id="l8">
+                <ol id="l9">
+                  <ol id="l10">
+                    <li data-list-text="5.3.a.i.">
+                      <p style="padding-top: 11pt; padding-left: 69pt; text-indent: 0pt; text-align: justify">
+                        <a name="bookmark26">&zwnj;</a>You acknowledge and agree that certain pricing-related issues or bugs and
+                        defects are outside the scope of this Program and therefore ineligible for Rewards. Specifically, the
+                        following are considered ineligible:
+                      </p>
+                      <ol id="l11">
+                        <li data-list-text="1)">
+                          <h1 style="padding-top: 11pt; padding-left: 91pt; text-indent: 0pt; text-align: left">
+                            <a name="bookmark27">&zwnj;</a><u>Third-Party Pricing Discrepancies</u>.
+                            <span class="p"
+                              >Any inaccuracies or other issues related to price data provided by third-party platforms, including
+                              Chainlink or Lido, will not be considered valid for claiming a Reward.</span
+                            >
+                          </h1>
+                        </li>
+                        <li data-list-text="2)">
+                          <p style="padding-top: 11pt; padding-left: 91pt; text-indent: 0pt; text-align: left">
+                            <a name="bookmark28">&zwnj;</a><u>Underlying Token Bugs or Defects</u>. Any bugs or other defects
+                            inherent to the underlying tokens utilized in the competition, including but not limited to USDC and
+                            WETH, are ineligible for claiming Rewards.
+                          </p>
+                        </li>
+                      </ol>
+                    </li>
+                    <li data-list-text="5.3.a.ii.">
+                      <p style="padding-top: 11pt; padding-left: 69pt; text-indent: 0pt; text-align: left">
+                        <a name="bookmark29">&zwnj;</a>Other programs or contests, including separate bug bounty programs, offered
+                        by Euler.
+                      </p>
+                    </li>
+                    <li data-list-text="5.3.a.iii.">
+                      <p style="padding-top: 11pt; padding-left: 105pt; text-indent: -35pt; text-align: left">
+                        <a name="bookmark30">&zwnj;</a>Any information or other findings or discoveries that do not lead to Funds
+                        Access.
+                      </p>
+                    </li>
+                  </ol>
+                </ol>
+              </ol>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="6.">
+        <h1 style="padding-top: 11pt; padding-left: 13pt; text-indent: -8pt; text-align: left">
+          <a name="bookmark31">&zwnj;</a>Submissions and Reward Terms<span class="p">.</span>
+        </h1>
+        <ol id="l12">
+          <li data-list-text="6.1.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: left">
+              <a name="bookmark32">&zwnj;</a><u>Submissions</u>. Prior to awarding a Reward, a Participant must submit a
+              Submission in accordance with the following requirements:
+            </p>
+            <ol id="l13">
+              <li data-list-text="6.1.a.">
+                <p style="padding-top: 11pt; padding-left: 48pt; text-indent: 0pt; text-align: left">
+                  <a name="bookmark33">&zwnj;</a>Detailed description as to how Participant Accessed the Funds, including
+                  providing detailed Vulnerability Reports related thereto.
+                </p>
+              </li>
+            </ol>
+          </li>
+          <li data-list-text="6.2.">
+            <p style="padding-top: 11pt; padding-left: 43pt; text-indent: -16pt; text-align: left">
+              <a name="bookmark34">&zwnj;</a><u>Rewards</u>.
+            </p>
+            <ol id="l14">
+              <ol id="l15">
+                <ol id="l16">
+                  <ol id="l17">
+                    <li data-list-text="6.2.a.i.">
+                      <p style="padding-top: 11pt; padding-left: 69pt; text-indent: 0pt; text-align: justify">
+                        <a name="bookmark35">&zwnj;</a>For the avoidance of doubt, as the sole and exclusive Reward, Participants
+                        may retain amounts they exploit from the USDC/ETH and WETH/USDC pools within Euler’s live contracts during
+                        the Program Period subject to meeting the applicable requirements herein. In no event will Hats, Euler, or
+                        any other person or entity be required to pay, provide, or award any amount to any Participant other than
+                        the Funds (defined below) Accessed (defined below) pursuant to Section 6.2(a)(ii) below.
+                      </p>
+                    </li>
+                    <li data-list-text="6.2.a.ii.">
+                      <p style="padding-top: 11pt; padding-left: 69pt; text-indent: 0pt; text-align: justify">
+                        <a name="bookmark36">&zwnj;</a>Upon exploiting, withdrawing, transferring, accessing or otherwise
+                        obtaining (each an “<b>Access</b>” or “<b>Accessed</b>”) any USDC/ETH or WETH/USDC pools within Euler’s
+                        live contracts (collectively “<b>Funds</b>”) during the Program Period, Participant will immediately, but
+                        in no event less than twenty four (24) hours following such Access, notify Hats of such Access via the
+                        communication established by Hats on its website (namely, the Euler CTF
+                      </p>
+                      <p style="padding-top: 4pt; padding-left: 69pt; text-indent: 0pt; text-align: justify">
+                        <a name="bookmark52">&zwnj;</a>vault on Hats dapp) and promptly provide all information requested by Hats
+                        or Euler, including the amount of Funds Accessed. Upon determination by Hats and Euler that Participant
+                        has met all requirements set forth herein, including those in Sections 4 - 6, Hats will provide written
+                        notice to Participant that it may claim the Reward. Such determination will be made at Hats and Euler’s
+                        sole and exclusive discretion.
+                      </p>
+                    </li>
+                    <li data-list-text="6.2.a.iii.">
+                      <p style="padding-top: 11pt; padding-left: 69pt; text-indent: 0pt; text-align: justify">
+                        <a name="bookmark37">&zwnj;</a>If Hats or Euler notifies Participant that Participant is not eligible for
+                        or cannot otherwise claim the Reward, Participant will immediately following such notification, but in no
+                        less than two (2) business days thereafter, return any Funds it Accessed to an account and via the
+                        transfer mechanism directed by Euler.
+                      </p>
+                    </li>
+                  </ol>
+                </ol>
+              </ol>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="7.">
+        <h1 style="padding-top: 11pt; padding-left: 13pt; text-indent: -8pt; text-align: justify">
+          <a name="bookmark38">&zwnj;</a>Payment Terms<span class="p">.</span>
+        </h1>
+        <ol id="l18">
+          <li data-list-text="7.1.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark39">&zwnj;</a><u>Hats Fee</u>. Participant will pay Hats a fee equal to five percent (5%) of the
+              Reward awarded to that Participant (“<b>Hats Fee</b>”) within thirty (30) days of the date that the Reward is
+              awarded. Participant will pay Hats the Hats Fee via the payment mechanism directed by Hats- namely, the Hats gov
+              wallet address.
+            </p>
+          </li>
+          <li data-list-text="7.2.">
+            <h1 style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark40">&zwnj;</a><u>Taxes</u>.
+              <span class="p"
+                >Participant is responsible for any duties, customs, fees, or taxes due on any Reward, excluding any taxes imposed
+                on Hats’ income.</span
+              >
+            </h1>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="8.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark41">&zwnj;</a>Information Submitted Through the Program<span class="p"
+            >. Participant’s submission of information or content in connection with the Program is governed by Hat’s Privacy
+            Policy, located at https://docs.hats.finance/ miscellaneous/privacy-policy (the “</span
+          >Privacy Policy<span class="p"
+            >”). Participant represents and warrants that any information it provides in connection with the Program is and will
+            remain accurate and complete, and that it will maintain and update such information as needed.</span
+          >
+        </h1>
+      </li>
+      <li data-list-text="9.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark42">&zwnj;</a>Jurisdictional Issues<span class="p"
+            >. Any participation in the Program is at Participant’s own risk, and Participant must comply with all Applicable Laws
+            in doing so. No person from any of the Sanctioned Jurisdictions may participate in the Program. We may limit the
+            Program’s availability at any time, in whole or in part, to any person, geographic area or jurisdiction that we
+            choose. Legal actions will be taken if any Participants from the Sanctioned Jurisdictions participate in the Program
+            or withdraw any Funds.</span
+          >
+        </h1>
+      </li>
+      <li data-list-text="10.">
+        <h1 style="padding-top: 11pt; padding-left: 18pt; text-indent: -13pt; text-align: justify">
+          <a name="bookmark43">&zwnj;</a>Rules of Conduct<span class="p"
+            >. In connection with the Program, Participant must not:</span
+          >
+        </h1>
+        <ol id="l19">
+          <li data-list-text="10.1.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark44">&zwnj;</a>Use the Euler Protocol for any commercial purpose, or for any purpose that is
+              fraudulent or otherwise tortious or unlawful.
+            </p>
+          </li>
+          <li data-list-text="10.2.">
+            <p style="padding-top: 11pt; padding-left: 48pt; text-indent: -22pt; text-align: justify">
+              <a name="bookmark45">&zwnj;</a>Harvest or collect information about other Participants.
+            </p>
+          </li>
+          <li data-list-text="10.3.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark46">&zwnj;</a>Reverse engineer, decompile or disassemble any portion of the Euler Protocol, except
+              where such restriction is expressly prohibited by Applicable Law, including after the Program Period.
+            </p>
+          </li>
+          <li data-list-text="10.4.">
+            <p style="padding-top: 11pt; padding-left: 48pt; text-indent: -22pt; text-align: justify">
+              <a name="bookmark47">&zwnj;</a>Download and store information or content collected or accessed from the Euler
+              Protocol.
+            </p>
+          </li>
+          <li data-list-text="10.5.">
+            <p style="padding-top: 11pt; padding-left: 48pt; text-indent: -22pt; text-align: justify">
+              <a name="bookmark48">&zwnj;</a>Interfere or attempt to interfere with the proper working of the Euler Protocol.
+            </p>
+          </li>
+          <li data-list-text="10.6.">
+            <p style="padding-top: 11pt; padding-left: 48pt; text-indent: -22pt; text-align: justify">
+              <a name="bookmark49">&zwnj;</a>Participate in the Program for the benefit of a third party.
+            </p>
+          </li>
+          <li data-list-text="10.7.">
+            <p style="padding-top: 11pt; padding-left: 48pt; text-indent: -22pt; text-align: justify">
+              <a name="bookmark50">&zwnj;</a>Restrict or inhibit any other person or entity from participating in the Program.
+            </p>
+          </li>
+          <li data-list-text="10.8.">
+            <p style="padding-top: 4pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark51">&zwnj;</a>Use the Euler Protocol or Program to build an application or product that is
+              competitive with any Hats or Euler product or services.
+            </p>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="11.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark53">&zwnj;</a>Monitoring<span class="p"
+            >. We may (but have no obligation to) monitor, evaluate, or alter Submissions, or analyze Participant’s participation
+            in the Program. We may disclose information regarding your access to and participation in the Program, and the
+            circumstances surrounding such access and participation, to anyone for any reason or purpose.</span
+          >
+        </h1>
+      </li>
+      <li data-list-text="12.">
+        <h1 style="padding-top: 11pt; padding-left: 18pt; text-indent: -13pt; text-align: justify">
+          <a name="bookmark54">&zwnj;</a>Ownership and Licenses<span class="p">.</span>
+        </h1>
+        <ol id="l20">
+          <li data-list-text="12.1.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark55">&zwnj;</a><u>Ownership Property Rights</u>. You agree that we may collect statistical and other
+              information about Participant Data and use that information for Hats’ or Euler’s benefit. Unless otherwise agreed in
+              writing, except for Participant Data, Euler and its licensors exclusively own all right, title, and interest in and
+              to the Euler Protocol and content contained on the Euler Protocol, including all intellectual property rights. You
+              may not use Hats or Euler’s trade names, trademarks, service marks or logos in connection with any product or
+              service that is not theirs, or in any manner that is likely to cause confusion. All trade names, trademarks, service
+              marks and logos on the Program not owned by Euler or Hats are the property of their respective owners. Nothing
+              contained on the Program should be construed as granting any right to use any trade names, trademarks, service marks
+              or logos without the express prior written consent of the owner. The Program, Euler Protocol and related content are
+              protected by copyright, trademark, and other laws of the United States and foreign countries.
+            </p>
+          </li>
+          <li data-list-text="12.2.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark56">&zwnj;</a><u>Participant Data</u>. By making any of Participant Data available through the
+              Program, you hereby grant to Hats a perpetual, irrevocable, non-exclusive, transferable, sublicensable, worldwide,
+              royalty- free license to use, copy, reproduce, display, modify, adapt, transmit, and distribute copies of
+              Participant Data, for the purposes of providing and improving the Program.
+            </p>
+          </li>
+          <li data-list-text="12.3.">
+            <p style="padding-top: 11pt; padding-left: 26pt; text-indent: 0pt; text-align: justify">
+              <a name="bookmark57">&zwnj;</a><u>Feedback</u>. By submitting any suggestions, comments, or other feedback, you
+              grant to Hats and Euler a worldwide, perpetual, irrevocable, non-exclusive, transferable, sublicensable, fully-paid,
+              and royalty-free license under any and all intellectual property rights that you may own or control to use, copy,
+              modify, create derivative works based upon, and otherwise exploit such feedback for any purpose.
+            </p>
+          </li>
+        </ol>
+      </li>
+      <li data-list-text="13.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark58">&zwnj;</a>Confidential Information<span class="p"
+            >. In connection with your participation in the Program, you may be exposed to or otherwise access information about
+            Hats’, Euler’s, or their Affiliated Entities’ (each a “</span
+          >Disclosing Party<span class="p"
+            >”) business affairs, Euler Protocol, products, confidential intellectual property, trade secrets, third- party
+            confidential information, and other sensitive or proprietary information, whether orally or in written, electronic, or
+            other form or media/in written or electronic form or media, and whether or not marked, designated, or otherwise
+            identified as “confidential” (collectively, “</span
+          >Confidential Information<span class="p"
+            >”). Confidential Information does not include information that, at the time of disclosure is:</span
+          >
+        </h1>
+        <p style="padding-left: 10pt; text-indent: 0pt; text-align: justify">
+          (a) in the public domain; (b) known to Participant at the time of disclosure; (c) rightfully obtained by Participant on
+          a non-confidential basis from a third party; or (d) independently developed by Participant without reference to the
+          Confidential Information. Participant will not disclose the Disclosing Party’s Confidential Information to any person or
+          entity, except to Participant&#39;s employees who have a need to know the Confidential Information for Participant to
+          exercise its rights or perform its obligations hereunder. On the expiration or termination of the Agreement, Participant
+          will promptly return to the Disclosing Party all copies, whether in written, electronic, or other form or media, of the
+          Disclosing Party’s Confidential Information, or destroy all such copies and certify in writing to the Disclosing Party
+          that such Confidential Information has been destroyed. Participant’s obligations of non-disclosure with
+        </p>
+        <p style="padding-top: 4pt; padding-left: 10pt; text-indent: 0pt; text-align: justify">
+          regard to Confidential Information will survive the termination or expiration of these Terms and Conditions.
+        </p>
+      </li>
+      <li data-list-text="14.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark59">&zwnj;</a>Non-Disparagement<span class="p"
+            >. Participant agrees and covenants that neither it, nor its employees, directors, owners, contractors, or other
+            personnel, will make, publish, or communicate defamatory or disparaging remarks, comments, or statements concerning
+            Euler, its Affiliated Entities, or the Euler Protocol. Participant agrees and covenants that neither it nor its
+            employees, directors, owners, contractors, or other personnel will make, publish, or communicate to any person or
+            entity or in any public forum any maliciously false, defamatory, or disparaging remarks, comments, or statements
+            concerning Euler, its Affiliated Entities their businesses or the Euler Protocol, or any of the their employees,
+            officers, directors, existing and prospective customers, suppliers, investors, and other associated third parties, now
+            or at any time in the future.</span
+          >
+        </h1>
+      </li>
+      <li data-list-text="15.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark60">&zwnj;</a>Indemnity<span class="p"
+            >. To the fullest extent permitted under Applicable Law, you agree to defend, indemnify and hold harmless Hats, Euler,
+            their Affiliated Entities, and their respective successors and assigns, from and against all claims, liabilities,
+            damages, judgments, awards, losses, costs, expenses and fees (including attorneys’ fees) arising out of or relating to
+            (a) your participation in the Program; and (b) any violation or alleged violation of these Terms and Conditions by
+            you, including any violations of Applicable Laws.</span
+          >
+        </h1>
+      </li>
+      <li data-list-text="16.">
+        <p style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark61">&zwnj;</a><b>D</b><span class="h2">ISCLAIMER OF </span><b>W</b><span class="h2">ARRANTIES</span>.
+          T<span class="s1">O THE FULLEST EXTENT PERMITTED UNDER </span>A<span class="s1">PPLICABLE </span>L<span class="s1"
+            >AW</span
+          >: (<span class="s1">A</span>) <span class="s1">THE </span>P<span class="s1">ROGRAM</span>,
+          <span class="s1">AND YOUR PARTICIPATION THEREIN</span>, <span class="s1">IS MADE AVAILABLE TO YOU ON AN </span>“A<span
+            class="s1"
+            >S </span
+          >I<span class="s1">S</span>,” “W<span class="s1">HERE </span>I<span class="s1">S</span>”
+          <span class="s1">AND </span>“W<span class="s1">HERE </span>A<span class="s1">VAILABLE</span>”
+          <span class="s1">BASIS</span>, <span class="s1">WITHOUT ANY WARRANTIES OF ANY KIND</span>,
+          <span class="s1">WHETHER EXPRESS</span>, <span class="s1">IMPLIED OR STATUTORY</span>;
+          <span class="s1">AND </span>(<span class="s1">B</span>) H<span class="s1">ATS</span>, E<span class="s1">ULER</span>,
+          <span class="s1">AND THEIR AFFILIATED ENTITIES DISCLAIM ALL WARRANTIES WITH RESPECT TO THE </span>P<span class="s1"
+            >ROGRAM</span
+          >, <span class="s1">INCLUDING THE WARRANTIES OF MERCHANTABILITY</span>,
+          <span class="s1">FITNESS FOR A PARTICULAR PURPOSE</span>, <span class="s1">NON</span>-<span class="s1"
+            >INFRINGEMENT AND TITLE</span
+          >. F<span class="s1">OR THE AVOIDANCE OF DOUBT</span>, <span class="s1">ALL DISCLAIMERS OF ANY KIND </span>(<span
+            class="s1"
+            >INCLUDING IN THIS SECTION AND ELSEWHERE IN THESE </span
+          >T<span class="s1">ERMS AND </span>C<span class="s1">ONDITIONS</span>)
+          <span class="s1">ARE MADE FOR THE BENEFIT OF BOTH </span>H<span class="s1">ATS AND ITS AFFILIATES AND THEIR </span
+          >“A<span class="s1">FFILIATED </span>E<span class="s1">NTITIES</span>,
+          <span class="s1">AND THEIR RESPECTIVE SUCCESSORS AND ASSIGNS</span>.
+        </p>
+        <p style="padding-top: 1pt; text-indent: 0pt; text-align: left"><br /></p>
+      </li>
+      <li data-list-text="17.">
+        <p style="padding-left: 18pt; text-indent: -13pt; line-height: 13pt; text-align: justify">
+          <a name="bookmark62">&zwnj;</a><b>L</b><span class="h2">IMITATION OF </span><b>L</b><span class="h2">IABILITY</span>.
+          T<span class="s1">O THE FULLEST EXTENT PERMITTED UNDER </span>A<span class="s1">PPLICABLE </span>L<span class="s1"
+            >AW</span
+          >:
+        </p>
+        <p style="padding-left: 10pt; text-indent: 0pt; text-align: justify">
+          (a) ​ Hats, Euler, and their affiliated entities will not be liable for any indirect, incidental, consequential,
+          special, exemplary or punitive damages of any kind, under any contract, tort (including negligence), strict liability or
+          other theory, including damages for loss of profits, service interruption, computer damage or system failure, use or
+          data, loss of other intangibles, loss of security of the reward (including unauthorized interception by third parties of
+          any reward), even if advised in advance of the possibility of such damages or losses;
+        </p>
+        <p style="padding-left: 10pt; text-indent: 0pt; line-height: 111%; text-align: justify">
+          (b) ​ without limiting the foregoing, Hats and Euler will not be liable for damages of any kind resulting from your use
+          of or inability to participate in the Program; (c) your sole and exclusive remedy for dissatisfaction with the
+        </p>
+        <p style="padding-left: 10pt; text-indent: 0pt; line-height: 11pt; text-align: justify">
+          Program or Reward (including any failure to receive part of a Reward or the
+        </p>
+        <p style="padding-left: 10pt; text-indent: 0pt; text-align: justify">
+          entirety of the reward) is to cease participating in the Program; and (d) the maximum aggregate liability of Hats,
+          Euler, and their affiliated entities for all damages, losses and causes of action, whether in contract, tort (including
+          negligence) or otherwise, will be one hundred U.S. Dollars ($100). All limitations of liability of any kind (including
+          in this section and elsewhere in these Terms and Conditions) are made for the benefit of both Hats, Euler, their
+          Affiliated Entities, and their respective successors and assigns.
+        </p>
+      </li>
+      <li data-list-text="18.">
+        <h1 style="padding-top: 4pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark63">&zwnj;</a>Third Party Beneficiary<span class="p"
+            >. Participant acknowledges and agrees that Euler is a third-party beneficiary of these Terms as if it were Hats,
+            including to the disclaimers, limitations of liabilities herein, and that Euler is entitled to enforce the terms
+            hereof as if it were an original party hereto.</span
+          >
+        </h1>
+      </li>
+      <li data-list-text="19.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark64">&zwnj;</a>Termination<span class="p"
+            >. These Terms and Conditions are effective until terminated. Hats may terminate or suspend your participation in the
+            Program at any time and without prior notice, for any or no reason, including if Hats believes that you have violated
+            or acted inconsistently with the letter or spirit of these Terms and Conditions. Upon any such termination or
+            suspension, your right to participate in the Program will immediately cease. Sections 1, 7, 8, 9, 10, 12, 13- 21 will
+            survive any expiration or termination of these Terms and Conditions.</span
+          >
+        </h1>
+      </li>
+      <li data-list-text="20.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark65">&zwnj;</a>Governing Law; Jurisdiction<span class="p"
+            >. These Terms and Conditions are governed by and construed in accordance with the laws of the Cayman Islands without
+            giving effect to any choice or conflict of law provision or rule that would require or permit the application of the
+            laws of any jurisdiction other than those of the Cayman Islands. Any legal suit, action, or proceeding arising out of
+            or related to these Terms and Conditions or the licenses granted hereunder will be instituted exclusively in the
+            courts of the Cayman Islands, and you irrevocably submit to the exclusive jurisdiction of such courts in any such
+            suit, action, or proceeding.</span
+          >
+        </h1>
+      </li>
+      <li data-list-text="21.">
+        <h1 style="padding-top: 11pt; padding-left: 10pt; text-indent: -5pt; text-align: justify">
+          <a name="bookmark66">&zwnj;</a>Miscellaneous<span class="p"
+            >. These Terms and Conditions does not, and will not be construed to, create any partnership, joint venture,
+            employer-employee, agency or franchisor-franchisee relationship between you and Hats or Euler. If any provision of
+            these Terms and Conditions are found to be unlawful, void or for any reason unenforceable, that provision will be
+            deemed severable from these Terms and Conditions and will not affect the validity and enforceability of any remaining
+            provision. You may not assign, transfer or sublicense any or all of your rights or obligations under these Terms and
+            Conditions without our express prior written consent. Any assignment, transfer or sublicense in violation of this
+            Section will be null and void. We may assign, transfer or sublicense any or all of our rights or obligations under
+            these Terms and Conditions without restriction. No waiver by either party of any breach or default under these Terms
+            and Conditions will be deemed to be a waiver of any preceding or subsequent breach or default. Any heading, caption or
+            section title contained herein is for convenience only, and in no way defines or explains any section or provision.
+            All terms defined in the singular will have the same meanings when used in the plural, where appropriate and unless
+            otherwise specified. Any use of the term “including” or variations thereof in these Terms and Conditions will be
+            construed as if followed by the phrase “without limitation.” These Terms and Conditions, including any terms and
+            conditions incorporated herein, is the entire agreement between you and Hats relating to the subject matter hereof,
+            and supersedes any and all prior or contemporaneous written or oral agreements or understandings between you and Hats
+            relating to such subject matter. Notices to you (including notices of changes to these Terms and Conditions) may be
+            made via posting to the Program or by e-mail (including in each case via links), or by regular mail. Without
+            limitation, a printed version of these Terms and Conditions and of any notice given in electronic form will be
+            admissible in judicial or administrative proceedings based upon or relating to these Terms and Conditions to the same
+            extent and subject to the same conditions as other business documents and records originally generated and maintained
+            in printed form. Hats will not be responsible for any failure to fulfill any obligation due to any cause beyond its
+            control.</span
+          >
+        </h1>
+      </li>
+    </ol>
+    <p class="s9" style="padding-top: 10pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
+      <a href="mailto:security@hats.finance" class="s8" target="_blank"
+        >If you have any questions or concerns, please contact us at </a
+      ><span
+        style="
+          color: #24e8c5;
+          font-family: 'Times New Roman', serif;
+          font-style: normal;
+          font-weight: normal;
+          text-decoration: underline;
+          font-size: 11pt;
+        "
+        >security@hats.finance</span
+      >
+      <a href="mailto:security@euler.foundation" class="s8" target="_blank">and </a
+      ><a href="mailto:security@euler.foundation" class="a" target="_blank">security@euler.foundation</a
+      ><a href="mailto:security@euler.foundation" class="s8" target="_blank">.</a>
+    </p>
+  </body>
+</html>

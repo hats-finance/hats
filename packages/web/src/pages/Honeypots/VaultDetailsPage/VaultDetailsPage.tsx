@@ -59,6 +59,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
 
   // Extra check: Euler CTF
   const isEulerCTF = vault?.id.toLowerCase() === "0x8899a84b1807c78db09c1ccd0812946d18986151";
+  const [addressIsSuspicious, setAddressIsSuspicious] = useState(false);
   useEffect(() => {
     if (!account) return;
 
@@ -66,7 +67,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
     if (isEulerCTF) {
       const checkEuler = async () => {
         const res = await axios.post("https://data.euler.finance/trm-address-checker-hatsfinancectf", { address: account });
-        console.log("Euler Check", res.data);
+        setAddressIsSuspicious(res.data.addressIsSuspicious);
       };
       checkEuler();
     }
@@ -197,6 +198,14 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
       </>
     );
   };
+
+  if (addressIsSuspicious) {
+    return (
+      <Alert className="mt-5 mb-5" type="warning">
+        {t("youAreNotAllowedToParticipateInThisCompetition")}
+      </Alert>
+    );
+  }
 
   return (
     <>
