@@ -14,7 +14,7 @@ export interface IHackerProfile {
     github?: { id: string; name: string; username: string };
   };
   curatorApplication?: {
-    roles: string[];
+    roles: CuratorRole[];
     services: string[];
     whyInterested: string;
     workedWithweb3Security: boolean;
@@ -26,3 +26,5 @@ export interface IHackerProfile {
     status: "pending" | "approved" | "rejected";
   };
 }
+
+export type CuratorRole = "growthSeeker" | "growthGenius" | "growthWizard";

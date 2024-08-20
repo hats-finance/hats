@@ -79,6 +79,19 @@ export async function getProfileByUsername(username?: string): Promise<IHackerPr
 }
 
 /**
+ * Gets all approved curators
+ */
+export async function getApprovedCurators(): Promise<IHackerProfile[]> {
+  try {
+    const response = await axiosClient.get(`${BASE_SERVICE_URL}/profile/curators/get-all`);
+    return response.data.users;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+/**
  * Gets a profile by address
  */
 export async function getProfileByAddress(address?: string): Promise<IHackerProfile | undefined> {

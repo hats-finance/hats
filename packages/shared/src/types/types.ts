@@ -1,3 +1,4 @@
+import { CuratorRole } from "./profile";
 import { ISubmissionMessageObject } from "./submissions";
 
 export interface IVaultInfo {
@@ -146,6 +147,10 @@ interface IBaseVaultDescription {
     starttime?: number;
     oneLiner?: string;
     intendedCompetitionAmount?: number;
+    curator?: {
+      username: string;
+      role: CuratorRole;
+    };
   };
   "communication-channel": {
     "pgp-pk": string | string[];

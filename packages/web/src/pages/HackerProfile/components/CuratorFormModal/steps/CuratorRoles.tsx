@@ -3,7 +3,7 @@ import { useEnhancedFormContext } from "hooks/form";
 import { useTranslation } from "react-i18next";
 import { CuratorFormType } from "../CuratorFormModal";
 
-const roles = ["growthSeeker", "growthGenius", "growthWizard"];
+const roles = ["growthSeeker", "growthGenius", "growthWizard"] as const;
 
 export const CuratorRoles = () => {
   const { t } = useTranslation();

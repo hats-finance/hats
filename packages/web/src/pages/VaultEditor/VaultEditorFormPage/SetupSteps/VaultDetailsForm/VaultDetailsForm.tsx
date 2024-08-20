@@ -14,6 +14,7 @@ import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
 import { VaultAssetsList } from "../shared/VaultAssetsList/VaultAssetsList";
+import { VaultCuratorForm } from "../shared/VaultCuratorForm/VaultCuratorForm";
 import { VaultEmailsForm } from "../shared/VaultEmailsList/VaultEmailsList";
 import { WhitelistedAddressesList } from "../shared/WhitelistedAddressesList/WhitelistedAddressesList";
 import { StyledVaultDetails } from "./styles";
@@ -204,6 +205,15 @@ export function VaultDetailsForm() {
           </>
         )}
       </div>
+
+      {/* Curator */}
+      {vaultType === "audit" && (
+        <>
+          <p className="section-title mt-5">{t("vaultCurator")}</p>
+          <p className="mb-3 helper-text">{t("VaultEditor.vault-details.curatorExplanation")}</p>
+          <VaultCuratorForm />
+        </>
+      )}
 
       {isPrivateAudit && (
         <>

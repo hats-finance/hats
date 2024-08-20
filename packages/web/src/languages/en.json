@@ -722,6 +722,9 @@
     "youNeedToSignMessageToSubmitExplanation": "In order to submit a vulnerability in this vault you need to agree and sign a message. Please go to the vault details page and sign it before proceeding.",
     "submitter": "Submitter",
     "typeHere": "Type here",
+    "vaultCurator": "Vault curator",
+    "curatorOfTheCompetition": "Curator of the competition",
+    "curatedByHats": "Curated by Hats",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",
@@ -1580,6 +1583,7 @@
         "oneLinerExplanation": "Provide a brief introductory sentence for your protocol (max 120 char)",
         "intendedAmountExplanation": "Enter intended competition rewards amount, rewards amount will be finalized upon deposit.",
         "communicationChannelExplanation": "Provide a communication channel for the committee to receive the vulnerability submissions.",
+        "curatorExplanation": "Provide the curator of the vault. If empty, the curator will be Hats Finance.",
         "startEndDateExplanation": "Provide the start and end date of the vault.",
         "oneLiner": "One liner (brief description)",
         "oneLiner-placeholder": "Enter a brief description about your project",
@@ -1590,7 +1594,12 @@
         "whitelistedAddress-placeholder": "Enter wallet address",
         "messageToSign-explanation": "This is the message users will need to sign in order to see vault scope and submit vulnerabilities.",
         "messageToSign-placeholder": "Enter message to be signed by users",
-        "messageToSign": "Message"
+        "messageToSign": "Message",
+        "curatorUsername": "Curator username",
+        "curator-placeholder": "Select curator of the vault",
+        "curatorRole": "Curator role",
+        "curatorRole-placeholder": "Select the role of the curator",
+        "clearCurator": "Clear curator"
       },
       "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",

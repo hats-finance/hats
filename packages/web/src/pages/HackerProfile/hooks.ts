@@ -5,6 +5,7 @@ import {
   IUpsertedProfileResult,
   createCuratorApplication,
   deleteProfile,
+  getApprovedCurators,
   getProfileByAddress,
   getProfileByUsername,
   isUsernameAvailable,
@@ -32,6 +33,16 @@ export const useProfileByUsername = (username?: string) => {
     queryKey: ["hacker-profile-username", username],
     queryFn: () => getProfileByUsername(username),
     enabled: !!username,
+  });
+};
+
+/**
+ * Gets all approved curators
+ */
+export const useApprovedCurators = () => {
+  return useQuery<IHackerProfile[]>({
+    queryKey: ["approved-curators"],
+    queryFn: () => getApprovedCurators(),
   });
 };
 
