@@ -53,6 +53,9 @@ export const HackerProfilePage = () => {
   const linkNewAddress = useLinkNewAddress();
   const unlinkAddress = useUnlinkAddress();
 
+  const curatorApplication = profileFound?.curatorApplication;
+  const curatorApproved = curatorApplication?.status === "approved";
+
   // If the user is not authenticated, and is is process of linking a new address, continue with the linking process
   useEffect(() => {
     if (!ownerSiweData || !profileFound) return;
@@ -164,6 +167,13 @@ export const HackerProfilePage = () => {
               <div className="profile-card">
                 <HackerProfileImage noMargin hackerProfile={profileFound} size="large" />
                 <div className="description">
+                  {curatorApproved && (
+                    <div className="curator-roles">
+                      {curatorApplication.roles.map((role, idx) => (
+                        <span key={idx}>{t(`CuratorForm.${role}`)}</span>
+                      ))}
+                    </div>
+                  )}
                   <h2>{profileFound.username}</h2>
                   {profileFound.title && <p className="hacker-title">{profileFound.title}</p>}
                   {profileStats.firstSubmissionDate && (
@@ -212,8 +222,12 @@ export const HackerProfilePage = () => {
                     </div>
                   </div>
 
-                  <Button size="medium" styleType="outlined" onClick={showCuratorModal}>
-                    {t("HackerProfile.applyForCurator")}
+                  <Button size="medium" styleType="outlined" onClick={!curatorApplication ? showCuratorModal : undefined}>
+                    {!!curatorApplication ? (
+                      <span>{`${t("HackerProfile.curatorApplication")}: ${curatorApplication.status.toUpperCase()}`}</span>
+                    ) : (
+                      <span>{t("HackerProfile.applyForCurator")}</span>
+                    )}
                   </Button>
                 </div>
               )}

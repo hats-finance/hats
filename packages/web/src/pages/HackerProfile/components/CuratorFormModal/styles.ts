@@ -45,6 +45,77 @@ export const StyledCuratorFormModal = styled.div<{ firstStep: boolean }>(
         align-items: center;
         gap: ${getSpacing(2)};
       }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: ${getSpacing(3)};
+        width: 100%;
+
+        .option {
+          display: flex;
+          gap: ${getSpacing(2)};
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            opacity: 0.8;
+          }
+
+          .check-circle {
+            width: ${getSpacing(2.5)};
+            height: ${getSpacing(2.5)};
+            border-radius: 50%;
+            border: 2px solid var(--grey-400);
+
+            &.selected {
+              position: relative;
+
+              &::after {
+                content: "";
+                width: ${getSpacing(1.2)};
+                height: ${getSpacing(1.2)};
+                border-radius: 50%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-43%, -50%);
+                position: absolute;
+                background-color: var(--grey-400);
+                display: block;
+              }
+            }
+
+            &.error {
+              border-color: var(--error-red);
+
+              &::after {
+                background-color: var(--error-red);
+              }
+            }
+          }
+          .info {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: ${getSpacing(0.5)};
+          }
+        }
+      }
+
+      a {
+        color: var(--secondary);
+      }
+
+      .socials {
+        display: flex;
+        gap: ${getSpacing(2)};
+        margin-top: ${getSpacing(4)};
+
+        svg {
+          width: ${getSpacing(6)};
+          height: ${getSpacing(6)};
+        }
+      }
     }
 
     .buttons {

@@ -721,6 +721,7 @@
     "youNeedToSignMessageToSubmit": "You need to sign a message",
     "youNeedToSignMessageToSubmitExplanation": "In order to submit a vulnerability in this vault you need to agree and sign a message. Please go to the vault details page and sign it before proceeding.",
     "submitter": "Submitter",
+    "typeHere": "Type here",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",
@@ -997,7 +998,8 @@
       "streakExplanationTitle": "<p><strong>Introducing</strong> <i>Streak</i></p>",
       "streakExplanationDescription": "<p>Build Your Streak with Consistent Engagement</p><br/><p><strong>Start Your Streak:</strong> Initiate a streak by submitting valid findings.</p><br/><p><strong>Reflect Your Dedication:</strong> Your streak is a testament to your consistent engagement in the community.</p><br/><p><strong>Maintain Your Momentum:</strong> Keep your streak alive by submitting at least one valid finding each month.</p>",
       "applyForCurator": "Apply for curator role",
-      "loadingCuratorApplication": "Loading curator application"
+      "loadingCuratorApplication": "Loading curator application",
+      "curatorApplication": "Curator Application"
     },
     "CuratorForm": {
       "welcomeTitle": "Join Hats growth curator Program",
@@ -1009,7 +1011,23 @@
       "growthGenius": "Growth Genius",
       "growthGeniusDesc": "As a Growth Genius, your task is to ensure the smooth progression of competitions from conception to deployment. This role requires a keen eye for detail and strong project management skills.",
       "growthWizard": "Growth Wizard",
-      "growthWizardDesc": "The Growth Wizard is crucial for the end-to-end management of competitions, from promotion to the resolution of disputes. This role is suited for those with deep understanding and experience in managing blockchain competitions."
+      "growthWizardDesc": "The Growth Wizard is crucial for the end-to-end management of competitions, from promotion to the resolution of disputes. This role is suited for those with deep understanding and experience in managing blockchain competitions.",
+      "selectARoleError": "You need to select a role to continue",
+      "selectServices": "Select the services you can provide",
+      "selectServicesDesc": "Select the role you are willing to provide as a curator.",
+      "whyInterested": "Why are you interested in joining  as Curator to Hats ecosystem?",
+      "haveYouWorkedWithWeb3": "Have you worked with any web3 projects related to security before? If yes, please specify:",
+      "pleaseSelectAnAnswer": "Please select an answer",
+      "shortBio": "Please provide a short bio",
+      "shortBioDesc": "Please provide a 2-3 sentences descriptor of your bio.",
+      "termsAndConditionsTitle": "Please read and agree to our curator terms and conditions",
+      "readTermsAndConditionsHere": "Read terms and conditions <a href='https://hats.finance/terms-and-conditions' target='_blank'>here</a>",
+      "youNeedToAcceptTermsAndConditions": "You need to accept the terms and conditions to continue",
+      "communicationChannel": "Communication channel",
+      "communicationChannelDesc": "Please provide a communication channel. Your communication channels won't be public on your profile.",
+      "thanksForSubmission": "Thank you for your submission",
+      "hatsWillReview": "Hats growth team will review your submission and contact you.",
+      "followHatsSocials": "In the meantime you can follow Hats official socials."
     },
     "PGPTool": {
       "title": "PGP tool",

@@ -23,5 +23,6 @@ export interface IHackerProfile {
     termsAndConditions: boolean;
     telegramHandle: string;
     discordHandle: string;
+    status: "pending" | "approved" | "rejected";
   };
 }

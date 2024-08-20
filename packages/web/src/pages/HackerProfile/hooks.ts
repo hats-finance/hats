@@ -3,6 +3,7 @@ import { UseMutationResult, useMutation, useQuery } from "@tanstack/react-query"
 import { ISiweData } from "hooks/siwe/useSiweAuth";
 import {
   IUpsertedProfileResult,
+  createCuratorApplication,
   deleteProfile,
   getProfileByAddress,
   getProfileByUsername,
@@ -56,6 +57,20 @@ export const useUpsertProfile = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: ({ profile, username }) => upsertProfile(profile, username),
+  });
+};
+
+/**
+ * Creates a curator application
+ */
+export const useCreateCuratorApplication = (): UseMutationResult<
+  IUpsertedProfileResult | undefined,
+  string,
+  { curatorForm: IHackerProfile["curatorApplication"]; username?: string },
+  unknown
+> => {
+  return useMutation({
+    mutationFn: ({ curatorForm, username }) => createCuratorApplication(curatorForm, username),
   });
 };
 

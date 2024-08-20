@@ -9,7 +9,7 @@ export const getCuratorFormYupSchema = (intl: TFunction) =>
     workedWithweb3Security: Yup.boolean().required(intl("required")),
     workedWithweb3SecurityDescription: Yup.string(),
     shortBio: Yup.string().required(intl("required")),
-    termsAndConditions: Yup.boolean().required(intl("required")),
+    termsAndConditions: Yup.boolean().oneOf([true]).required(intl("required")),
     telegramHandle: Yup.string().required(intl("required")),
     discordHandle: Yup.string().required(intl("required")),
   });

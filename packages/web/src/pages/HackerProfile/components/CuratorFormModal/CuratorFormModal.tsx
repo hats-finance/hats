@@ -1,18 +1,24 @@
 import { IHackerProfile } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackOutlined";
-import HatsBoat from "assets/images/profile-creation.jpg";
 import { Alert, Button, Loading, Modal } from "components";
+import { queryClient } from "config/reactQuery";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useProfileByAddress, useUpsertProfile } from "../../hooks";
+import { useCreateCuratorApplication, useProfileByAddress } from "../../hooks";
 import { getCuratorFormYupSchema } from "./formSchema";
+import { CuratorCommunication } from "./steps/CuratorCommunication";
 import { CuratorRoles } from "./steps/CuratorRoles";
+import { CuratorServices } from "./steps/CuratorServices";
+import { CuratorShortBio } from "./steps/CuratorShortBio";
+import { CuratorSubmitted } from "./steps/CuratorSubmitted";
+import { CuratorTermsAndConditions } from "./steps/CuratorTermsAndConditions";
 import { CuratorWelcome } from "./steps/CuratorWelcome";
+import { CuratorWhyInterested } from "./steps/CuratorWhyInterested";
+import { CuratorWorkedWeb3 } from "./steps/CuratorWorkedWeb3";
 import { StyledCuratorFormModal } from "./styles";
 
 type ICuratorFormModalProps = {
@@ -27,26 +33,32 @@ const curatorFormSteps = [
     nextButtonTextKey: { create: "next", update: "next" },
   },
   { element: <CuratorRoles />, fields: ["roles"], nextButtonTextKey: { create: "next", update: "next" } },
-  // {
-  //   element: <CreateProfileIntro />,
-  //   fields: [],
-  //   nextButtonTextKey: { create: "HackerProfile.createProfileCta", update: "HackerProfile.updateProfileCta" },
-  // },
-  // { element: <CreateProfileTitle />, fields: ["title"], nextButtonTextKey: { create: "continue", update: "continue" } },
-  // { element: <CreateProfileBio />, fields: ["bio"], nextButtonTextKey: { create: "continue", update: "continue" } },
-  // {
-  //   element: <CreateProfileSocials />,
-  //   fields: ["twitter_username", "github_username", "avatar"],
-  //   nextButtonTextKey: { create: "continue", update: "continue" },
-  // },
-  // {
-  //   element: <CreateProfileReview />,
-  //   fields: [],
-  //   nextButtonTextKey: { create: "HackerProfile.createProfileCta", update: "HackerProfile.updateProfileCta" },
-  // },
+  { element: <CuratorServices />, fields: ["services"], nextButtonTextKey: { create: "next", update: "next" } },
+  { element: <CuratorWhyInterested />, fields: ["whyInterested"], nextButtonTextKey: { create: "next", update: "next" } },
+  {
+    element: <CuratorWorkedWeb3 />,
+    fields: ["workedWithweb3Security", "workedWithweb3SecurityDescription"],
+    nextButtonTextKey: { create: "next", update: "next" },
+  },
+  { element: <CuratorShortBio />, fields: ["shortBio"], nextButtonTextKey: { create: "next", update: "next" } },
+  {
+    element: <CuratorCommunication />,
+    fields: ["telegramHandle", "discordHandle"],
+    nextButtonTextKey: { create: "next", update: "next" },
+  },
+  {
+    element: <CuratorTermsAndConditions />,
+    fields: ["termsAndConditions"],
+    nextButtonTextKey: { create: "submit", update: "submit" },
+  },
+  {
+    element: <CuratorSubmitted />,
+    fields: [],
+    nextButtonTextKey: { create: "gotIt", update: "gotIt" },
+  },
 ];
 
-type CuratorFormType = NonNullable<IHackerProfile["curatorApplication"]>;
+export type CuratorFormType = NonNullable<IHackerProfile["curatorApplication"]>;
 
 export const CuratorFormModal = ({ isShowing, onHide }: ICuratorFormModalProps) => {
   const { t } = useTranslation();
@@ -57,18 +69,20 @@ export const CuratorFormModal = ({ isShowing, onHide }: ICuratorFormModalProps) 
   const createdCuratorApplication = createdProfile?.curatorApplication;
 
   const [currentFormStep, setCurrentFormStep] = useState<number>(0);
+  const isSubmitStep = currentFormStep === curatorFormSteps.length - 2;
   const isLastStep = currentFormStep === curatorFormSteps.length - 1;
 
-  const upsertCuratorApplication = useUpsertProfile();
+  const createCuratorApplication = useCreateCuratorApplication();
 
   const methods = useForm<CuratorFormType>({
     resolver: yupResolver(getCuratorFormYupSchema(t)),
-    mode: "onBlur",
+    mode: "onChange",
   });
-  const { trigger, handleSubmit, formState, reset } = methods;
+  const { trigger, handleSubmit, formState } = methods;
 
   const nextStep = async () => {
     const isValid = await trigger(curatorFormSteps[currentFormStep].fields as any);
+    if (isLastStep) onHide();
     if (isValid) setCurrentFormStep((prev) => (prev === curatorFormSteps.length - 1 ? prev : prev + 1));
   };
 
@@ -83,26 +97,18 @@ export const CuratorFormModal = ({ isShowing, onHide }: ICuratorFormModalProps) 
       const signedIn = await tryAuthentication();
       if (!signedIn) return;
 
-      // const profileToUpsert = { ...formData };
+      const curatorApplication = { ...formData };
 
-      // if (createdProfile) {
-      //   profileToUpsert.addresses = createdProfile.addresses;
-      //   profileToUpsert.username = createdProfile.username;
-      // }
+      const result = await createCuratorApplication.mutateAsync({
+        username: createdProfile ? createdProfile.username : undefined,
+        curatorForm: curatorApplication,
+      });
 
-      // const result = await upsertProfile.mutateAsync({
-      //   username: createdProfile ? createdProfile.username : undefined,
-      //   profile: profileToUpsert,
-      // });
-
-      // if (result?.upsertedCount || result?.modifiedCount) {
-      //   onHide();
-      //   navigate(`${RoutePaths.profile}/${profileToUpsert.username}`);
-      //   queryClient.invalidateQueries({ queryKey: ["hacker-profile-address", address] });
-      //   queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
-      //   setCurrentFormStep(0);
-      //   reset();
-      // }
+      if (result?.upsertedCount || result?.modifiedCount) {
+        queryClient.invalidateQueries({ queryKey: ["hacker-profile-address", address] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+        nextStep();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -112,23 +118,23 @@ export const CuratorFormModal = ({ isShowing, onHide }: ICuratorFormModalProps) 
     <>
       <Modal capitalizeTitle isShowing={isShowing} onHide={onHide}>
         <FormProvider {...methods}>
-          <StyledCuratorFormModal firstStep={currentFormStep === 0 && !createdCuratorApplication}>
+          <StyledCuratorFormModal firstStep={currentFormStep === 0 || isLastStep}>
             {curatorFormSteps[currentFormStep].element}
             <div className="alerts">
-              {!!upsertCuratorApplication.error && <Alert type="error" content={upsertCuratorApplication.error} />}
+              {!!createCuratorApplication.error && <Alert type="error" content={createCuratorApplication.error} />}
             </div>
             <div className="buttons">
-              {currentFormStep !== 0 && (
-                <Button disabled={upsertCuratorApplication.isLoading} styleType="outlined" onClick={prevStep}>
+              {currentFormStep !== 0 && currentFormStep !== curatorFormSteps.length - 1 && (
+                <Button disabled={createCuratorApplication.isLoading} styleType="outlined" onClick={prevStep}>
                   <ArrowBackIcon />
                 </Button>
               )}
               <Button
                 bigHorizontalPadding
-                disabled={formState.isValidating || upsertCuratorApplication.isLoading}
-                onClick={isLastStep ? handleSubmit(handleUpsertCuratorApplication) : nextStep}
+                disabled={formState.isValidating || createCuratorApplication.isLoading}
+                onClick={isSubmitStep ? handleSubmit(handleUpsertCuratorApplication) : nextStep}
               >
-                {formState.isValidating || upsertCuratorApplication.isLoading
+                {formState.isValidating || createCuratorApplication.isLoading
                   ? `${t("loading")}...`
                   : t(curatorFormSteps[currentFormStep].nextButtonTextKey[createdCuratorApplication ? "update" : "create"])}
               </Button>
