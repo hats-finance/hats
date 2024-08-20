@@ -36,6 +36,12 @@ export const overrideDescription = (vaultAddress: string, description?: IVaultDe
     description["project-metadata"].tokenIcon = "ipfs://QmTBHBZchoxncW1LXCvptTbvRzuZDN8yzze3xXrRsh2WZz";
   }
 
+  // Change EulerCTF token icon to USDC
+  const eulerCTFId = "0x8899a84b1807c78db09c1ccd0812946d18986151";
+  if (eulerCTFId === vaultAddress.toLowerCase()) {
+    description["project-metadata"].tokenIcon = "ipfs://QmTBHBZchoxncW1LXCvptTbvRzuZDN8yzze3xXrRsh2WZz";
+  }
+
   return description;
 };
 
@@ -95,6 +101,15 @@ const fixVaultsData = (vaults: IVault[]) => {
   if (morphoVault) morphoVault.registered = true;
   if (morphoVault && morphoVault.descriptionHash === "QmeLFD6czyZq7GBsqy6Ukdep5oGzr2RfxDvDhdwJ8TyCHU")
     morphoVault.descriptionHash = "QmTMTK6NpVgqjr664VTS44opgU1FpvkL2gcvyVYvGu85Fk";
+
+  // Override information for Euler CTF
+  const eulerCTFVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x8899a84b1807c78db09c1ccd0812946d18986151");
+  if (eulerCTFVault) {
+    eulerCTFVault.stakingToken = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+    eulerCTFVault.stakingTokenDecimals = "6";
+    eulerCTFVault.stakingTokenSymbol = "USDC";
+    eulerCTFVault.honeyPotBalance = "4000000000000";
+  }
 
   return newVaults;
 };
