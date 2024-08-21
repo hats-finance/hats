@@ -726,6 +726,10 @@
     "curatorOfTheCompetition": "Curator of the competition",
     "curatedByHats": "Curated by Hats",
     "youAreNotAllowedToParticipateInThisCompetition": "You are not allowed to participate in this competition.",
+    "username": "Username",
+    "roles": "Roles",
+    "competitionsRewards": "Competitions rewards",
+    "earnedFees": "Earned fees",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",
@@ -1136,9 +1140,11 @@
       "claimedBountySuccessfully": "You claimed your rewards successfully.",
       "allTime": "All time",
       "timeline": "Timeline",
+      "curators": "Curators",
       "loadingLeaderboard": "Loading leaderboard",
       "highestSeverity": "Highest severity",
-      "auditsTimeline": "Competitions timeline"
+      "auditsTimeline": "Competitions timeline",
+      "noCuratorYet": "No curators yet in the leaderboard. Be the first one!"
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
