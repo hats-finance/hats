@@ -72,22 +72,32 @@ export const StyledVaultCard = styled.div<{
         align-items: center;
         gap: ${getSpacing(1)};
       }
+    }
 
-      .curator-pill {
-        font-size: var(--xxsmall);
-        text-transform: none;
-        font-weight: 400;
-        display: flex;
-        align-items: center;
-        gap: ${getSpacing(1)};
-        padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
-        border-radius: 100px;
-        width: fit-content;
-        border: 1px solid var(--grey-600);
+    .curator-pill {
+      font-size: var(--xxsmall);
+      text-transform: none;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(1)};
+      padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
+      border-radius: 100px;
+      width: fit-content;
+      border: 1px solid var(--grey-600);
+
+      img.hats-logo {
+        width: ${getSpacing(3.4)};
+        height: ${getSpacing(3.4)};
+      }
+
+      &.vertical {
+        flex-direction: column;
+        border: none;
 
         img.hats-logo {
-          width: ${getSpacing(3.4)};
-          height: ${getSpacing(3.4)};
+          width: ${getSpacing(4)};
+          height: ${getSpacing(4)};
         }
       }
     }

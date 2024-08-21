@@ -214,12 +214,12 @@ export const VaultCard = ({
     );
   };
 
-  const getCuratorPill = () => {
+  const getCuratorPill = (style: "vertical" | "horizontal" = "horizontal") => {
     // Curated by HATS
     if (!curatorInfo || !curatorInfo.username) {
       return (
         <WithTooltip text={t("curatorOfTheCompetition")}>
-          <div className="curator-pill">
+          <div className={`curator-pill ${style}`}>
             <img src={HatsTokenIcon} alt="hats logo" className="hats-logo" />
             <p>{t("curatedByHats")}</p>
           </div>
@@ -230,8 +230,8 @@ export const VaultCard = ({
 
       return (
         <WithTooltip text={t("curatorOfTheCompetition")}>
-          <div className="curator-pill">
-            <HackerProfileImage size="xxsmall" hackerProfile={curatorProfile} noMargin />
+          <div className={`curator-pill ${style}`}>
+            <HackerProfileImage size={style === "vertical" ? "xsmall" : "xxsmall"} hackerProfile={curatorProfile} noMargin />
             <p>{t(`CuratorForm.${curatorInfo.role}`)}</p>
           </div>
         </WithTooltip>
@@ -388,6 +388,8 @@ export const VaultCard = ({
         </div>
 
         <div className="stats">
+          {/* Curator for paid competitions */}
+          {hideStatusPill && reducedStyles && <div className="stats__stat">{getCuratorPill("vertical")}</div>}
           <div className="stats__stat">
             {isAudit ? (
               <>
