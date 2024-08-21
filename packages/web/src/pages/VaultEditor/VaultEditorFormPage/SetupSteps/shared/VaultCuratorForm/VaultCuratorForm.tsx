@@ -20,15 +20,17 @@ export const VaultCuratorForm = () => {
   const selectedCurator = watch("project-metadata.curator.username");
   const availableRoles = curators?.find((curator) => curator.username === selectedCurator)?.curatorApplication?.roles ?? [];
 
-  const curatorItems = curators?.map((curator) => ({
-    label: curator.username,
-    value: curator.username,
-  })) as FormSelectInputOption[];
+  const curatorItems =
+    curators?.map((curator) => ({
+      label: curator.username,
+      value: curator.username,
+    })) ?? ([] as FormSelectInputOption[]);
 
-  const roleItems = availableRoles.map((role) => ({
-    label: t(`CuratorForm.${role}`),
-    value: role,
-  })) as FormSelectInputOption[];
+  const roleItems =
+    availableRoles.map((role) => ({
+      label: t(`CuratorForm.${role}`),
+      value: role,
+    })) ?? ([] as FormSelectInputOption[]);
 
   const resetCurator = () => {
     setValue("project-metadata.curator", undefined);
