@@ -362,7 +362,7 @@ export const VaultCard = ({
         <div className="pills mb-5">
           {isAudit && getAuditStatusPill()}
           {isContinuousAudit && getContinuousAuditPill()}
-          {getCuratorPill()}
+          {isAudit && getCuratorPill()}
           {!reducedStyles && vaultApy && vaultApy.length > 0 && getAPYPill()}
         </div>
       )}

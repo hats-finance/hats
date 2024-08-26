@@ -198,7 +198,7 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
     <StyledVaultCard isAudit={isAudit} reducedStyles={false} showIntendedAmount={true} hasActiveClaim={false}>
       <div className="pills mb-3">
         {isAudit && getAuditStatusPill()}
-        {getCuratorPill()}
+        {isAudit && getCuratorPill()}
       </div>
 
       <div className="vault-info">
