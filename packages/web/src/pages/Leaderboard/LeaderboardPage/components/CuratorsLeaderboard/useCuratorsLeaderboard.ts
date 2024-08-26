@@ -1,4 +1,4 @@
-import { IHackerProfile, getOldTokenPrice } from "@hats.finance/shared";
+import { IHackerProfile, IVaultV3, getOldTokenPrice } from "@hats.finance/shared";
 import { ethers } from "ethers";
 import { IPayoutsTimeframe } from "hooks/leaderboard/usePayoutsGroupedByAddress";
 import { usePayoutsGroupedByCurator } from "hooks/leaderboard/usePayoutsGroupedByCurator";
@@ -39,6 +39,9 @@ export const useCuratorsLeaderboard = (
           const curator = payout.payoutData?.curator;
           if (!curator) return acc;
 
+          const vaultVersion = vault.version;
+          if (vaultVersion !== "v3") return acc;
+
           const isAudit = vault.description?.["project-metadata"].type === "audit";
 
           const totalRewardInTokens = +ethers.utils.formatUnits(payout.totalPaidOut ?? "0", vault.stakingTokenDecimals);
@@ -46,7 +49,9 @@ export const useCuratorsLeaderboard = (
           const tokenPrice =
             payout.payoutData?.vault?.amountsInfo?.tokenPriceUsd ?? getOldTokenPrice(payout.id) ?? (isAudit ? 1 : 0);
 
-          const curatorPercentage = (+payout.governanceHatReward / 100 / 100) * (curator.percentage / 100);
+          const govPercentage =
+            (payout.payoutData?.vault as IVaultV3 | undefined)?.description?.parameters.fixedHatsGovPercetange ?? 0;
+          const curatorPercentage = (govPercentage / 100) * (curator.percentage / 100);
           acc.totalAmountCompetitionsPaid.tokens += totalRewardInTokens;
           acc.totalAmountCompetitionsPaid.usd += totalRewardInTokens * tokenPrice;
           acc.totalAmountEarned.tokens += acc.totalAmountCompetitionsPaid.tokens * curatorPercentage;
