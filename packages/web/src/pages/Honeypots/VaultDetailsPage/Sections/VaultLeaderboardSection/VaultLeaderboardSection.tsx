@@ -46,11 +46,15 @@ export const VaultLeaderboardSection = ({ vault, auditPayout, hideClaimRewardsAc
   const isWinnerAddress = leaderboardData?.find(
     (leaderboardEntry) => leaderboardEntry.beneficiary?.toLowerCase() === address?.toLowerCase()
   );
+  const isCurator =
+    auditPayout?.payoutData?.curator?.address.toLowerCase() === address?.toLowerCase() &&
+    vault.version === "v3" &&
+    vault.description?.["project-metadata"].type === "audit";
 
   // IF gov member, use the gov multisig as the account to release the funds
-  const releasable = ReleasablePaymentSplitter.hook(vault, auditPayout?.beneficiary, isGov ? govMultisig : address);
+  const releasable = ReleasablePaymentSplitter.hook(vault, auditPayout?.beneficiary, isGov && !isCurator ? govMultisig : address);
   const releasableAmount = new Amount(releasable, vault.stakingTokenDecimals, vault.stakingTokenSymbol);
-  const released = ReleasedPaymentSplitter.hook(vault, auditPayout?.beneficiary, isGov ? govMultisig : address);
+  const released = ReleasedPaymentSplitter.hook(vault, auditPayout?.beneficiary, isGov && !isCurator ? govMultisig : address);
   const releasedAmount = new Amount(released, vault.stakingTokenDecimals, vault.stakingTokenSymbol);
 
   const severitiesInVault = vault.description?.severities.map((severity) => parseSeverityName(severity.name)) ?? [];
@@ -76,6 +80,7 @@ export const VaultLeaderboardSection = ({ vault, auditPayout, hideClaimRewardsAc
   };
 
   const getRole = () => {
+    if (isCurator) return "curator!";
     if (isGov) return "governance!";
     if (isDepositor) return "depositor!";
     if (isWinnerAddress) return "winner. Congrats!";

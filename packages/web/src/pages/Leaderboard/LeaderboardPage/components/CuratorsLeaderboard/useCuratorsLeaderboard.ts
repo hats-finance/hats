@@ -51,11 +51,13 @@ export const useCuratorsLeaderboard = (
 
           const govPercentage =
             (payout.payoutData?.vault as IVaultV3 | undefined)?.description?.parameters.fixedHatsGovPercetange ?? 0;
-          const curatorPercentage = (govPercentage / 100) * (curator.percentage / 100);
+          const curatorPercentage = curator.percentage / 100;
+          const govFeesAmountTokens = (govPercentage * totalRewardInTokens) / (100 - govPercentage);
+
           acc.totalAmountCompetitionsPaid.tokens += totalRewardInTokens;
           acc.totalAmountCompetitionsPaid.usd += totalRewardInTokens * tokenPrice;
-          acc.totalAmountEarned.tokens += acc.totalAmountCompetitionsPaid.tokens * curatorPercentage;
-          acc.totalAmountEarned.usd += acc.totalAmountCompetitionsPaid.usd * curatorPercentage;
+          acc.totalAmountEarned.tokens += govFeesAmountTokens * curatorPercentage;
+          acc.totalAmountEarned.usd += govFeesAmountTokens * tokenPrice * curatorPercentage;
           acc.totalCompetitions += 1;
           acc.profile = profiles.find((prof) => prof.addresses.map((address) => address.toLowerCase()).includes(address));
 
