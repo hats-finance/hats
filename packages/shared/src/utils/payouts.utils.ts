@@ -174,7 +174,11 @@ export const getExecutePayoutSafeTransaction = async (
         // Add curator as beneficiary
         let remainingGovPoints = governancePoints;
         if (payout.payoutData.curator) {
-          const curatorFees = (payout.payoutData.curator.percentage / 100) * remainingGovPoints;
+          const curatorPercentage = payout.payoutData.curator.percentage / 100;
+          if (curatorPercentage < 0 || curatorPercentage > 50) {
+            throw new Error(`Invalid curator percentage for payout id: ${payout._id} and percentage ${curatorPercentage}`);
+          }
+          const curatorFees = curatorPercentage * remainingGovPoints;
           remainingGovPoints = remainingGovPoints - curatorFees;
 
           beneficiariesToIterate.push({
