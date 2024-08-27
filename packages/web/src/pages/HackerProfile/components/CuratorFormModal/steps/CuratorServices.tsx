@@ -30,8 +30,9 @@ export const CuratorServices = () => {
       <p>{t("CuratorForm.selectServicesDesc")}</p>
 
       <div className="options mt-5">
-        {services.map((service) => (
+        {services.map((service, idx) => (
           <div
+            key={idx}
             className="option"
             onClick={() => {
               setValue(
