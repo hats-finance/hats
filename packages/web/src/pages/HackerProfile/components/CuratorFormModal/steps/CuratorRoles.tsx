@@ -24,6 +24,7 @@ export const CuratorRoles = () => {
       <div className="options mt-5">
         {roles.map((role) => (
           <div
+            key={role}
             className="option"
             onClick={() => {
               setValue(
