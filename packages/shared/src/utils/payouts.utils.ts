@@ -165,17 +165,35 @@ export const getExecutePayoutSafeTransaction = async (
         );
       }
 
-      // Add governance as beneficiary
+      // Add governance ans curator as beneficiary
       // We are doing this because in v3 the govFees on-chain is 0%. We need to calculate it manually
       if (governancePercentage > 0) {
         const govWallet = ChainsConfig[Number(vaultInfo.chainId)].govMultisig;
         if (!govWallet) throw new Error(`Gov wallet not found on ChainsConfig for payout id: ${payout._id}`);
 
+        // Add curator as beneficiary
+        let remainingGovPoints = governancePoints;
+        if (payout.payoutData.curator) {
+          const curatorPercentage = payout.payoutData.curator.percentage / 100;
+          if (curatorPercentage < 0 || curatorPercentage > 50) {
+            throw new Error(`Invalid curator percentage for payout id: ${payout._id} and percentage ${curatorPercentage}`);
+          }
+          const curatorFees = curatorPercentage * remainingGovPoints;
+          remainingGovPoints = remainingGovPoints - curatorFees;
+
+          beneficiariesToIterate.push({
+            beneficiary: payout.payoutData.curator.address,
+            severity: "curator",
+            nftUrl: "",
+            percentageOfPayout: truncate(curatorFees, 4),
+          } as ISplitPayoutBeneficiary);
+        }
+
         beneficiariesToIterate.push({
           beneficiary: govWallet,
           severity: "governance",
           nftUrl: "",
-          percentageOfPayout: truncate(governancePoints, 4),
+          percentageOfPayout: truncate(remainingGovPoints, 4),
         } as ISplitPayoutBeneficiary);
       }
     }

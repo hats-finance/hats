@@ -7,6 +7,7 @@ import { RoutePaths } from "navigation";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { getVaultCurator } from "utils/curator.utils";
 import { useCreateDraftPayout } from "../payoutsService.hooks";
 import { StyledPayoutCreateModal } from "./styles";
 
@@ -44,6 +45,7 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
 
     let payoutData = createNewPayoutData(payoutType);
     payoutData.depositors = getVaultDepositors(selectedVault);
+    payoutData.curator = await getVaultCurator(selectedVault);
 
     const payoutId = await createDraftPayout.mutateAsync({
       vaultInfo: getVaultInfoFromVault(selectedVault),

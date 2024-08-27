@@ -184,6 +184,7 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
     const committeeFee = (Number(vault.committeeRewardSplit) / 100 / 100) * splitFactor;
 
     const maxRewardFactor = 1 - governanceFee - committeeFee;
+    const maxBounty = isAudit ? 1 : vault.maxBounty ? +vault.maxBounty / 100 / 100 : 1;
 
     return {
       ...vault,
@@ -219,8 +220,8 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
           usd: depositedAmountTokens * tokenPrice,
         },
         maxRewardAmount: {
-          tokens: depositedAmountTokens * maxRewardFactor,
-          usd: depositedAmountTokens * tokenPrice * maxRewardFactor,
+          tokens: depositedAmountTokens * maxRewardFactor * maxBounty,
+          usd: depositedAmountTokens * tokenPrice * maxRewardFactor * maxBounty,
         },
       },
     } as IVault;

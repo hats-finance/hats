@@ -2,7 +2,8 @@ import { IPayoutGraph, IVault } from "@hats.finance/shared";
 import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
-import { Button, Pill, VaultAssetsPillsList, WithTooltip } from "components";
+import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
+import { Button, HackerProfileImage, Pill, VaultAssetsPillsList, WithTooltip } from "components";
 import { queryClient } from "config/reactQuery";
 import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
@@ -16,7 +17,7 @@ import millify from "millify";
 import moment from "moment";
 import { RoutePaths } from "navigation";
 import { CreateProfileFormModal } from "pages/HackerProfile/components";
-import { useProfileByAddress } from "pages/HackerProfile/hooks";
+import { useProfileByAddress, useProfileByUsername } from "pages/HackerProfile/hooks";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -141,6 +142,9 @@ export const VaultCard = ({
     };
   }, [auditPayout, vault]);
 
+  const curatorInfo = vault?.description?.["project-metadata"].curator;
+  const { data: curatorProfile, isLoading: isLoadingCuratorProfile } = useProfileByUsername(curatorInfo?.username);
+
   if (!vault || !vault.description) return null;
 
   const activeClaim = vault.activeClaim;
@@ -210,7 +214,34 @@ export const VaultCard = ({
     );
   };
 
+  const getCuratorPill = (style: "vertical" | "horizontal" = "horizontal") => {
+    // Curated by HATS
+    if (!curatorInfo || !curatorInfo.username) {
+      return (
+        <WithTooltip text={t("curatorOfTheCompetition")}>
+          <div className={`curator-pill ${style}`}>
+            <img src={HatsTokenIcon} alt="hats logo" className="hats-logo" />
+            <p>{t("curatedByHats")}</p>
+          </div>
+        </WithTooltip>
+      );
+    } else {
+      if (isLoadingCuratorProfile) return null;
+
+      return (
+        <WithTooltip text={t("curatorOfTheCompetition")}>
+          <div className={`curator-pill ${style}`}>
+            <HackerProfileImage size={style === "vertical" ? "xsmall" : "xxsmall"} hackerProfile={curatorProfile} noMargin />
+            <p>{t(`CuratorForm.${curatorInfo.role}`)}</p>
+          </div>
+        </WithTooltip>
+      );
+    }
+  };
+
   const getAPYPill = () => {
+    if (isAudit) return null;
+
     return (
       <ApyPill>
         <div className="content-apy">
@@ -331,6 +362,7 @@ export const VaultCard = ({
         <div className="pills mb-5">
           {isAudit && getAuditStatusPill()}
           {isContinuousAudit && getContinuousAuditPill()}
+          {isAudit && getCuratorPill()}
           {!reducedStyles && vaultApy && vaultApy.length > 0 && getAPYPill()}
         </div>
       )}
@@ -356,6 +388,8 @@ export const VaultCard = ({
         </div>
 
         <div className="stats">
+          {/* Curator for paid competitions */}
+          {hideStatusPill && reducedStyles && <div className="stats__stat">{getCuratorPill("vertical")}</div>}
           <div className="stats__stat">
             {isAudit ? (
               <>

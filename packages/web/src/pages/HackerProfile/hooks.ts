@@ -3,7 +3,9 @@ import { UseMutationResult, useMutation, useQuery } from "@tanstack/react-query"
 import { ISiweData } from "hooks/siwe/useSiweAuth";
 import {
   IUpsertedProfileResult,
+  createCuratorApplication,
   deleteProfile,
+  getApprovedCurators,
   getProfileByAddress,
   getProfileByUsername,
   isUsernameAvailable,
@@ -35,6 +37,16 @@ export const useProfileByUsername = (username?: string) => {
 };
 
 /**
+ * Gets all approved curators
+ */
+export const useApprovedCurators = () => {
+  return useQuery<IHackerProfile[]>({
+    queryKey: ["approved-curators"],
+    queryFn: () => getApprovedCurators(),
+  });
+};
+
+/**
  * Gets the availability of a username
  */
 export const useUsernameAvailability = (username?: string) => {
@@ -56,6 +68,20 @@ export const useUpsertProfile = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: ({ profile, username }) => upsertProfile(profile, username),
+  });
+};
+
+/**
+ * Creates a curator application
+ */
+export const useCreateCuratorApplication = (): UseMutationResult<
+  IUpsertedProfileResult | undefined,
+  string,
+  { curatorForm: IHackerProfile["curatorApplication"]; username?: string },
+  unknown
+> => {
+  return useMutation({
+    mutationFn: ({ curatorForm, username }) => createCuratorApplication(curatorForm, username),
   });
 };
 

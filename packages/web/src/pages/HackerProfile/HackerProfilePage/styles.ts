@@ -62,6 +62,19 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
               }
             }
           }
+
+          .curator-roles {
+            display: flex;
+            gap: ${getSpacing(2)};
+            margin-top: ${getSpacing(1)};
+
+            span {
+              font-size: var(--xsmall);
+              border: 1px solid var(--primary-light);
+              padding: ${getSpacing(0.5)} ${getSpacing(2)};
+              border-radius: 100px;
+            }
+          }
         }
       }
 

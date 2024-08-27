@@ -53,6 +53,7 @@ interface IPayoutDataBase {
   vault?: IVault;
   stopAutocalculation?: boolean;
   depositors?: { address: string; shares: number; ownership: number }[];
+  curator?: { username: string; address: string; role: string; percentage: number };
 }
 
 export interface ISinglePayoutData extends IPayoutDataBase {
@@ -83,7 +84,7 @@ export interface ISplitPayoutData extends IPayoutDataBase {
 
 export interface ISplitPayoutBeneficiary {
   beneficiary: string;
-  severity: string | "depositor" | "governance"; // Severity name
+  severity: string | "depositor" | "governance" | "curator"; // Severity name
   percentageOfPayout: string; // Number between 0 and 100
   nftUrl: string;
   submissionData?: { id: string; subId: string; idx: number };

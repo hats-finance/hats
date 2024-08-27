@@ -38,6 +38,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getVaultCurator } from "utils/curator.utils";
 import { useAccount } from "wagmi";
 import { useCreatePayoutFromSubmissions, useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
@@ -283,6 +284,7 @@ export const SubmissionsListPage = () => {
         severity: severity ?? "",
         submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
         depositors: getVaultDepositors(vault),
+        curator: await getVaultCurator(vault),
       } as ISinglePayoutData;
     } else {
       const submissions = committeeSubmissions.filter((sub) => selectedSubmissions.includes(sub.subId));
@@ -303,6 +305,7 @@ export const SubmissionsListPage = () => {
         }),
         usingPointingSystem: (vault.description as IVaultDescriptionV2).usingPointingSystem,
         depositors: getVaultDepositors(vault),
+        curator: await getVaultCurator(vault),
       } as ISplitPayoutData;
     }
 

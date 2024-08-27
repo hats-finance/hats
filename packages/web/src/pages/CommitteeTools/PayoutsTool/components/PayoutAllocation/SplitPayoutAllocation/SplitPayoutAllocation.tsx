@@ -369,9 +369,7 @@ function SplitPayoutAllocationShared({
         {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
       </StyledSplitPayoutSummary>
 
-      {vault?.version === "v3" && payout?.payoutData?.depositors && payout.payoutData.depositors.length > 0 && (
-        <AdditionalBeneficiariesInfo payout={payout} vault={vault} />
-      )}
+      {vault?.version === "v3" && <AdditionalBeneficiariesInfo payout={payout} vault={vault} />}
     </>
   );
 }
