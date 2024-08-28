@@ -24,6 +24,14 @@ export const StyledFormSelectInput = styled.div<{ noMargin: boolean; flexExpand:
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);
     }
+
+    span.helper {
+      display: block;
+      color: var(--secondary-light);
+      margin-top: ${getSpacing(0.5)};
+      margin-left: ${getSpacing(1)};
+      font-size: var(--xxsmall);
+    }
   `
 );
 
