@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatNumber } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
-import { CreateProfileFormModal } from "../components";
+import { CreateProfileFormModal, CuratorFormModal } from "../components";
 import { useLinkNewAddress, useProfileByUsername, useUnlinkAddress } from "../hooks";
 import { useAddressesStats } from "../useAddressesStats";
 import { useAddressesStreak } from "../useAddressesStreak";
@@ -37,6 +37,7 @@ export const HackerProfilePage = () => {
 
   const [showSettings, setShowSettings] = useState(false);
   const { isShowing: isShowingUpdateProfile, show: showUpdateProfile, hide: hideUpdateProfile } = useModal();
+  const { isShowing: isShowingCuratorModal, show: showCuratorModal, hide: hideCuratorModal } = useModal();
   const [ownerSiweData, setOwnerSiweData] = useState<ISiweData>();
 
   const { data: profileFound, isLoading: isLoadingProfile } = useProfileByUsername(username);
@@ -51,6 +52,9 @@ export const HackerProfilePage = () => {
 
   const linkNewAddress = useLinkNewAddress();
   const unlinkAddress = useUnlinkAddress();
+
+  const curatorApplication = profileFound?.curatorApplication;
+  const curatorApproved = curatorApplication?.status === "approved";
 
   // If the user is not authenticated, and is is process of linking a new address, continue with the linking process
   useEffect(() => {
@@ -163,6 +167,13 @@ export const HackerProfilePage = () => {
               <div className="profile-card">
                 <HackerProfileImage noMargin hackerProfile={profileFound} size="large" />
                 <div className="description">
+                  {curatorApproved && (
+                    <div className="curator-roles">
+                      {curatorApplication.roles.map((role, idx) => (
+                        <span key={idx}>{t(`CuratorForm.${role}`)}</span>
+                      ))}
+                    </div>
+                  )}
                   <h2>{profileFound.username}</h2>
                   {profileFound.title && <p className="hacker-title">{profileFound.title}</p>}
                   {profileStats.firstSubmissionDate && (
@@ -210,6 +221,14 @@ export const HackerProfilePage = () => {
                       ))}
                     </div>
                   </div>
+
+                  <Button size="medium" styleType="outlined" onClick={!curatorApplication ? showCuratorModal : undefined}>
+                    {!!curatorApplication ? (
+                      <span>{`${t("HackerProfile.curatorApplication")}: ${curatorApplication.status.toUpperCase()}`}</span>
+                    ) : (
+                      <span>{t("HackerProfile.applyForCurator")}</span>
+                    )}
+                  </Button>
                 </div>
               )}
             </div>
@@ -261,6 +280,7 @@ export const HackerProfilePage = () => {
       </StyledHackerProfilePage>
 
       <CreateProfileFormModal isShowing={isShowingUpdateProfile} onHide={hideUpdateProfile} />
+      <CuratorFormModal isShowing={isShowingCuratorModal} onHide={hideCuratorModal} />
     </>
   );
 };

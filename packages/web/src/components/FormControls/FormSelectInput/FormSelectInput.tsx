@@ -87,7 +87,9 @@ export function FormSelectInputComponent(
 
   const getRenderValue = () => {
     if ((!value || value.length === 0) && placeholder) return placeholder;
-    return multiple ? `${(value as string[]).length} selected` : options.find((o) => o.value === (value as string))?.label;
+    return multiple
+      ? `${(value as string[]).length} selected`
+      : (options ?? []).find((o) => o.value === (value as string))?.label;
   };
 
   return (

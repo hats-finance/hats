@@ -35,6 +35,22 @@ export async function upsertProfile(profile: IHackerProfile, username?: string):
 }
 
 /**
+ * Creates a curator application
+ */
+export async function createCuratorApplication(
+  curatorForm: IHackerProfile["curatorApplication"],
+  username?: string
+): Promise<IUpsertedProfileResult | undefined> {
+  try {
+    const response = await axiosClient.post(`${BASE_SERVICE_URL}/profile/curator-application/${username ?? ""}`, curatorForm);
+    return response.data.profile;
+  } catch (error) {
+    console.log(error);
+    throw ((error as AxiosError).response?.data as any)?.error;
+  }
+}
+
+/**
  * Deletes a profile by username
  */
 export async function deleteProfile(username: string): Promise<boolean> {
@@ -59,6 +75,19 @@ export async function getProfileByUsername(username?: string): Promise<IHackerPr
   } catch (error) {
     console.log(error);
     return undefined;
+  }
+}
+
+/**
+ * Gets all approved curators
+ */
+export async function getApprovedCurators(): Promise<IHackerProfile[]> {
+  try {
+    const response = await axiosClient.get(`${BASE_SERVICE_URL}/profile/curators/get-all`);
+    return response.data.users;
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 }
 

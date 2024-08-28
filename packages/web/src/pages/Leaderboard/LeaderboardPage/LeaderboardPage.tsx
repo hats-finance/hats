@@ -2,16 +2,18 @@ import { Seo } from "components";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AllTimeLeaderboard } from "./components/AllTimeLeaderboard/AllTimeLeaderboard";
+import { CuratorsLeaderboard } from "./components/CuratorsLeaderboard/CuratorsLeaderboard";
 import { TimelineLeaderboard } from "./components/TimelineLeaderboard/TimelineLeaderboard";
 import { StyledLeaderboardPage } from "./styles";
 
 export const LeaderboardPage = () => {
   const { t } = useTranslation();
-  const [selectedLeaderboard, setSelectedLeaderboard] = useState<"alltime" | "timeline">("alltime");
+  const [selectedLeaderboard, setSelectedLeaderboard] = useState<"alltime" | "timeline" | "curators">("alltime");
 
   const leaderboards = {
     alltime: <AllTimeLeaderboard />,
     timeline: <TimelineLeaderboard />,
+    curators: <CuratorsLeaderboard />,
   };
 
   return (
@@ -32,6 +34,12 @@ export const LeaderboardPage = () => {
             onClick={() => setSelectedLeaderboard("timeline")}
           >
             {t("Leaderboard.auditsTimeline")}
+          </h3>
+          <h3
+            className={`section section--curators ${selectedLeaderboard === "curators" ? "selected" : ""}`}
+            onClick={() => setSelectedLeaderboard("curators")}
+          >
+            {t("Leaderboard.curators")}
           </h3>
         </div>
 

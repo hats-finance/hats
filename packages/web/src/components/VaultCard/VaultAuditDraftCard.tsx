@@ -1,7 +1,8 @@
 import { IEditedSessionResponse } from "@hats.finance/shared";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
-import { Button, Pill, WithTooltip } from "components";
+import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
+import { Button, HackerProfileImage, Pill, WithTooltip } from "components";
 import { queryClient } from "config/reactQuery";
 import { useAuditFrameGame } from "hooks/auditFrameGame";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -14,7 +15,7 @@ import millify from "millify";
 import moment from "moment";
 import { RoutePaths } from "navigation";
 import { CreateProfileFormModal } from "pages/HackerProfile/components";
-import { useProfileByAddress } from "pages/HackerProfile/hooks";
+import { useProfileByAddress, useProfileByUsername } from "pages/HackerProfile/hooks";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -70,6 +71,9 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
     };
   }, [vaultDraft]);
 
+  const curatorInfo = vaultDraft?.editedDescription?.["project-metadata"].curator;
+  const { data: curatorProfile, isLoading: isLoadingCuratorProfile } = useProfileByUsername(curatorInfo?.username);
+
   if (!vaultDraft || !vaultDraft.editedDescription) return null;
 
   const isAudit = true;
@@ -103,6 +107,31 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
         <div className="mb-4">
           <Pill transparent dotColor="blue" text={t("liveNow")} />
         </div>
+      );
+    }
+  };
+
+  const getCuratorPill = (style: "vertical" | "horizontal" = "horizontal") => {
+    // Curated by HATS
+    if (!curatorInfo || !curatorInfo.username) {
+      return (
+        <WithTooltip text={t("curatorOfTheCompetition")}>
+          <div className={`curator-pill ${style}`}>
+            <img src={HatsTokenIcon} alt="hats logo" className="hats-logo" />
+            <p>{t("curatedByHats")}</p>
+          </div>
+        </WithTooltip>
+      );
+    } else {
+      if (isLoadingCuratorProfile) return null;
+
+      return (
+        <WithTooltip text={t("curatorOfTheCompetition")}>
+          <div className={`curator-pill ${style}`}>
+            <HackerProfileImage size={style === "vertical" ? "xsmall" : "xxsmall"} hackerProfile={curatorProfile} noMargin />
+            <p>{t(`CuratorForm.${curatorInfo.role}`)}</p>
+          </div>
+        </WithTooltip>
       );
     }
   };
@@ -167,7 +196,10 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
 
   return (
     <StyledVaultCard isAudit={isAudit} reducedStyles={false} showIntendedAmount={true} hasActiveClaim={false}>
-      {isAudit && getAuditStatusPill()}
+      <div className="pills mb-3">
+        {isAudit && getAuditStatusPill()}
+        {isAudit && getCuratorPill()}
+      </div>
 
       <div className="vault-info">
         <div className="metadata">

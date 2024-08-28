@@ -74,6 +74,13 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
         if (!type || type !== "audit") return schema;
         return schema.required(intl("required"));
       }),
+      curator: Yup.object({
+        username: Yup.string(),
+        role: Yup.string().when("username", (username: string, schema: any) => {
+          if (!username) return schema;
+          return schema.required(intl("required"));
+        }),
+      }),
     }),
     scope: Yup.object({
       reposInformation: Yup.array().of(

@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers";
+import { CuratorRole } from "./profile";
 import {
   ICommitteeMember,
   IProtocolSetupInstructions,
@@ -86,6 +87,10 @@ export interface IBaseEditedVaultDescription {
     emails: IEditedCommunicationEmail[];
     oneLiner?: string;
     intendedCompetitionAmount?: number;
+    curator?: {
+      username: string;
+      role: CuratorRole;
+    };
   };
   committee: {
     chainId?: string;

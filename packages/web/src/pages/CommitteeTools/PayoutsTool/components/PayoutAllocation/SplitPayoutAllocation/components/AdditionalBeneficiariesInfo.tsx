@@ -27,13 +27,17 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
   if (vault.version !== "v3") return null;
   if (isNaN(totalToPay) || totalToPay <= 0) return null;
 
+  const curator = payout.payoutData.curator;
+
   const hatsGovFee = +vault?.governanceHatRewardSplit / 100 / 100;
-  const governancePercentage = totalToPay * hatsGovFee;
+  const governancePercentage = curator ? totalToPay * hatsGovFee * (1 - curator.percentage / 100) : totalToPay * hatsGovFee;
+  const curatorPercentage = curator ? totalToPay * hatsGovFee * (curator.percentage / 100) : 0;
   const hackersPercentage = totalToPay * (1 - hatsGovFee);
   const depositorsPercentage = 100 - totalToPay;
 
   const hackersPoints = beneficiaries.reduce((acc, beneficiary) => acc + +beneficiary.percentageOfPayout, 0);
   const governancePoints = (governancePercentage * hackersPoints) / hackersPercentage;
+  const curatorPoints = (curatorPercentage * hackersPoints) / hackersPercentage;
   const depositorsPoints = (depositorsPercentage * hackersPoints) / hackersPercentage;
 
   const needToPayDepositors = !isNaN(depositorsPercentage) && depositorsPercentage > 0;
@@ -52,9 +56,6 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
           <span>{`${vault.stakingTokenSymbol} ${millify(
             (vault.amountsInfo?.depositedAmount?.tokens ?? 0) * (hackersPercentage / 100)
           )}`}</span>
-          <span className="ml-2">
-            (~${millify((vault.amountsInfo?.depositedAmount?.tokens ?? 0) * (hackersPercentage / 100))})
-          </span>
         </p>
       </div>
 
@@ -74,11 +75,32 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
           <span className="ml-2">{`${vault.stakingTokenSymbol} ${millify(
             (vault.amountsInfo?.depositedAmount?.tokens ?? 0) * (governancePercentage / 100)
           )}`}</span>
-          <span className="ml-2">
-            (~${millify((vault.amountsInfo?.depositedAmount?.tokens ?? 0) * (governancePercentage / 100))})
-          </span>
         </p>
       </div>
+
+      {curator && (
+        <div className="section">
+          <p className="title">
+            Curator{" "}
+            <strong>
+              {curatorPercentage.toFixed(2)}% ({(+truncate(curatorPoints, 4) * 10 ** 10).toFixed(0)} points)
+            </strong>
+          </p>
+          <div className="depositors-list">
+            <div className="depositor" key={curator.address}>
+              <WithTooltip text={curator.address}>
+                <p>{shortenIfAddress(curator.address)}</p>
+              </WithTooltip>
+              <p>
+                - {curator.role} - {curator.percentage}% of Hats Fees
+              </p>
+              <span className="ml-2">{`${vault.stakingTokenSymbol} ${millify(
+                (vault.amountsInfo?.depositedAmount?.tokens ?? 0) * (curatorPercentage / 100)
+              )}`}</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {payout.payoutData.depositors && payout.payoutData.depositors.length > 0 && needToPayDepositors && (
         <div className="section">
@@ -92,8 +114,6 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
             {payout?.payoutData?.depositors.map((depositor) => {
               const tokens =
                 (vault.amountsInfo?.depositedAmount?.tokens ?? 0) * (depositorsPercentage / 100) * (depositor.ownership / 100);
-              const usd =
-                (vault.amountsInfo?.depositedAmount?.usd ?? 0) * (depositorsPercentage / 100) * (depositor.ownership / 100);
 
               return (
                 <div className="depositor" key={depositor.address}>
@@ -103,7 +123,6 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
                   <p>{depositor.ownership}% of shares</p>
                   <p>
                     <span>{`${vault.stakingTokenSymbol} ${millify(tokens)}`}</span>
-                    <span className="ml-2">(~${millify(usd)})</span>
                     <span className="ml-2">({((depositorsPoints * depositor.ownership) / 100).toFixed(6)} points)</span>
                   </p>
                 </div>

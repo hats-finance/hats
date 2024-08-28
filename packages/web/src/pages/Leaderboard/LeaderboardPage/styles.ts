@@ -15,7 +15,7 @@ export const StyledLeaderboardPage = styled.div`
 
     .section {
       border-bottom: 1px solid var(--primary-light);
-      padding: ${getSpacing(1.8)} ${getSpacing(14)};
+      padding: ${getSpacing(1.8)} ${getSpacing(8)};
       font-size: var(--small);
       font-weight: 700;
       cursor: pointer;
