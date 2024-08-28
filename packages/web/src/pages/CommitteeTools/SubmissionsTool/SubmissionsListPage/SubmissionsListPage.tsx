@@ -503,14 +503,62 @@ export const SubmissionsListPage = () => {
 
                         <div className="pages">
                           <ArrowLeftIcon className="icon" onClick={handleChangePage(-1)} />
-                          {Array.from(
+
+                          {(() => {
+                            const totalPages = filteredSubmissions ? Math.ceil(filteredSubmissions?.length / ITEMS_PER_PAGE) : 1;
+
+                            if (totalPages <= 20) {
+                              return Array.from(Array(totalPages).keys()).map((pageIdx) => (
+                                <p
+                                  key={pageIdx + 1}
+                                  onClick={() => setPage(pageIdx + 1)}
+                                  className={`number ${page === pageIdx + 1 && "current"}`}
+                                >
+                                  {pageIdx + 1}
+                                </p>
+                              ));
+                            } else {
+                              return (
+                                <>
+                                  {page > 1 && (
+                                    <>
+                                      <p onClick={() => setPage(1)} className={`number ${page === 1 && "current"}`}>
+                                        1
+                                      </p>
+                                      <p>...</p>
+                                    </>
+                                  )}
+
+                                  {Array.from(
+                                    { length: 20 },
+                                    (_, i) => i + (totalPages - page > 20 ? page : totalPages - 20)
+                                  ).map((pageIdx) => (
+                                    <p
+                                      key={pageIdx}
+                                      onClick={() => setPage(pageIdx)}
+                                      className={`number ${page === pageIdx && "current"}`}
+                                    >
+                                      {pageIdx}
+                                    </p>
+                                  ))}
+
+                                  {totalPages - page > 20 && <p>...</p>}
+                                  <p onClick={() => setPage(totalPages)} className={`number ${page === totalPages && "current"}`}>
+                                    {totalPages}
+                                  </p>
+                                </>
+                              );
+                            }
+                          })()}
+
+                          {/* {Array.from(
                             { length: filteredSubmissions ? Math.ceil(filteredSubmissions?.length / ITEMS_PER_PAGE) : 1 },
                             (_, i) => i + 1
                           ).map((pageIdx) => (
                             <p key={pageIdx} onClick={() => setPage(pageIdx)} className={`${page === pageIdx && "current"}`}>
                               {pageIdx}
                             </p>
-                          ))}
+                          ))} */}
                           <ArrowRightIcon className="icon" onClick={handleChangePage(1)} />
                         </div>
 

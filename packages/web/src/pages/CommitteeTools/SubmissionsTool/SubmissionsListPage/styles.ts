@@ -142,6 +142,10 @@ export const StyledSubmissionsListPage = styled.div`
     gap: ${getSpacing(1.5)};
     justify-content: center;
 
+    .number {
+      width: 15px;
+    }
+
     p,
     .icon {
       cursor: pointer;
