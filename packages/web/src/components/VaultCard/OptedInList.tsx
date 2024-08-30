@@ -19,6 +19,7 @@ export const OptedInList = ({ editSessionIdOrAddress }: IOptedInListProps) => {
   const {
     optedInList: { data },
   } = useAuditFrameGame(editSessionIdOrAddress);
+  // TODO: Cache the leaderboard in order to avoid performance issues
   // const { data: profiles } = useAllProfiles();
   // const { leaderboard } = useAllTimeLeaderboard();
   // const leaderboardWithUsernames = leaderboard?.map((entry) => {
