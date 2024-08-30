@@ -3,6 +3,7 @@ import {
   ISinglePayoutData,
   ISplitPayoutData,
   ISubmittedSubmission,
+  IVault,
   IVaultDescriptionV2,
   IVulnerabilitySeverity,
   PayoutType,
@@ -20,12 +21,24 @@ import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
 import ClearIcon from "@mui/icons-material/ClearOutlined";
 import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
+import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
 import SearchIcon from "@mui/icons-material/SearchOutlined";
 import SyncIcon from "@mui/icons-material/SyncOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import { AxiosError } from "axios";
-import { Alert, Button, FormDateInput, FormInput, FormSelectInput, HatSpinner, Loading, Modal, WalletButton } from "components";
+import {
+  Alert,
+  Button,
+  FormDateInput,
+  FormInput,
+  FormSelectInput,
+  FormSelectInputOption,
+  HatSpinner,
+  Loading,
+  Modal,
+  WalletButton,
+} from "components";
 import { useKeystore } from "components/Keystore";
 import { IndexedDBs } from "config/DBConfig";
 import { LocalStorage } from "constants/constants";
@@ -38,8 +51,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useLocation, useNavigate } from "react-router-dom";
+import { appChains } from "settings";
+import { shortenIfAddress } from "utils/addresses.utils";
 import { getVaultCurator } from "utils/curator.utils";
+import { getForkedRepoName } from "utils/slug.utils";
 import { useAccount } from "wagmi";
+import { getGithubIssuesFromVault } from "../submissionsService.api";
 import { useCreatePayoutFromSubmissions, useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
 import { StyledSubmissionsListPage } from "./styles";
@@ -59,8 +76,9 @@ export const SubmissionsListPage = () => {
 
   const [openDateFilter, setOpenDateFilter] = useState(false);
   const [dateFilter, setDateFilter] = useState({ from: 0, to: 0, active: false });
-  const [severityFilter, setSeverityFilter] = useState<string>();
+  const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [titleFilter, setTitleFilter] = useState<string>("");
+  const [vaultFilter, setVaultFilter] = useState<string>("");
 
   const { data: committeeSubmissions, isLoading, loadingProgress } = useVaultSubmissionsByKeystore();
 
@@ -82,12 +100,17 @@ export const SubmissionsListPage = () => {
     if (titleFilter) {
       filteredSubmissions = filteredSubmissions.filter((submission) => {
         if (!submission.submissionDataStructure?.title) return false;
-        console.log(titleFilter);
         return submission.submissionDataStructure.title.toLowerCase().includes(titleFilter.toLowerCase());
       });
     }
+    if (vaultFilter && vaultFilter !== "all") {
+      filteredSubmissions = filteredSubmissions.filter((submission) => {
+        if (!submission.linkedVault?.id) return false;
+        return submission.linkedVault?.id.toLowerCase() === vaultFilter.toLowerCase();
+      });
+    }
     return filteredSubmissions;
-  }, [committeeSubmissions, dateFilter, severityFilter, titleFilter]);
+  }, [committeeSubmissions, dateFilter, severityFilter, titleFilter, vaultFilter]);
 
   const allSeveritiesOptions = useMemo(() => {
     if (!committeeSubmissions) return [];
@@ -100,6 +123,44 @@ export const SubmissionsListPage = () => {
 
     const options = severities.map((severity) => ({ label: severity, value: severity }));
     options.unshift({ label: t("all"), value: "all" });
+    return options;
+  }, [committeeSubmissions, t]);
+
+  const allVaultsOptions = useMemo(() => {
+    if (!committeeSubmissions || committeeSubmissions.length === 0) return undefined;
+    const vaults = committeeSubmissions.reduce<IVault[]>((prev, submission) => {
+      if (!submission.linkedVault) return prev;
+      const vault = submission.linkedVault;
+      if (vault && !prev.some((v) => v.id === vault.id)) prev.push(vault);
+      return prev;
+    }, []);
+
+    vaults.sort(
+      (a, b) => (b.description?.["project-metadata"].starttime ?? 0) - (a.description?.["project-metadata"].starttime ?? 0)
+    );
+
+    const options: FormSelectInputOption[] =
+      vaults?.map((vault) => ({
+        value: vault.id,
+        label: vault.description?.["project-metadata"].name ?? vault.name,
+        icon: vault.description?.["project-metadata"].icon,
+        onHoverText: `${vault.version} - ${appChains[vault.chainId as number].chain.name}`,
+        helper: (
+          <div className="vault-address">
+            {vault.version === "v1"
+              ? `${shortenIfAddress(vault.master.address, { startLength: 6, endLength: 6 })} (PID: ${vault.pid})`
+              : shortenIfAddress(vault.id, { startLength: 6, endLength: 6 })}
+            <OpenIcon fontSize="small" />
+          </div>
+        ),
+        onHelperClick: () =>
+          window.open(
+            appChains[vault.chainId as number].chain.blockExplorers?.default.url + "/address/" + vault.id ?? vault.master.address,
+            "_blank"
+          ),
+      })) ?? [];
+    options.push({ label: t("all"), value: "all" });
+
     return options;
   }, [committeeSubmissions, t]);
 
@@ -159,6 +220,15 @@ export const SubmissionsListPage = () => {
     sessionStorage.setItem(LocalStorage.SelectedSubmissions, JSON.stringify(selectedSubmissions));
   }, [selectedSubmissions]);
 
+  // Set by default first vault as vaultFilter
+  useEffect(() => {
+    if (!allVaultsOptions) return;
+    if (vaultFilter) return;
+
+    if (allVaultsOptions.length === 0) return setVaultFilter("all");
+    setVaultFilter(allVaultsOptions[0].value);
+  }, [allVaultsOptions, vaultFilter]);
+
   // Get selected submissions from navigation state
   useEffect(() => {
     const navigationState = location.state as { selectedSubmissions?: string[] };
@@ -167,6 +237,22 @@ export const SubmissionsListPage = () => {
     setSelectedSubmissions(navigationState.selectedSubmissions as string[]);
     navigate(location.pathname, { replace: true });
   }, [location, navigate]);
+
+  // Get information from github
+  useEffect(() => {
+    if (!vaultFilter || vaultFilter === "all") return;
+
+    const vault = allVaults?.find((vault) => vault.id.toLowerCase() === vaultFilter.toLowerCase());
+    if (!vault) return;
+
+    const loadGhIssues = async () => {
+      const ghIssues = await getGithubIssuesFromVault(vault);
+      console.log(ghIssues);
+    };
+    loadGhIssues();
+
+    console.log(filteredSubmissions);
+  }, [vaultFilter, filteredSubmissions, allVaults]);
 
   const handleDownloadAsCsv = () => {
     if (!filteredSubmissions) return;
@@ -394,11 +480,38 @@ export const SubmissionsListPage = () => {
                             colorable
                             options={allSeveritiesOptions}
                             noMargin
-                            onChange={(severity) => setSeverityFilter(severity as string)}
+                            onChange={(severity) => {
+                              setSeverityFilter(severity as string);
+                              setPage(1);
+                            }}
                           />
+                        </div>
+                        <div className="pagination">
+                          <p>
+                            {(page - 1) * ITEMS_PER_PAGE + 1}-{(page - 1) * ITEMS_PER_PAGE + quantityInPage}
+                            <strong> of {filteredSubmissions?.length ?? 0}</strong>
+                          </p>
+                          <div className="selection">
+                            <ArrowLeftIcon onClick={handleChangePage(-1)} />
+                            <ArrowRightIcon onClick={handleChangePage(1)} />
+                          </div>
                         </div>
                       </div>
                       <div className="controls-row">
+                        <div className="vaults-filter">
+                          <FormSelectInput
+                            value={vaultFilter ?? ""}
+                            label={t("SubmissionsTool.filterByVault")}
+                            placeholder={t("vault")}
+                            colorable
+                            options={allVaultsOptions ?? []}
+                            noMargin
+                            onChange={(vaultId) => {
+                              setVaultFilter(vaultId as string);
+                              setPage(1);
+                            }}
+                          />
+                        </div>
                         <div className="title-filter">
                           <FormInput
                             value={titleFilter ?? ""}
@@ -406,19 +519,17 @@ export const SubmissionsListPage = () => {
                             placeholder={t("SubmissionsTool.title")}
                             colorable
                             noMargin
-                            onChange={(e) => setTitleFilter(e.target.value as string)}
+                            onChange={(e) => {
+                              setTitleFilter(e.target.value as string);
+                              setPage(1);
+                            }}
                           />
                         </div>
                       </div>
-                    </div>
-                    <div className="pagination">
-                      <p>
-                        {(page - 1) * ITEMS_PER_PAGE + 1}-{(page - 1) * ITEMS_PER_PAGE + quantityInPage}
-                        <strong> of {filteredSubmissions?.length ?? 0}</strong>
-                      </p>
-                      <div className="selection">
-                        <ArrowLeftIcon onClick={handleChangePage(-1)} />
-                        <ArrowRightIcon onClick={handleChangePage(1)} />
+                      <div>
+                        <Button styleType="text" textColor="secondary" onClick={() => setVaultFilter("all")}>
+                          {t("SubmissionsTool.showAllVaults")}
+                        </Button>
                       </div>
                     </div>
                   </div>

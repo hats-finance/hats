@@ -114,6 +114,7 @@ export const StyledSubmissionsListPage = styled.div`
       align-items: flex-start;
       margin-bottom: ${getSpacing(1)};
       gap: ${getSpacing(2)};
+      width: 100%;
 
       .controls-row {
         width: 100%;
@@ -125,8 +126,13 @@ export const StyledSubmissionsListPage = styled.div`
           width: ${getSpacing(25)};
         }
 
-        .title-filter {
+        .title-filter,
+        .vaults-filter {
           width: 100%;
+        }
+
+        .pagination {
+          margin-left: auto;
         }
       }
     }

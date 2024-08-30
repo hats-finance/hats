@@ -21,6 +21,7 @@ import { useVaultRepoName } from "pages/Honeypots/VaultDetailsPage/hooks";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
+import { getForkedRepoName } from "utils/slug.utils";
 import { checkUrl } from "utils/yup.utils";
 import { StyledContractsList, StyledInScopeSection } from "./styles";
 
@@ -69,8 +70,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       return vault.description.scope?.reposInformation ?? [];
     }
 
-    const vaultName = vault.description["project-metadata"].name.replace(/[^\w\s]| /gi, "-");
-    const forkedRepoName = `${vaultName}-${vault.id}`;
+    const forkedRepoName = getForkedRepoName(vault);
     const forkedRepoUrl = `https://github.com/hats-finance/${forkedRepoName}`;
 
     const reposInformation: IVaultRepoInformation[] = [

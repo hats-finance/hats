@@ -1,6 +1,6 @@
 import { IPayoutData, ISubmittedSubmission, IVault, IVaultInfo, PayoutType } from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
-import { BASE_SERVICE_URL } from "settings";
+import { BASE_SERVICE_URL, HATS_GITHUB_BOT_ID } from "settings";
 
 export const extractSubmissionData = (
   submission: ISubmittedSubmission,
@@ -201,4 +201,41 @@ export async function createPayoutFromSubmissions(
     type,
   });
   return res.data.upsertedId;
+}
+
+type GithubIssue = {
+  id: number;
+  number: number;
+  title: string;
+  createdBy: number;
+  labels: string[];
+  createdAt: string;
+  body: string;
+  txHash?: string;
+};
+
+export async function getGithubIssuesFromVault(vault: IVault): Promise<GithubIssue[]> {
+  const extractTxHashFromBody = (issue: GithubIssue): any => {
+    // const txHash = issue.body.match(/(0x[a-fA-F0-9]{64})/)?.[0];
+    const txHash = issue.body.match(/(\*\*Submission hash \(on-chain\):\*\* (.*)\n)/)?.[2] ?? undefined;
+    return txHash;
+  };
+
+  const mapGithubIssue = (issue: any): GithubIssue => {
+    return {
+      id: issue.id,
+      number: issue.number,
+      title: issue.title,
+      createdBy: issue.user.id,
+      labels: issue.labels.map((label: any) => label.name),
+      createdAt: issue.created_at,
+      body: issue.body,
+      txHash: extractTxHashFromBody(issue),
+    };
+  };
+
+  const res = await axiosClient.get(`${BASE_SERVICE_URL}/github-repos/gh-issues/${vault.id}`);
+  const issues = res.data.githubIssues.map(mapGithubIssue) as GithubIssue[];
+
+  return issues.filter((issue) => issue.createdBy === HATS_GITHUB_BOT_ID) ?? [];
 }
