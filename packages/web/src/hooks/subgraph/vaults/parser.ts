@@ -111,6 +111,11 @@ const fixVaultsData = (vaults: IVault[]) => {
     eulerCTFVault.honeyPotBalance = "4000000000000";
   }
 
+  // Override information for Accumulated Finance vault
+  const accumulatedVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x75278bcc0fa7c9e3af98654bce195eaf3bb6a784");
+  if (accumulatedVault && accumulatedVault.descriptionHash === "QmfDcBsAwfUhqG9Mvj6ZmSZfxCwzTMUNTfFxERddBvtFeL")
+    accumulatedVault.descriptionHash = "QmSRrEZ3GMDe2CuezSbfRCHFmCNQNWHXmhvHy7VAD4jzDX";
+
   return newVaults;
 };
 
