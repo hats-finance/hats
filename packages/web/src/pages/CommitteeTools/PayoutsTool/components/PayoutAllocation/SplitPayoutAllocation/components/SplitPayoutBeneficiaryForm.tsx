@@ -1,15 +1,16 @@
-import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats.finance/shared";
+import { GithubIssue, IPayoutResponse, ISplitPayoutData, IVault } from "@hats.finance/shared";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";
-import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Modal, Spinner } from "components";
+import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Loading, Modal, Spinner } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import useModal from "hooks/useModal";
 import { useOnChange } from "hooks/usePrevious";
 import { hasSubmissionData } from "pages/CommitteeTools/PayoutsTool/utils/hasSubmissionData";
 import { SubmissionCard } from "pages/CommitteeTools/SubmissionsTool/SubmissionsListPage/SubmissionCard";
+import { getGhIssueFromSubmission, getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
 import { useVaultSubmissionsByKeystore } from "pages/CommitteeTools/SubmissionsTool/submissionsService.hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SinglePayoutAllocation } from "../../SinglePayoutAllocation/SinglePayoutAllocation";
@@ -97,6 +98,23 @@ export const SplitPayoutBeneficiaryForm = ({
     setValue<any>(`beneficiaries.${index}.percentageOfPayout` as any, defaultPoints, { shouldValidate: true });
   });
 
+  const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
+  const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
+
+  // Get information from github
+  useEffect(() => {
+    if (!beneficiarySubmission || !vault) return;
+    if (vaultGithubIssues !== undefined) return;
+
+    const loadGhIssues = async () => {
+      setIsLoadingGH(true);
+      const ghIssues = await getGithubIssuesFromVault(vault);
+      setVaultGithubIssues(ghIssues);
+      setIsLoadingGH(false);
+    };
+    loadGhIssues();
+  }, [vault, vaultGithubIssues, beneficiarySubmission]);
+
   const getMoreOptions = () => {
     if (beneficiariesCount === undefined) return [];
     if (beneficiariesCount > 1 && !readOnly && !isPayoutCreated) {
@@ -148,6 +166,10 @@ export const SplitPayoutBeneficiaryForm = ({
                 submission={
                   isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!
                 }
+                ghIssue={getGhIssueFromSubmission(
+                  isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!,
+                  vaultGithubIssues
+                )}
               />
             </div>
           ) : (
@@ -241,6 +263,8 @@ export const SplitPayoutBeneficiaryForm = ({
           />
         </StyledSplitPayoutBeneficiaryAllocationModal>
       </Modal>
+
+      {isLoadingGH && <Loading fixed extraText={`${t("loadingGithubIssues")}...`} />}
     </div>
   );
 };
