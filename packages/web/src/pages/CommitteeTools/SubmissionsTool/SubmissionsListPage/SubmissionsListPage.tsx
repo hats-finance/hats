@@ -1,4 +1,5 @@
 import {
+  GithubIssue,
   IPayoutData,
   ISinglePayoutData,
   ISplitPayoutData,
@@ -19,7 +20,6 @@ import CalendarIcon from "@mui/icons-material/CalendarTodayOutlined";
 import BoxUnselected from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
 import ClearIcon from "@mui/icons-material/ClearOutlined";
-import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
@@ -47,6 +47,7 @@ import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
 import moment from "moment";
 import { RoutePaths } from "navigation";
+import { useVaultRepoName } from "pages/Honeypots/VaultDetailsPage/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useIndexedDB } from "react-indexed-db-hook";
@@ -54,9 +55,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { getVaultCurator } from "utils/curator.utils";
-import { getForkedRepoName } from "utils/slug.utils";
 import { useAccount } from "wagmi";
-import { getGithubIssuesFromVault } from "../submissionsService.api";
+import { getGhIssueFromSubmission, getGithubIssuesFromVault } from "../submissionsService.api";
 import { useCreatePayoutFromSubmissions, useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
 import { StyledSubmissionsListPage } from "./styles";
@@ -78,7 +78,31 @@ export const SubmissionsListPage = () => {
   const [dateFilter, setDateFilter] = useState({ from: 0, to: 0, active: false });
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [titleFilter, setTitleFilter] = useState<string>("");
-  const [vaultFilter, setVaultFilter] = useState<string>("");
+  const [vaultFilter, setVaultFilter] = useState<string>(localStorage.getItem(LocalStorage.SelectedVaultInSubmissions) ?? "");
+  const [onlyShowLabeled, setOnlyShowLabeled] = useState<boolean>(false);
+
+  const filteredVault = allVaults?.find((vault) => vault.id.toLowerCase() === vaultFilter.toLowerCase());
+  const { data: filteredVaultRepoName } = useVaultRepoName(filteredVault);
+
+  const goToFilteredVaultGithubIssues = async () => {
+    if (!filteredVaultRepoName) return;
+
+    const githubLink = `https://github.com/hats-finance/${filteredVaultRepoName}/issues`;
+
+    const wantToGo = await confirm({
+      title: t("openGithub"),
+      titleIcon: <OpenIcon className="mr-2" fontSize="large" />,
+      description: t("doYouWantToSeeSubmissionsOnGithub"),
+      cancelText: t("no"),
+      confirmText: t("yesGo"),
+    });
+
+    if (!wantToGo) return;
+    window.open(githubLink, "_blank");
+  };
+
+  const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
+  const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
 
   const { data: committeeSubmissions, isLoading, loadingProgress } = useVaultSubmissionsByKeystore();
 
@@ -109,8 +133,14 @@ export const SubmissionsListPage = () => {
         return submission.linkedVault?.id.toLowerCase() === vaultFilter.toLowerCase();
       });
     }
+    if (vaultFilter && vaultFilter !== "all" && onlyShowLabeled && vaultGithubIssues && vaultGithubIssues.length > 0) {
+      filteredSubmissions = filteredSubmissions.filter((submission) => {
+        const ghIssue = getGhIssueFromSubmission(submission, vaultGithubIssues);
+        return ghIssue && ghIssue.validLabels.length > 0;
+      });
+    }
     return filteredSubmissions;
-  }, [committeeSubmissions, dateFilter, severityFilter, titleFilter, vaultFilter]);
+  }, [committeeSubmissions, dateFilter, severityFilter, titleFilter, vaultFilter, onlyShowLabeled, vaultGithubIssues]);
 
   const allSeveritiesOptions = useMemo(() => {
     if (!committeeSubmissions) return [];
@@ -244,43 +274,46 @@ export const SubmissionsListPage = () => {
 
     const vault = allVaults?.find((vault) => vault.id.toLowerCase() === vaultFilter.toLowerCase());
     if (!vault) return;
+    if (vaultGithubIssues !== undefined) return;
 
     const loadGhIssues = async () => {
+      setIsLoadingGH(true);
       const ghIssues = await getGithubIssuesFromVault(vault);
-      console.log(ghIssues);
+      setVaultGithubIssues(ghIssues);
+      setIsLoadingGH(false);
     };
     loadGhIssues();
 
     console.log(filteredSubmissions);
-  }, [vaultFilter, filteredSubmissions, allVaults]);
+  }, [vaultFilter, filteredSubmissions, allVaults, vaultGithubIssues]);
 
-  const handleDownloadAsCsv = () => {
-    if (!filteredSubmissions) return;
-    if (filteredSubmissions.length === 0) return;
+  // const handleDownloadAsCsv = () => {
+  //   if (!filteredSubmissions) return;
+  //   if (filteredSubmissions.length === 0) return;
 
-    const submissionsToDownload =
-      selectedSubmissions.length === 0
-        ? filteredSubmissions
-        : filteredSubmissions.filter((submission) => selectedSubmissions.includes(submission.subId));
+  //   const submissionsToDownload =
+  //     selectedSubmissions.length === 0
+  //       ? filteredSubmissions
+  //       : filteredSubmissions.filter((submission) => selectedSubmissions.includes(submission.subId));
 
-    const csvString = [
-      ["beneficiary", "severity", "title"],
-      ...submissionsToDownload.map((submission, idx) => [
-        submission.submissionDataStructure?.beneficiary,
-        submission.submissionDataStructure?.severity?.toLowerCase(),
-        submission.submissionDataStructure?.title.replaceAll(",", "."),
-      ]),
-    ]
-      .map((e) => e.join(","))
-      .join("\n");
+  //   const csvString = [
+  //     ["beneficiary", "severity", "title"],
+  //     ...submissionsToDownload.map((submission, idx) => [
+  //       submission.submissionDataStructure?.beneficiary,
+  //       submission.submissionDataStructure?.severity?.toLowerCase(),
+  //       submission.submissionDataStructure?.title.replaceAll(",", "."),
+  //     ]),
+  //   ]
+  //     .map((e) => e.join(","))
+  //     .join("\n");
 
-    const blob = new Blob([csvString], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.setAttribute("href", url);
-    a.setAttribute("download", `hats-submissions-${new Date().getTime()}.csv`);
-    a.click();
-  };
+  //   const blob = new Blob([csvString], { type: "text/csv" });
+  //   const url = window.URL.createObjectURL(blob);
+  //   const a = document.createElement("a");
+  //   a.setAttribute("href", url);
+  //   a.setAttribute("download", `hats-submissions-${new Date().getTime()}.csv`);
+  //   a.click();
+  // };
 
   const handleChangePage = (direction: number) => () => {
     if (direction === -1) {
@@ -364,16 +397,20 @@ export const SubmissionsListPage = () => {
           .find((sev) => submission?.submissionDataStructure?.severity?.includes(sev.name.toLowerCase()))
           ?.name.toLowerCase() ?? submission?.submissionDataStructure?.severity;
 
+      const ghIssue = getGhIssueFromSubmission(submission, vaultGithubIssues);
+
       payoutData = {
         ...(createNewPayoutData("single") as ISinglePayoutData),
         beneficiary: submission?.submissionDataStructure?.beneficiary,
-        severity: severity ?? "",
+        severity: ghIssue ? ghIssue?.validLabels[0] ?? "" : severity ?? "",
         submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
         depositors: getVaultDepositors(vault),
         curator: await getVaultCurator(vault),
+        ghIssue,
       } as ISinglePayoutData;
     } else {
       const submissions = committeeSubmissions.filter((sub) => selectedSubmissions.includes(sub.subId));
+
       payoutData = {
         ...(createNewPayoutData("split") as ISplitPayoutData),
         beneficiaries: submissions.map((submission) => {
@@ -382,11 +419,14 @@ export const SubmissionsListPage = () => {
               .find((sev) => submission?.submissionDataStructure?.severity?.includes(sev.name.toLowerCase()))
               ?.name.toLowerCase() ?? submission?.submissionDataStructure?.severity;
 
+          const ghIssue = getGhIssueFromSubmission(submission, vaultGithubIssues);
+
           return {
             ...createNewSplitPayoutBeneficiary(),
             beneficiary: submission?.submissionDataStructure?.beneficiary,
-            severity: severity ?? "",
+            severity: ghIssue ? ghIssue?.validLabels[0] ?? "" : severity ?? "",
             submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
+            ghIssue,
           };
         }),
         usingPointingSystem: (vault.description as IVaultDescriptionV2).usingPointingSystem,
@@ -456,7 +496,7 @@ export const SubmissionsListPage = () => {
                   <div className="toolbar">
                     <div className="controls">
                       <div className="controls-row">
-                        <div style={{ display: "none" }} className="selection" onClick={handleSelectAll}>
+                        <div className="selection" onClick={handleSelectAll}>
                           {allPageSelected ? (
                             <BoxSelected className="icon" fontSize="inherit" />
                           ) : (
@@ -508,6 +548,9 @@ export const SubmissionsListPage = () => {
                             noMargin
                             onChange={(vaultId) => {
                               setVaultFilter(vaultId as string);
+                              localStorage.setItem(LocalStorage.SelectedVaultInSubmissions, vaultId as string);
+                              setVaultGithubIssues(undefined);
+                              setSelectedSubmissions([]);
                               setPage(1);
                             }}
                           />
@@ -526,10 +569,28 @@ export const SubmissionsListPage = () => {
                           />
                         </div>
                       </div>
-                      <div>
+                      <div className="flex">
                         <Button styleType="text" textColor="secondary" onClick={() => setVaultFilter("all")}>
                           {t("SubmissionsTool.showAllVaults")}
                         </Button>
+
+                        <div className="flex-end">
+                          {vaultFilter !== "all" && vaultGithubIssues && vaultGithubIssues.length > 0 && (
+                            <FormInput
+                              name="onlyShowLabeled"
+                              checked={onlyShowLabeled}
+                              onChange={(e) => setOnlyShowLabeled(e.target.checked)}
+                              type="toggle"
+                              label={t("onlyShowLabeledIssues")}
+                              noMargin
+                            />
+                          )}
+                          {filteredVault && (
+                            <Button styleType="text" textColor="secondary" onClick={goToFilteredVaultGithubIssues}>
+                              {t("SubmissionsTool.goToVaultGithubIssues")}
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -606,6 +667,7 @@ export const SubmissionsListPage = () => {
                                   isChecked={selectedSubmissions.includes(submission.subId)}
                                   key={submission.subId}
                                   submission={submission}
+                                  ghIssue={getGhIssueFromSubmission(submission, vaultGithubIssues)}
                                 />
                               );
                             })}
@@ -674,12 +736,12 @@ export const SubmissionsListPage = () => {
                         </div>
 
                         <div className="buttons">
-                          <Button onClick={handleDownloadAsCsv}>
+                          {/* <Button onClick={handleDownloadAsCsv}>
                             <DownloadIcon className="mr-2" />
                             {selectedSubmissions.length === 0
                               ? t("downloadAllSubmissionsCsv")
                               : t("downloadSelectedSubmissionsCsv", { num: selectedSubmissions.length })}
-                          </Button>
+                          </Button> */}
                           {selectedSubmissions.length >= 1 && (
                             <Button onClick={handleCreatePayout}>
                               <PayoutIcon className="mr-2" />
@@ -735,6 +797,7 @@ export const SubmissionsListPage = () => {
       </Modal>
       {createPayoutFromSubmissions.isLoading && <Loading fixed extraText={`${t("creatingPayout")}...`} />}
       {!vaultsReadyAllChains && <Loading fixed extraText={`${t("loadingVaults")}...`} />}
+      {isLoadingGH && <Loading fixed extraText={`${t("loadingGithubIssues")}...`} />}
     </StyledSubmissionsListPage>
   );
 };

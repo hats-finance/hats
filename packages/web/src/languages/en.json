@@ -730,6 +730,11 @@
     "roles": "Roles",
     "competitionsRewards": "Competitions rewards",
     "earnedFees": "Earned fees",
+    "loadingGithubIssues": "Loading GitHub issues",
+    "submittedAs": "Submitted as",
+    "labeledAs": "Labeled as",
+    "onlyShowLabeledIssues": "Show only labeled issues",
+    "ghIssue": "GH issue",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",
@@ -1127,7 +1132,8 @@
       "filterByTitle": "Filter by title",
       "filterByVault": "Filter by vault",
       "title": "Title",
-      "showAllVaults": "Show all vaults"
+      "showAllVaults": "Show all vaults",
+      "goToVaultGithubIssues": "Go to vault GitHub issues"
     },
     "Leaderboard": {
       "ifYouAreAWinner": "If you are one of the winners and you want to claim your rewards, please execute the claim by clicking on the button:",
