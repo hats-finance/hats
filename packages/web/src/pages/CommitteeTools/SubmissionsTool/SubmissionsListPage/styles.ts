@@ -182,6 +182,20 @@ export const StyledSubmissionsListPage = styled.div`
     padding: ${getSpacing(0)} ${getSpacing(3)} ${getSpacing(4)};
     transform: translateX(-${getSpacing(3)});
   }
+
+  .flex {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(3)};
+
+    .flex-end {
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(2)};
+      margin-left: auto;
+    }
+  }
 `;
 
 export const StyledSubmissionCard = styled.div<{
@@ -262,6 +276,17 @@ export const StyledSubmissionCard = styled.div<{
         display: flex;
         flex-direction: column;
         gap: ${getSpacing(0.5)};
+
+        .severity {
+          display: flex;
+          gap: ${getSpacing(1)};
+          align-items: center;
+
+          span {
+            font-size: var(--xxsmall);
+            font-weight: 700;
+          }
+        }
 
         .submission-title {
           font-weight: 700;

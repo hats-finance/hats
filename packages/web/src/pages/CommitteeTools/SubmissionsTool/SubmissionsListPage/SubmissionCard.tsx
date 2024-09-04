@@ -1,4 +1,4 @@
-import { ISubmittedSubmission, IVulnerabilitySeverity, parseSeverityName } from "@hats.finance/shared";
+import { GithubIssue, ISubmittedSubmission, IVulnerabilitySeverity, parseSeverityName } from "@hats.finance/shared";
 import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import BoxUnselected from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
@@ -18,11 +18,13 @@ type SubmissionCardProps = {
   inPayout?: boolean;
   isChecked?: boolean;
   onCheckChange?: (submission: ISubmittedSubmission) => void;
+  ghIssue?: GithubIssue;
 };
 
 export const SubmissionCard = ({
   submission,
   onCheckChange,
+  ghIssue,
   noActions = false,
   isChecked = false,
   inPayout = false,
@@ -65,11 +67,27 @@ export const SubmissionCard = ({
         <div className="content">
           {submissionData?.severity && (
             <span className="severity">
+              {ghIssue && (
+                <span>
+                  {t("ghIssue")} #{ghIssue.number} -
+                </span>
+              )}
+              <span>{t("submittedAs")}:</span>
               <Pill
                 textColor={severityColors[severityIndex ?? 0]}
-                isSeverity
+                isSeverity={!ghIssue}
                 text={parseSeverityName(submissionData?.severity) ?? t("noSeverity")}
               />
+              {ghIssue && ghIssue?.validLabels.length > 0 && (
+                <>
+                  <span>{t("labeledAs")}:</span>
+                  <Pill
+                    textColor={severityColors[severityIndex ?? 0]}
+                    isSeverity
+                    text={parseSeverityName(ghIssue.validLabels[0])}
+                  />
+                </>
+              )}
             </span>
           )}
           <p className="submission-title">{submissionData?.title}</p>
