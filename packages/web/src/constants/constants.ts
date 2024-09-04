@@ -9,6 +9,7 @@ export enum LocalStorage {
   ShowedWhereverCTA = "HATS_SHOWED_WHEREVER_CTA",
   Submissions = "HATS_SUBMISSIONS",
   SelectedSubmissions = "HATS_USER_SELECTED_SUBMISSIONS",
+  SelectedVaultInSubmissions = "HATS_USER_SELECTED_VAULT_IN_SUBMISSIONS",
   CoingeckoPrices = "HATS_COINGECKO_PRICES",
   CompetitionStreak = "HATS_HAS_SEEN_COMPETITION_STREAK",
   AirdropModalSeen = "HATS_HAS_SEEN_AIRDROP_MODAL",
