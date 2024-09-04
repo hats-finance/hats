@@ -1,4 +1,12 @@
-import { IPayoutData, ISubmittedSubmission, IVault, IVaultInfo, PayoutType } from "@hats.finance/shared";
+import {
+  GithubIssue,
+  IPayoutData,
+  ISubmittedSubmission,
+  IVault,
+  IVaultInfo,
+  PayoutType,
+  severitiesOrder,
+} from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL, HATS_GITHUB_BOT_ID } from "settings";
 
@@ -203,17 +211,6 @@ export async function createPayoutFromSubmissions(
   return res.data.upsertedId;
 }
 
-type GithubIssue = {
-  id: number;
-  number: number;
-  title: string;
-  createdBy: number;
-  labels: string[];
-  createdAt: string;
-  body: string;
-  txHash?: string;
-};
-
 export async function getGithubIssuesFromVault(vault: IVault): Promise<GithubIssue[]> {
   const extractTxHashFromBody = (issue: GithubIssue): any => {
     // const txHash = issue.body.match(/(0x[a-fA-F0-9]{64})/)?.[0];
@@ -228,6 +225,9 @@ export async function getGithubIssuesFromVault(vault: IVault): Promise<GithubIss
       title: issue.title,
       createdBy: issue.user.id,
       labels: issue.labels.map((label: any) => label.name),
+      validLabels: issue.labels
+        .filter((label: any) => severitiesOrder.includes((label.name as string).toLowerCase()))
+        .map((label: any) => (label.name as string).toLowerCase()),
       createdAt: issue.created_at,
       body: issue.body,
       txHash: extractTxHashFromBody(issue),
@@ -238,4 +238,13 @@ export async function getGithubIssuesFromVault(vault: IVault): Promise<GithubIss
   const issues = res.data.githubIssues.map(mapGithubIssue) as GithubIssue[];
 
   return issues.filter((issue) => issue.createdBy === HATS_GITHUB_BOT_ID) ?? [];
+}
+
+export function getGhIssueFromSubmission(submission?: ISubmittedSubmission, ghIssues?: GithubIssue[]): GithubIssue | undefined {
+  if (!ghIssues || !submission) return undefined;
+
+  const sameTxHash = ghIssues.filter((issue) => issue.txHash === submission.txid);
+  const sameTitle = sameTxHash.filter((issue) => issue.title === submission.submissionDataStructure?.title);
+
+  return sameTitle[0];
 }
