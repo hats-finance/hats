@@ -18,6 +18,7 @@ export interface FormSelectInputOption {
 interface FormSelectInputProps {
   name?: string;
   label?: string;
+  helper?: string;
   placeholder?: string;
   emptyState?: string;
   multiple?: boolean;
@@ -52,6 +53,7 @@ export function FormSelectInputComponent(
     noSelectedMark = false,
     emptyState,
     error,
+    helper,
     placeholder,
     label,
   }: FormSelectInputProps,
@@ -145,6 +147,7 @@ export function FormSelectInputComponent(
           })}
         </SelectMenuOptions>
       )}
+      {!error && helper && <span className="helper">{helper}</span>}
     </StyledFormSelectInput>
   );
 }

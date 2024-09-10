@@ -73,6 +73,9 @@ export const useUserVaults = (versions: UserVaultsVersion[] = ["all"]) => {
       }
     }
 
+    foundVaults.sort(
+      (a, b) => (b.description?.["project-metadata"].starttime ?? 0) - (a.description?.["project-metadata"].starttime ?? 0)
+    );
     setUserVaults(foundVaults);
     setIsLoading(false);
   };

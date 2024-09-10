@@ -114,6 +114,7 @@ export const StyledSubmissionsListPage = styled.div`
       align-items: flex-start;
       margin-bottom: ${getSpacing(1)};
       gap: ${getSpacing(2)};
+      width: 100%;
 
       .controls-row {
         width: 100%;
@@ -125,8 +126,13 @@ export const StyledSubmissionsListPage = styled.div`
           width: ${getSpacing(25)};
         }
 
-        .title-filter {
+        .title-filter,
+        .vaults-filter {
           width: 100%;
+        }
+
+        .pagination {
+          margin-left: auto;
         }
       }
     }
@@ -141,6 +147,10 @@ export const StyledSubmissionsListPage = styled.div`
     align-items: center;
     gap: ${getSpacing(1.5)};
     justify-content: center;
+
+    .number {
+      width: 15px;
+    }
 
     p,
     .icon {
@@ -171,6 +181,20 @@ export const StyledSubmissionsListPage = styled.div`
     bottom: 0;
     padding: ${getSpacing(0)} ${getSpacing(3)} ${getSpacing(4)};
     transform: translateX(-${getSpacing(3)});
+  }
+
+  .flex {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(3)};
+
+    .flex-end {
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(2)};
+      margin-left: auto;
+    }
   }
 `;
 
@@ -252,6 +276,17 @@ export const StyledSubmissionCard = styled.div<{
         display: flex;
         flex-direction: column;
         gap: ${getSpacing(0.5)};
+
+        .severity {
+          display: flex;
+          gap: ${getSpacing(1)};
+          align-items: center;
+
+          span {
+            font-size: var(--xxsmall);
+            font-weight: 700;
+          }
+        }
 
         .submission-title {
           font-weight: 700;

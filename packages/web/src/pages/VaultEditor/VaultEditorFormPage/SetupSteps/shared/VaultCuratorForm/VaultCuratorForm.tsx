@@ -56,6 +56,7 @@ export const VaultCuratorForm = () => {
               colorable
               disabled={allFormDisabled || isLoadingCurators}
               options={curatorItems}
+              helper={curators?.find((c) => c.username === selectedCurator)?.addresses?.[0]}
               {...field}
               value={field.value ?? ""}
               flexExpand
