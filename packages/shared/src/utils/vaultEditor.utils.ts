@@ -447,9 +447,9 @@ export function editedFormToCreateVaultOnChainCall(
     descriptionHash,
     bountyGovernanceHAT: formatPercentage(getHatsFee()),
     bountyHackerHATVested: formatPercentage(editedVaultDescription.parameters.fixedHatsRewardPercetange ?? 0),
-    arbitratorCanChangeBeneficiary: true,
-    arbitratorCanChangeBounty: true,
-    arbitratorCanSubmitClaims: true,
+    arbitratorCanChangeBeneficiary: false,
+    arbitratorCanChangeBounty: false,
+    arbitratorCanSubmitClaims: false,
     isTokenLockRevocable: false,
     arbitrator: ChainsConfig[+(editedVaultDescription.committee.chainId ?? "1")].arbitratorContract,
   } as ICreateVaultOnChainCall;

@@ -1,17 +1,19 @@
 import {
   DefaultIndexArray,
+  GithubIssue,
   IPayoutData,
   ISinglePayoutData,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
 } from "@hats.finance/shared";
-import { FormInput, FormSelectInput, Spinner } from "components";
+import { FormInput, FormSelectInput, Loading, Spinner } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
 import { hasSubmissionData } from "pages/CommitteeTools/PayoutsTool/utils/hasSubmissionData";
 import { SubmissionCard } from "pages/CommitteeTools/SubmissionsTool/SubmissionsListPage/SubmissionCard";
+import { getGhIssueFromSubmission, getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
 import { useVaultSubmissionsByKeystore } from "pages/CommitteeTools/SubmissionsTool/submissionsService.hooks";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SinglePayoutAllocation } from "../../../components";
@@ -81,6 +83,23 @@ export const SinglePayoutForm = () => {
     }
   });
 
+  const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
+  const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
+
+  // Get information from github
+  useEffect(() => {
+    if (!beneficiarySubmission || !vault) return;
+    if (vaultGithubIssues !== undefined) return;
+
+    const loadGhIssues = async () => {
+      setIsLoadingGH(true);
+      const ghIssues = await getGithubIssuesFromVault(vault);
+      setVaultGithubIssues(ghIssues);
+      setIsLoadingGH(false);
+    };
+    loadGhIssues();
+  }, [vault, vaultGithubIssues, beneficiarySubmission]);
+
   return (
     <StyledPayoutForm>
       <div className="form-container">
@@ -100,6 +119,10 @@ export const SinglePayoutForm = () => {
               <SubmissionCard
                 inPayout
                 submission={isPayoutCreated ? decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!}
+                ghIssue={getGhIssueFromSubmission(
+                  isPayoutCreated ? decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!,
+                  vaultGithubIssues
+                )}
               />
             </div>
           ) : (
@@ -203,6 +226,7 @@ export const SinglePayoutForm = () => {
           colorable
         />
       </div> */}
+      {isLoadingGH && <Loading fixed extraText={`${t("loadingGithubIssues")}...`} />}
     </StyledPayoutForm>
   );
 };

@@ -1,17 +1,19 @@
-import { allowedElementsMarkdown } from "@hats.finance/shared";
+import { GithubIssue, allowedElementsMarkdown } from "@hats.finance/shared";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import LinkIcon from "@mui/icons-material/InsertLinkOutlined";
 import MDEditor from "@uiw/react-md-editor";
-import { Alert, Button, HatSpinner, WalletButton } from "components";
+import { Alert, Button, HatSpinner, Loading, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
 import { IPFS_PREFIX } from "constants/constants";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { RoutePaths } from "navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { appChains } from "settings";
 import { useAccount } from "wagmi";
 import { SubmissionCard } from "../SubmissionsListPage/SubmissionCard";
+import { getGhIssueFromSubmission, getGithubIssuesFromVault } from "../submissionsService.api";
 import { useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { StyledSubmissionDetailsPage } from "./styles";
 
@@ -20,14 +22,35 @@ export const SubmissionDetailsPage = () => {
   const navigate = useNavigate();
   const { address } = useAccount();
   const { keystore, initKeystore } = useKeystore();
+  const { allVaults, vaultsReadyAllChains } = useVaults();
 
   const { subId } = useParams();
   const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
   const submission = committeeSubmissions?.find((sub) => sub.subId === subId);
 
+  const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
+  const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
+
   useEffect(() => {
     if (!keystore) setTimeout(() => initKeystore(), 600);
   }, [keystore, initKeystore]);
+
+  // Get information from github
+  useEffect(() => {
+    if (!submission) return;
+
+    const vault = allVaults?.find((vault) => vault.id.toLowerCase() === submission.linkedVault?.id.toLowerCase());
+    if (!vault) return;
+    if (vaultGithubIssues !== undefined) return;
+
+    const loadGhIssues = async () => {
+      setIsLoadingGH(true);
+      const ghIssues = await getGithubIssuesFromVault(vault);
+      setVaultGithubIssues(ghIssues);
+      setIsLoadingGH(false);
+    };
+    loadGhIssues();
+  }, [allVaults, vaultGithubIssues, submission]);
 
   const openSubmissionData = () => {
     window.open(`${IPFS_PREFIX}/${submission?.submissionHash}`, "_blank");
@@ -82,7 +105,11 @@ export const SubmissionDetailsPage = () => {
                           </p>
                         </div>
                       </div>
-                      <SubmissionCard submission={submission} noActions />
+                      <SubmissionCard
+                        submission={submission}
+                        noActions
+                        ghIssue={getGhIssueFromSubmission(submission, vaultGithubIssues)}
+                      />
 
                       <MDEditor.Markdown
                         allowedElements={allowedElementsMarkdown}
@@ -109,6 +136,9 @@ export const SubmissionDetailsPage = () => {
           )}
         </>
       )}
+
+      {!vaultsReadyAllChains && <Loading fixed extraText={`${t("loadingVaults")}...`} />}
+      {isLoadingGH && <Loading fixed extraText={`${t("loadingGithubIssues")}...`} />}
     </StyledSubmissionDetailsPage>
   );
 };

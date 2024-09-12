@@ -42,6 +42,18 @@ export interface IPayoutResponse {
   updatedAt?: Date;
 }
 
+export type GithubIssue = {
+  id: number;
+  number: number;
+  title: string;
+  createdBy: number;
+  labels: string[];
+  validLabels: string[];
+  createdAt: string;
+  body: string;
+  txHash?: string;
+};
+
 export type IPayoutData = ISinglePayoutData | ISplitPayoutData;
 
 interface IPayoutDataBase {
@@ -64,6 +76,7 @@ export interface ISinglePayoutData extends IPayoutDataBase {
   nftUrl: string;
   submissionData?: { id: string; subId: string; idx: number };
   decryptedSubmission?: Omit<ISubmittedSubmission, "linkedVault">; // Omit: workaround to avoid circular dependency;
+  ghIssue?: GithubIssue;
 }
 
 // Only for v2 vaults
@@ -89,6 +102,7 @@ export interface ISplitPayoutBeneficiary {
   nftUrl: string;
   submissionData?: { id: string; subId: string; idx: number };
   decryptedSubmission?: Omit<ISubmittedSubmission, "linkedVault">; // Omit: workaround to avoid circular dependency;
+  ghIssue?: GithubIssue;
 }
 
 export interface IPayoutSignature {
