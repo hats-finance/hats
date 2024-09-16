@@ -1034,7 +1034,7 @@
       "shortBio": "Please provide a short bio",
       "shortBioDesc": "Please provide a 2-3 sentences descriptor of your bio.",
       "termsAndConditionsTitle": "Please read and agree to our curator terms and conditions",
-      "readTermsAndConditionsHere": "Read terms and conditions <a href='https://hats.finance/terms-and-conditions' target='_blank'>here</a>",
+      "readTermsAndConditionsHere": "Read terms and conditions <a href='https://docs.hats.finance/curator-program/curator-terms-and-conditions' target='_blank'>here</a>",
       "youNeedToAcceptTermsAndConditions": "You need to accept the terms and conditions to continue",
       "communicationChannel": "Communication channel",
       "communicationChannelDesc": "Please provide a communication channel. Your communication channels won't be public on your profile.",
