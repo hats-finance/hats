@@ -2,7 +2,7 @@ import { GithubIssue, IPayoutResponse, ISplitPayoutData, IVault } from "@hats.fi
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";
-import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Loading, Modal, Spinner } from "components";
+import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Modal, Spinner } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import useModal from "hooks/useModal";
 import { useOnChange } from "hooks/usePrevious";
@@ -104,7 +104,7 @@ export const SplitPayoutBeneficiaryForm = ({
   // Get information from github
   useEffect(() => {
     if (!beneficiarySubmission || !vault) return;
-    if (vaultGithubIssues !== undefined) return;
+    if (vaultGithubIssues !== undefined || isLoadingGH) return;
 
     const loadGhIssues = async () => {
       setIsLoadingGH(true);
@@ -113,7 +113,7 @@ export const SplitPayoutBeneficiaryForm = ({
       setIsLoadingGH(false);
     };
     loadGhIssues();
-  }, [vault, vaultGithubIssues, beneficiarySubmission]);
+  }, [vault, vaultGithubIssues, beneficiarySubmission, isLoadingGH]);
 
   const getMoreOptions = () => {
     if (beneficiariesCount === undefined) return [];
@@ -263,8 +263,6 @@ export const SplitPayoutBeneficiaryForm = ({
           />
         </StyledSplitPayoutBeneficiaryAllocationModal>
       </Modal>
-
-      {isLoadingGH && <Loading fixed extraText={`${t("loadingGithubIssues")}...`} />}
     </div>
   );
 };

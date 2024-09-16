@@ -41,7 +41,7 @@ export const SubmissionDetailsPage = () => {
 
     const vault = allVaults?.find((vault) => vault.id.toLowerCase() === submission.linkedVault?.id.toLowerCase());
     if (!vault) return;
-    if (vaultGithubIssues !== undefined) return;
+    if (vaultGithubIssues !== undefined || isLoadingGH) return;
 
     const loadGhIssues = async () => {
       setIsLoadingGH(true);
@@ -50,7 +50,7 @@ export const SubmissionDetailsPage = () => {
       setIsLoadingGH(false);
     };
     loadGhIssues();
-  }, [allVaults, vaultGithubIssues, submission]);
+  }, [allVaults, vaultGithubIssues, submission, isLoadingGH]);
 
   const openSubmissionData = () => {
     window.open(`${IPFS_PREFIX}/${submission?.submissionHash}`, "_blank");
