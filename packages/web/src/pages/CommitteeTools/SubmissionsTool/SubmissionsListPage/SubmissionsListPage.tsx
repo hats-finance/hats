@@ -274,7 +274,7 @@ export const SubmissionsListPage = () => {
 
     const vault = allVaults?.find((vault) => vault.id.toLowerCase() === vaultFilter.toLowerCase());
     if (!vault) return;
-    if (vaultGithubIssues !== undefined) return;
+    if (vaultGithubIssues !== undefined || isLoadingGH) return;
 
     const loadGhIssues = async () => {
       setIsLoadingGH(true);
@@ -285,7 +285,7 @@ export const SubmissionsListPage = () => {
     loadGhIssues();
 
     console.log(filteredSubmissions);
-  }, [vaultFilter, filteredSubmissions, allVaults, vaultGithubIssues]);
+  }, [vaultFilter, filteredSubmissions, allVaults, vaultGithubIssues, isLoadingGH]);
 
   // const handleDownloadAsCsv = () => {
   //   if (!filteredSubmissions) return;

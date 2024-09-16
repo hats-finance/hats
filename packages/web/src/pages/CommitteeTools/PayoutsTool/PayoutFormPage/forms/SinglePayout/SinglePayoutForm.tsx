@@ -6,7 +6,7 @@ import {
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
 } from "@hats.finance/shared";
-import { FormInput, FormSelectInput, Loading, Spinner } from "components";
+import { FormInput, FormSelectInput, Spinner } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
 import { hasSubmissionData } from "pages/CommitteeTools/PayoutsTool/utils/hasSubmissionData";
@@ -89,7 +89,7 @@ export const SinglePayoutForm = () => {
   // Get information from github
   useEffect(() => {
     if (!beneficiarySubmission || !vault) return;
-    if (vaultGithubIssues !== undefined) return;
+    if (vaultGithubIssues !== undefined || isLoadingGH) return;
 
     const loadGhIssues = async () => {
       setIsLoadingGH(true);
@@ -98,7 +98,7 @@ export const SinglePayoutForm = () => {
       setIsLoadingGH(false);
     };
     loadGhIssues();
-  }, [vault, vaultGithubIssues, beneficiarySubmission]);
+  }, [vault, vaultGithubIssues, beneficiarySubmission, isLoadingGH]);
 
   return (
     <StyledPayoutForm>
@@ -226,7 +226,6 @@ export const SinglePayoutForm = () => {
           colorable
         />
       </div> */}
-      {isLoadingGH && <Loading fixed extraText={`${t("loadingGithubIssues")}...`} />}
     </StyledPayoutForm>
   );
 };
