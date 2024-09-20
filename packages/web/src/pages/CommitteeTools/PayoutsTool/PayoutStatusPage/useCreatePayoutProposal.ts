@@ -14,10 +14,17 @@ export const useCreatePayoutProposal = (vault?: IVault, payout?: IPayoutResponse
 
   const create = async () => {
     try {
-      if (!vault || !payout || !account) return;
+      if (!vault || !payout || !account) return false;
       setIsLoading(true);
 
-      const multisigAddress = utils.getAddress(vault.committee ?? "");
+      let multisigAddress: string | undefined;
+      try {
+        multisigAddress = utils.getAddress(vault.committee ?? "");
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+
       if (!multisigAddress) {
         alert("No vault multisig address. Please contact Hats team with this error.");
         return false;
