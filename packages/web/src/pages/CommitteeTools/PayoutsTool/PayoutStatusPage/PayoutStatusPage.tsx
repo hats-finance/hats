@@ -2,6 +2,8 @@ import {
   HATSVaultV2_abi,
   HATSVaultV3ClaimsManager_abi,
   PayoutStatus,
+  getBaseSafeAppUrl,
+  getGnosisChainPrefixByChainId,
   getSafeHomeLink,
   getVaultInfoWithCommittee,
   isAddressAMultisigMember,
@@ -31,7 +33,7 @@ import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { RoutePaths } from "navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useNetwork, useWaitForTransaction } from "wagmi";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
@@ -39,6 +41,7 @@ import { PayoutCard, SignerCard, SinglePayoutAllocation, SplitPayoutAllocation }
 import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
 import { usePayoutStatus } from "../utils/usePayoutStatus";
 import { StyledPayoutStatusPage } from "./styles";
+import { useCreatePayoutProposal } from "./useCreatePayoutProposal";
 import { useSignPayout } from "./useSignPayout";
 
 const DELETABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
@@ -51,6 +54,10 @@ export const PayoutStatusPage = () => {
   const navigate = useNavigate();
   const confirm = useConfirm();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
+
+  const [searchParams] = useSearchParams();
+  const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
+  const [proposalCreatedSuccessfully, setProposalCreatedSuccessfully] = useState<boolean | undefined>();
 
   const { allVaults, allPayouts, withdrawSafetyPeriod } = useVaults();
 
@@ -68,6 +75,7 @@ export const PayoutStatusPage = () => {
   const addSignature = useAddSignature();
   const markPayoutAsExecuted = useMarkPayoutAsExecuted();
   const signPayout = useSignPayout(vault, payout);
+  const createPayoutProposal = useCreatePayoutProposal(vault, payout);
   const executePayout = ExecutePayoutContract.hook(vault, payout);
   const waitingPayoutExecution = useWaitForTransaction({
     hash: executePayout.data?.hash as `0x${string}`,
@@ -98,6 +106,7 @@ export const PayoutStatusPage = () => {
   const isCollectingSignatures = payoutStatus === PayoutStatus.Pending;
   const canBeDeleted = payoutStatus && DELETABLE_STATUS.includes(payoutStatus);
   const canBesigned = payoutStatus && SIGNABLE_STATUS.includes(payoutStatus);
+  const canCreateProposalOnSafe = isAdvancedMode;
   const isAnyActivePayout = allPayouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
   const [isUserCommitteeMember, setIsUserCommitteeMember] = useState(false);
 
@@ -172,6 +181,24 @@ export const PayoutStatusPage = () => {
 
     await addSignature.mutateAsync({ payoutId, signature });
     refetchPayout();
+  };
+
+  const handleCreateProposalOnSafe = async () => {
+    if (!isUserCommitteeMember) return;
+    if (!payoutId || !payout || !vault) return;
+
+    const isOk = await createPayoutProposal.create();
+    setProposalCreatedSuccessfully(isOk);
+  };
+
+  const goToSafeApp = () => {
+    if (!vault) return;
+
+    const multisig = vault.committee;
+    window.open(
+      `${getBaseSafeAppUrl(vault.chainId)}/transactions/queue?safe=${getGnosisChainPrefixByChainId(vault.chainId)}:${multisig}`,
+      "_blank"
+    );
   };
 
   const handleExecutePayout = async () => {
@@ -348,6 +375,11 @@ export const PayoutStatusPage = () => {
                 )}
 
                 <div className="sub-container">
+                  {canCreateProposalOnSafe && (
+                    <Button styleType="outlined" disabled={!isUserCommitteeMember} onClick={handleCreateProposalOnSafe}>
+                      {t("Payouts.createProposalOnSafe")}
+                    </Button>
+                  )}
                   {canBesigned && !userHasAlreadySigned && (
                     <Button disabled={!isUserCommitteeMember} onClick={handleSignPayout}>
                       {t("Payouts.signPayout")}
@@ -360,6 +392,17 @@ export const PayoutStatusPage = () => {
                   )}
                 </div>
               </div>
+
+              {proposalCreatedSuccessfully && (
+                <Alert type="success" className="mt-4">
+                  <>
+                    <span>{t("proposalCreatedSuccessfully")}</span>
+                    <Button styleType="text" onClick={goToSafeApp}>
+                      {t("goToSafeApp")}
+                    </Button>
+                  </>
+                </Alert>
+              )}
             </div>
           </div>
         )}
@@ -369,6 +412,7 @@ export const PayoutStatusPage = () => {
         {(addSignature.isLoading || signPayout.isLoading) && (
           <Loading fixed extraText={`${t("Payouts.signingPayoutTransaction")}...`} />
         )}
+        {createPayoutProposal.isLoading && <Loading fixed extraText={`${t("Payouts.creatingSafeProposal")}...`} />}
         {(executePayout.isLoading || waitingPayoutExecution.isLoading || markPayoutAsExecuted.isLoading) && (
           <Loading fixed extraText={`${t("Payouts.executingPayout")}`} />
         )}
