@@ -19,7 +19,7 @@ export const getVaultCurator = async (
   vault: IVault
 ): Promise<{ username: string; address: string; role: string; percentage: number } | undefined> => {
   const curator = vault.description?.["project-metadata"].curator;
-  if (!vault || !curator) return undefined;
+  if (!vault || !curator || !curator.username) return undefined;
 
   const curatorProfile = await getProfileByUsername(curator.username);
   if (!curatorProfile) throw new Error("Curator not found");
