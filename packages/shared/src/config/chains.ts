@@ -97,7 +97,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
     paymentSplitterFactory: "0x0aA1464dB005857Db8FC3E0470d306FB9E54b908",
     infuraKey: "optimism-mainnet",
-    provider: "https://winter-alien-reel.optimism.quiknode.pro/3b8fcb9fa592b6025c5ec16de15be9e85ed0e051",
+    provider: "",
   },
   [wagmiChains.arbitrum.id]: {
     // vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48", v2
@@ -116,7 +116,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
     paymentSplitterFactory: "0x83E0dfc2c1891Ada906D8F266029F2a416BC8b3f",
     infuraKey: "arbitrum-mainnet",
-    provider: "https://few-maximum-voice.arbitrum-mainnet.quiknode.pro/5abae8858e1e7248437717c16d14ff7193d6aae6",
+    provider: "",
   },
   [wagmiChains.polygon.id]: {
     // vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48", v2
@@ -135,7 +135,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
     paymentSplitterFactory: "0x10C483158B8aF7e91CE7068bA45eb5446789851D",
     infuraKey: "polygon-mainnet",
-    provider: "https://frequent-billowing-smoke.matic.quiknode.pro/518ec9b749b64717da7d8495bdac26d1d27933d1",
+    provider: "",
   },
   [wagmiChains.gnosis.id]: {
     // vaultsCreatorContract: "0x304A70840D8D43B288A6e4e4e718081BBcF160be", v2
@@ -153,7 +153,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0x1065A9e3AC47f2624293727F4b8319A0a10F6015",
     // infuraKey: "polygon-mainnet",
-    provider: "https://frosty-convincing-choice.xdai.quiknode.pro/db844278bdba30f1567a37c679660797fbbea869",
+    provider: "",
   },
   [wagmiChains.bsc.id]: {
     // vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4", v2
@@ -170,6 +170,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     growthMultisig: "0x6C4654Fe6Efe491D601ca2ff1842e179A5612c38",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
+    infuraKey: "bsc-mainnet",
     provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
   },
   [oasis.id]: {
