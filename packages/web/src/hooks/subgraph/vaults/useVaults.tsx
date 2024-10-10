@@ -9,6 +9,7 @@ import {
   IWithdrawSafetyPeriod,
   fixObject,
 } from "@hats.finance/shared";
+import axios from "axios";
 import { OFAC_Sanctioned_Digital_Currency_Addresses } from "data/OFACSanctionedAddresses";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
@@ -218,9 +219,9 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
       if (isValidIpfsHash(vault.descriptionHash)) {
         try {
-          const dataResponse = await fetch(ipfsTransformUri(vault.descriptionHash)!);
-          if (dataResponse.status === 200) {
-            const object = await dataResponse.json();
+          const response = await axios.get(ipfsTransformUri(vault.descriptionHash)!, { timeout: 4000 });
+          if (response.status === 200) {
+            const object = response.data;
             return overrideDescription(vault.id, fixObject(object));
           }
           return undefined;
