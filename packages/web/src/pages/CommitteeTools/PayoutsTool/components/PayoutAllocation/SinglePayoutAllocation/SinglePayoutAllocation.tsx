@@ -47,7 +47,7 @@ export const SinglePayoutAllocation = ({
 
       <div className="mb-5">{t("Payouts.resultDescription")}</div>
       <div className="result-container">
-        <VaultNftRewardCard vault={vault} severity={selectedSeverity} />
+        {/* <VaultNftRewardCard vault={vault} severity={selectedSeverity} /> */}
         <FormInput
           value={`≈ ${totalAmount?.tokens.formatted} ~ ${totalAmount?.usd.formatted}`}
           label={t("Payouts.totalPayoutSum")}
