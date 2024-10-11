@@ -94,10 +94,11 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
         </div>
       </div>
 
-      <h2 className="mt-5">{t("nftRewards")}</h2>
+      {/* NFT rewards */}
+      {/* <h2 className="mt-5">{t("nftRewards")}</h2>
       <div className="nft-rewards-container mt-4">
         <VaultNftRewards vault={vault} />
-      </div>
+      </div> */}
     </StyledRewardsSection>
   );
 };

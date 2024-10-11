@@ -47,7 +47,7 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
     const loadSubmissionData = async (submission: ISubmittedSubmission): Promise<ISubmissionMessageObject | undefined> => {
       if (isValidIpfsHash(submission.submissionHash)) {
         try {
-          const dataResponse = await axios.get(ipfsTransformUri(submission.submissionHash));
+          const dataResponse = await axios.get(ipfsTransformUri(submission.submissionHash), { timeout: 4000 });
           const object = dataResponse.data;
           return object;
         } catch (error) {

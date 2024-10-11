@@ -137,11 +137,11 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
         </>
       )}
 
-      {!noNft && (
+      {/* {!noNft && (
         <div className="severity-nft">
           <VaultNftRewardCard vault={vault} severity={severity} type="tiny" />
         </div>
-      )}
+      )} */}
     </StyledVaultSeverityRewardCard>
   );
 }
