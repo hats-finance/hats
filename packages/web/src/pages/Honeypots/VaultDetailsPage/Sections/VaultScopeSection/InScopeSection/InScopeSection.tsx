@@ -230,7 +230,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
             />
             <div className="code-languages">
-              {vault.description.scope.codeLangs.map((codeLang) => (
+              {vault.description.scope?.codeLangs?.map((codeLang) => (
                 <Pill key={codeLang} isChecked text={codeLang} />
               ))}
             </div>
