@@ -1321,7 +1321,7 @@
       "submissionOnChain": "Submission on chain",
       "submissionSentToCommittee": "Submission sent to committee",
       "resendToServer": "Resend to server",
-      "responseNotice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee.",
+      "responseNotice": "If you have not received response within 24 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee.",
       "submitNewIssues": "Submit new issues",
       "whileWaitingJoinCommunity": "While waiting, become an active member of our community and let us know what you think.",
       "checkAuditCompetitionRepo": "Check here the audit competition repo",
@@ -1333,7 +1333,7 @@
       "editSubmission": "Edit submission",
       "terms": {
         "bugBounty": {
-          "submissionSection": "<p>Your submission will be sent to the committee who will process your submission.</p> <p>The committee of the vault will respond within 12 hours to acknowledge the receipt of submission via the communication channel you provided.<p/>",
+          "submissionSection": "<p>Your submission will be sent to the committee who will process your submission.</p> <p>The committee of the vault will respond within 24 hours to acknowledge the receipt of submission via the communication channel you provided.<p/>",
           "fixRemedySection": "<p>In order to clarify your submission, the committee might open a direct communication channel with you and ask for one or both of the following:</p> <br> <ul class='no-decoration'> <li class='align-center'>##question## Questions to help with clarification</li>  <li class='align-center'>##warning## Identification of any errors that they have noticed in your submission</li> </ul> <br><br>  <p>The committee may also request confirmation of the accuracy of your submission and details regarding the solution, which may include the following:</p> <br>  <ul class='no-decoration'> <li class='align-center'>##timeline## Timeline for implementing the solution</li>  <li class='align-center'>##bug## Severity level of the identified vulnerability</li> <li class='align-center'>##award## Level of reward</li> </ul>",
           "awardsSection": "<p>For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.</p> <p>For medium, high and critical level severity vulnerabilities, rewards will be released within two weeks of the deployment of the vault committee's solution.</p>",
           "alertSection": "<p class='title small-margin-top'>Please be aware!</p> <p>If the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential.</p>"
