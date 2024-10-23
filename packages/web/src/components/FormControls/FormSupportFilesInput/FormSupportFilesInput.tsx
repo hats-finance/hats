@@ -20,10 +20,11 @@ type FormSupportFilesInputProps = {
   name: string;
   onChange: (data: ISavedFile[]) => void;
   error?: { message?: string; type: string };
+  uploadTo?: "db" | "ipfs";
 };
 
 export const FormSupportFilesInputComponent = (
-  { colorable = false, isDirty = false, name, onChange, label, error, value }: FormSupportFilesInputProps,
+  { colorable = false, isDirty = false, name, onChange, label, error, value, uploadTo = "db" }: FormSupportFilesInputProps,
   ref
 ) => {
   const { t } = useTranslation();
@@ -50,7 +51,7 @@ export const FormSupportFilesInputComponent = (
           return alert(t("invalid-file-type"));
         }
 
-        filesToUploadPromises.push(FilesService.uploadFileToDB(file));
+        filesToUploadPromises.push(FilesService.uploadFileToDB(file, uploadTo === "ipfs"));
       }
 
       const uploadedFiles = await Promise.all(filesToUploadPromises);

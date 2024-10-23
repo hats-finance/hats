@@ -1,1 +1,1 @@
-export const supportedExtensions = ["txt", "sol", "ts", "js"];
+export const supportedExtensions = ["txt", "sol", "ts", "js", ".md", ".json"];
