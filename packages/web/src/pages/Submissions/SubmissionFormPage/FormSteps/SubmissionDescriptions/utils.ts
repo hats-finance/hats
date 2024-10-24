@@ -1,3 +1,4 @@
+import { IPFS_PREFIX } from "constants/constants";
 import { BASE_SERVICE_URL } from "settings";
 import { ISubmissionData, ISubmissionsDescriptionsData } from "../../types";
 
@@ -29,10 +30,18 @@ export const getAuditSubmissionTexts = (
 
   ${descriptions
     .filter((description) => description.isEncrypted)
-    .map(
-      (description, idx) => `
+    .map((description, idx) =>
+      description.type === "new"
+        ? `
 ## [ISSUE #${idx + 1}]: ${description.title} (${description.severity})\n
 ${description.description.trim()}
+##`
+        : `
+## [ISSUE #${idx + 1}]: COMPLEMENTARY [Issue #${description.complementGhIssueNumber}] ${description.complementGhIssue?.title}\n\n
+### Fix files
+${description.complementFixFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}\n
+### Test files
+${description.complementTestFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}
 ##`
     )
     .join("\n")}`;
@@ -44,8 +53,9 @@ ${description.description.trim()}
     
     ${descriptions
       .filter((description) => !description.isEncrypted)
-      .map(
-        (description, idx) => `
+      .map((description, idx) =>
+        description.type === "new"
+          ? `
 ## [ISSUE #${idx + 1}]: ${description.title} (${description.severity})\n
 ${description.description.trim()}
 ${
@@ -53,6 +63,13 @@ ${
     ? `**Files:**\n${description.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}`
     : ""
 }
+##`
+          : `
+## [ISSUE #${idx + 1}]: COMPLEMENTARY [Issue #${description.complementGhIssueNumber}] ${description.complementGhIssue?.title}\n\n
+### Fix files
+${description.complementFixFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}\n
+### Test files ${description.testNotApplicable ? "(NOT APPLICABLE) " : ""}
+${description.complementTestFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}
 ##`
       )
       .join("\n")}`;
@@ -97,19 +114,35 @@ export const getGithubIssueDescription = (
   submissionData: ISubmissionData,
   description: ISubmissionsDescriptionsData["descriptions"][0]
 ) => {
-  return `${submissionData.ref === "audit-wizard" ? "***Submitted via auditwizard.io***\n" : ""}
-**Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
+  if (description.type === "new") {
+    return `${submissionData.ref === "audit-wizard" ? "***Submitted via auditwizard.io***\n" : ""}
+  **Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
+  **Twitter username:** ${submissionData.contact?.twitterUsername ? `${submissionData.contact?.twitterUsername}` : "--"}
+  **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
+  **Severity:** ${description.severity}
+  
+  **Description:**
+  ${description.description.trim()}
+    
+  ${
+    description.files && description.files.length > 0
+      ? `**Files:**\n${description.files
+          .map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`)
+          .join("\n")}`
+      : ""
+  }
+  `;
+  }
+
+  return `**Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
 **Twitter username:** ${submissionData.contact?.twitterUsername ? `${submissionData.contact?.twitterUsername}` : "--"}
 **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
-**Severity:** ${description.severity}
 
 **Description:**
-${description.description.trim()}
-  
-${
-  description.files && description.files.length > 0
-    ? `**Files:**\n${description.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}`
-    : ""
-}
+### Fix files
+${description.complementFixFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}\n
+### Test files ${description.testNotApplicable ? "(NOT APPLICABLE) " : ""}
+${description.complementTestFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}
+##
 `;
 };

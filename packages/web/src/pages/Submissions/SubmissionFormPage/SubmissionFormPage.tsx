@@ -1,4 +1,3 @@
-import { IVulnerabilitySeverity } from "@hats.finance/shared";
 import ErrorIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ClearIcon from "@mui/icons-material/HighlightOffOutlined";
 import { Button, Loading, Seo } from "components";
@@ -59,7 +58,7 @@ export const SubmissionFormPage = () => {
       { title: t("Submissions.termsAndProcess"), component: SubmissionTermsAndProcess, card: SubmissionStep.terms },
       { title: t("Submissions.communicationChannel"), component: SubmissionContactInfo, card: SubmissionStep.contact },
       {
-        title: t("Submissions.describeVulnerability"),
+        title: t("Submissions.submissionDescription"),
         component: SubmissionDescriptions,
         card: SubmissionStep.submissionsDescriptions,
       },
@@ -300,20 +299,17 @@ export const SubmissionFormPage = () => {
         verified: false,
         submission: "",
         submissionMessage: "",
-        descriptions: auditWizardSubmission.submissionsDescriptions.descriptions.map((desc: any) => {
-          const severity = (vault.description?.severities as IVulnerabilitySeverity[]).find(
-            (sev) =>
-              desc.severity.toLowerCase()?.includes(sev.name.toLowerCase()) ||
-              sev.name.toLowerCase()?.includes(desc.severity.toLowerCase())
-          );
-          return {
-            title: desc.title,
-            description: desc.description,
-            severity: severity?.name.toLowerCase() ?? desc.severity.toLowerCase(),
-            isEncrypted: !severity?.decryptSubmissions,
-            files: [],
-          };
-        }),
+        descriptions: auditWizardSubmission.submissionsDescriptions.descriptions.map((desc: any) => ({
+          type: "new", // or "complement" based on your logic
+          complementTestFiles: [],
+          complementFixFiles: [],
+          title: desc.title,
+          description: desc.description,
+          severity: desc.severity,
+          isEncrypted: desc.isEncrypted,
+          files: desc.files || [],
+          testNotApplicable: false,
+        })),
       },
       submissionResult: undefined,
     }));

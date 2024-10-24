@@ -1,4 +1,4 @@
-import { IVault } from "@hats.finance/shared";
+import { GithubIssue, IVault } from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { auditWizardVerifyService } from "constants/constants";
 import { BASE_SERVICE_URL } from "settings";
@@ -31,11 +31,26 @@ export async function submitVulnerabilitySubmission(
     createIssueRequests:
       vault.description?.["project-metadata"].type === "audit"
         ? submissionData.submissionsDescriptions.descriptions
-            ?.filter((desc) => !desc.isEncrypted)
+            ?.filter((desc) => !desc.isEncrypted && desc.type === "new")
             ?.map((description) => ({
               issueTitle: description.title,
               issueDescription: getGithubIssueDescription(submissionData, description),
               issueFiles: description.files?.map((file) => file.ipfsHash),
+            }))
+        : [],
+    createPRsRequests:
+      vault.description?.["project-metadata"].type === "audit"
+        ? submissionData.submissionsDescriptions.descriptions
+            ?.filter((desc) => !desc.isEncrypted && desc.type === "complement")
+            ?.map((description) => ({
+              pullRequestTitle: `Complementary submission for #${description.complementGhIssueNumber}`,
+              pullRequestDescription: getGithubIssueDescription(submissionData, description),
+              pullRequestFiles: [...description.complementFixFiles, ...description.complementTestFiles].map((file) => ({
+                path: file.path,
+                fileIpfsHash: file.file.ipfsHash,
+              })),
+              githubIssue: description.complementGhIssue as GithubIssue,
+              githubIssueNumber: Number(description.complementGhIssueNumber),
             }))
         : [],
   };

@@ -1,3 +1,4 @@
+import { GithubIssue } from "@hats.finance/shared";
 import { ISavedFile } from "components";
 import { SessionKey } from "openpgp";
 
@@ -29,6 +30,16 @@ export interface ISubmissionsDescriptionsData {
   submission: string; // Submission object ({encrypted: string, decrypted: string})
   submissionMessage: string; // It's only for showing on the frontend final step
   descriptions: {
+    type: "new" | "complement"; // "new" is for new vulnerabilities, "complement" is for fix/test submissions
+
+    // complement fields
+    testNotApplicable: boolean;
+    complementTestFiles: { file: ISavedFile; path: string }[];
+    complementFixFiles: { file: ISavedFile; path: string }[];
+    complementGhIssueNumber?: string;
+    complementGhIssue?: GithubIssue;
+
+    // new fields
     title: string;
     description: string;
     severity: string;
@@ -81,6 +92,13 @@ export interface ISubmitSubmissionRequest {
     issueDescription: string;
     issueFiles: string[];
   }[];
+  createPRsRequests: {
+    pullRequestTitle: string;
+    pullRequestDescription: string;
+    pullRequestFiles: { path: string; fileIpfsHash: string }[];
+    githubIssue: GithubIssue;
+    githubIssueNumber?: number;
+  }[];
 }
 
 export interface IAuditWizardSubmissionData {
@@ -119,8 +137,8 @@ export const getCurrentAuditwizardSubmission = (
       ...awSubmission.submissionsDescriptions,
       descriptions:
         form.submissionsDescriptions?.descriptions.map((d, idx) => ({
-          title: d.title,
-          description: d.description,
+          title: d.title ?? "",
+          description: d.description ?? "",
           severity: awSubmission.submissionsDescriptions.descriptions[idx].severity,
         })) ?? [],
     },

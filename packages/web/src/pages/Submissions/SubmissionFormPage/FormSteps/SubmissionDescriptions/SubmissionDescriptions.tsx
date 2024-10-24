@@ -1,6 +1,7 @@
-import { ISubmissionMessageObject, IVulnerabilitySeverity } from "@hats.finance/shared";
+import { GithubIssue, ISubmissionMessageObject, IVulnerabilitySeverity } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
+import CloseIcon from "@mui/icons-material/CloseOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlined";
 import {
   Alert,
@@ -14,6 +15,7 @@ import {
 } from "components";
 import download from "downloadjs";
 import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
+import { getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -33,7 +35,19 @@ export function SubmissionDescriptions() {
   const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
 
-  const { register, handleSubmit, control, reset, setValue } = useEnhancedForm<ISubmissionsDescriptionsData>({
+  const [vaultGithubIssuesOpts, setVaultGithubIssuesOpts] = useState<FormSelectInputOption[] | undefined>();
+  const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
+  const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useEnhancedForm<ISubmissionsDescriptionsData>({
     resolver: yupResolver(getCreateDescriptionSchema(t)),
     mode: "onChange",
   });
@@ -75,6 +89,11 @@ export function SubmissionDescriptions() {
     if (!vault || !vault.description || !vault.description.severities) return;
 
     for (const [idx, description] of controlledDescriptions.entries()) {
+      if (description.type === "complement") {
+        if (description.isEncrypted === true) setValue(`descriptions.${idx}.isEncrypted`, false);
+        continue;
+      }
+
       const severitySelected =
         vault.description?.severities &&
         (vault.description.severities as IVulnerabilitySeverity[]).find((sev) => sev.name.toLowerCase() === description.severity);
@@ -96,6 +115,27 @@ export function SubmissionDescriptions() {
       }
     }
   }, [controlledDescriptions, vault, setValue, isAuditSubmission]);
+
+  // Get information from github
+  const someComplementSubmission = controlledDescriptions.some((desc) => desc.type === "complement");
+  useEffect(() => {
+    if (!someComplementSubmission) return;
+    if (!vault) return;
+    if (vaultGithubIssues !== undefined || isLoadingGH) return;
+    const loadGhIssues = async () => {
+      // console.log(1);
+      setIsLoadingGH(true);
+      const ghIssues = await getGithubIssuesFromVault(vault);
+      const ghIssuesOpts = ghIssues.map((ghIssue) => ({
+        label: `[#${ghIssue.number}] ${ghIssue.title}`,
+        value: `${ghIssue.number}`,
+      }));
+      setVaultGithubIssuesOpts(ghIssuesOpts);
+      setVaultGithubIssues(ghIssues);
+      setIsLoadingGH(false);
+    };
+    loadGhIssues();
+  }, [vault, vaultGithubIssues, isLoadingGH, someComplementSubmission]);
 
   const handleSaveAndDownloadDescription = async (formData: ISubmissionsDescriptionsData) => {
     if (!vault) return;
@@ -148,6 +188,12 @@ export function SubmissionDescriptions() {
       `${submissionData.project?.projectName}-${new Date().getTime()}.json`
     );
 
+    console.log({
+      submissionMessage,
+      submissionInfo: JSON.stringify(submissionInfo),
+      descriptions: formData.descriptions,
+    });
+
     setSubmissionData((prev) => {
       if (!prev) return prev;
       return {
@@ -165,6 +211,226 @@ export function SubmissionDescriptions() {
 
   if (!vault) return <Alert type="error">{t("Submissions.firstYouNeedToSelectAProject")}</Alert>;
 
+  const getNewIssueForm = (submissionDescription: (typeof controlledDescriptions)[number], index: number) => {
+    return (
+      <>
+        <p className="mb-4">{t("Submissions.provideExplanation")}</p>
+        <div className="row">
+          <FormInput
+            {...register(`descriptions.${index}.title`)}
+            disabled={allFormDisabled}
+            label={`${t("Submissions.submissionTitle")}`}
+            placeholder={t("Submissions.submissionTitlePlaceholder")}
+            colorable
+          />
+          <Controller
+            control={control}
+            name={`descriptions.${index}.severity`}
+            render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+              <FormSelectInput
+                disabled={allFormDisabled}
+                isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
+                error={error}
+                label={t("severity")}
+                placeholder={t("severityPlaceholder")}
+                colorable
+                options={severitiesOptions ?? []}
+                {...field}
+              />
+            )}
+          />
+        </div>
+
+        <Controller
+          control={control}
+          name={`descriptions.${index}.description`}
+          render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+            <FormMDEditor
+              disabled={allFormDisabled}
+              isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
+              error={error}
+              colorable
+              {...field}
+            />
+          )}
+        />
+
+        {!submissionDescription.isEncrypted && !allFormDisabled && (
+          <Controller
+            control={control}
+            name={`descriptions.${index}.files`}
+            render={({ field, fieldState: { error } }) => (
+              <FormSupportFilesInput label={t("Submissions.selectSupportFiles")} error={error} {...field} />
+            )}
+          />
+        )}
+      </>
+    );
+  };
+
+  const getComplementIssueForm = (submissionDescription: (typeof controlledDescriptions)[number], index: number) => {
+    return (
+      <>
+        <p className="mb-4">{t("Submissions.selectIssueToComplement")}</p>
+        <Controller
+          control={control}
+          name={`descriptions.${index}.complementGhIssueNumber`}
+          render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+            <FormSelectInput
+              disabled={allFormDisabled}
+              isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
+              error={error}
+              label={t("Submissions.githubIssue")}
+              placeholder={t("Submissions.selectGithubIssue")}
+              colorable
+              options={vaultGithubIssuesOpts ?? []}
+              {...field}
+              value={field.value ?? ""}
+              onChange={(a) => {
+                field.onChange(a);
+                const ghIssue = vaultGithubIssues?.find((gh) => gh.number === Number(a as string));
+                if (ghIssue) setValue(`descriptions.${index}.complementGhIssue`, ghIssue);
+              }}
+            />
+          )}
+        />
+
+        {/* Fix PR section */}
+        <>
+          <p className="mb-2">{t("Submissions.addFixFiles")}:</p>
+          <p className="mb-4">{t("Submissions.addFixFilesExplanation")}</p>
+          <FormSupportFilesInput
+            label={t("Submissions.selectFixFiles")}
+            name={`descriptions.${index}.complementFixFiles`}
+            uploadTo="ipfs"
+            noFilesAttachedInfo
+            value={[]}
+            colorable
+            error={
+              errors.descriptions?.[index]?.complementFixFiles?.type === "min"
+                ? (errors.descriptions?.[index]?.complementFixFiles as never)
+                : undefined
+            }
+            onChange={(a) => {
+              if (!a?.length) return;
+              for (const file of a) {
+                const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
+                if (fixFiles.some((f) => f.file.ipfsHash === file.ipfsHash)) continue;
+                setValue(`descriptions.${index}.complementFixFiles`, [...fixFiles, { file, path: `test/${file.name}` }]);
+              }
+            }}
+          />
+
+          <div className="files-attached-container">
+            <div className="files">
+              {(submissionDescription.complementFixFiles ?? []).map((item, idx) => (
+                <li key={idx}>
+                  <div className="file">
+                    <CloseIcon
+                      className="remove-icon"
+                      onClick={() => {
+                        const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
+                        setValue(
+                          `descriptions.${index}.complementFixFiles`,
+                          fixFiles.filter((_, fileIndex) => fileIndex !== idx)
+                        );
+                      }}
+                    />
+                    <p>{item.file.name}</p>
+                  </div>
+
+                  <div className="file-path">
+                    <p>{t("Submissions.filePath")}:</p>
+                    <FormInput
+                      {...register(`descriptions.${index}.complementFixFiles.${idx}.path`)}
+                      disabled={allFormDisabled}
+                      label={`${t("Submissions.filePath")}`}
+                      placeholder={t("Submissions.filePathPlaceholder")}
+                      colorable
+                    />
+                  </div>
+                </li>
+              ))}
+            </div>
+          </div>
+        </>
+
+        <div className="mt-5" />
+
+        {/* Test PR section */}
+        {!submissionDescription.testNotApplicable && (
+          <>
+            <p className="mb-2">{t("Submissions.addTestFiles")}:</p>
+            <p className="mb-4">{t("Submissions.addTestFilesExplanation")}</p>
+            <FormSupportFilesInput
+              label={t("Submissions.selectTestFiles")}
+              name={`descriptions.${index}.complementTestFiles`}
+              uploadTo="ipfs"
+              noFilesAttachedInfo
+              value={[]}
+              colorable
+              error={
+                errors.descriptions?.[index]?.complementTestFiles?.type === "min"
+                  ? (errors.descriptions?.[index]?.complementTestFiles as never)
+                  : undefined
+              }
+              onChange={(a) => {
+                if (!a?.length) return;
+                for (const file of a) {
+                  const testFiles = getValues(`descriptions.${index}.complementTestFiles`);
+                  if (testFiles.some((f) => f.file.ipfsHash === file.ipfsHash)) continue;
+                  setValue(`descriptions.${index}.complementTestFiles`, [...testFiles, { file, path: `test/${file.name}` }]);
+                }
+              }}
+            />
+
+            {/* <p className="mb-4">{t("Submissions.filesAttached")}:</p> */}
+            <div className="files-attached-container">
+              <div className="files">
+                {(submissionDescription.complementTestFiles ?? []).map((item, idx) => (
+                  <li key={idx}>
+                    <div className="file">
+                      <CloseIcon
+                        className="remove-icon"
+                        onClick={() => {
+                          const testFiles = getValues(`descriptions.${index}.complementTestFiles`);
+                          setValue(
+                            `descriptions.${index}.complementTestFiles`,
+                            testFiles.filter((_, fileIndex) => fileIndex !== idx)
+                          );
+                        }}
+                      />
+                      <p>{item.file.name}</p>
+                    </div>
+
+                    <div className="file-path">
+                      <p>{t("Submissions.filePath")}:</p>
+                      <FormInput
+                        {...register(`descriptions.${index}.complementTestFiles.${idx}.path`)}
+                        disabled={allFormDisabled}
+                        label={`${t("Submissions.filePath")}`}
+                        placeholder={t("Submissions.filePathPlaceholder")}
+                        colorable
+                      />
+                    </div>
+                  </li>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+        <div>
+          <FormInput
+            {...register(`descriptions.${index}.testNotApplicable`)}
+            noMargin
+            type="checkbox"
+            label={t("Submissions.testNotApplicable")}
+          />
+        </div>
+      </>
+    );
+  };
+
   return (
     <StyledSubmissionDescriptionsList>
       {controlledDescriptions.map((submissionDescription, index) => {
@@ -172,73 +438,45 @@ export function SubmissionDescriptions() {
           <StyledSubmissionDescription key={submissionDescription.id} isEncrypted={!!submissionDescription.isEncrypted}>
             <p className="title mb-2">
               <span>
-                {t("issue")} #{index + 1}
+                {t("submission")} #{index + 1}
               </span>
-              <WithTooltip
-                text={
-                  submissionDescription.isEncrypted
-                    ? t("Submissions.encryptedSubmissionExplanation")
-                    : t("Submissions.decryptedSubmissionExplanation")
-                }
-              >
-                <span className="encryption-info">
-                  {submissionDescription.isEncrypted
-                    ? t("Submissions.encryptedSubmission")
-                    : t("Submissions.decryptedSubmission")}
-                </span>
-              </WithTooltip>
+              {((submissionDescription.type === "new" && submissionDescription.severity) ||
+                submissionDescription.type === "complement") && (
+                <WithTooltip
+                  text={
+                    submissionDescription.isEncrypted
+                      ? t("Submissions.encryptedSubmissionExplanation")
+                      : t("Submissions.decryptedSubmissionExplanation")
+                  }
+                >
+                  <span className="encryption-info">
+                    {submissionDescription.isEncrypted
+                      ? t("Submissions.encryptedSubmission")
+                      : t("Submissions.decryptedSubmission")}
+                  </span>
+                </WithTooltip>
+              )}
             </p>
-            <p className="mb-4">{t("Submissions.provideExplanation")}</p>
 
-            <div className="row">
-              <FormInput
-                {...register(`descriptions.${index}.title`)}
-                disabled={allFormDisabled}
-                label={`${t("Submissions.submissionTitle")}`}
-                placeholder={t("Submissions.submissionTitlePlaceholder")}
-                colorable
-              />
-              <Controller
-                control={control}
-                name={`descriptions.${index}.severity`}
-                render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
-                  <FormSelectInput
-                    disabled={allFormDisabled}
-                    isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
-                    error={error}
-                    label={t("severity")}
-                    placeholder={t("severityPlaceholder")}
-                    colorable
-                    options={severitiesOptions ?? []}
-                    {...field}
-                  />
-                )}
-              />
+            <div className="options mt-3 mb-5">
+              <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "new")}>
+                <div className={`check-circle ${submissionDescription.type === "new" ? "selected" : ""}`} />
+                <div className="info">
+                  <p>{t("newSubmission")}</p>
+                </div>
+              </div>
+
+              <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "complement")}>
+                <div className={`check-circle ${submissionDescription.type === "complement" ? "selected" : ""}`} />
+                <div className="info">
+                  <p>{t("complementSubmission")}</p>
+                </div>
+              </div>
             </div>
 
-            <Controller
-              control={control}
-              name={`descriptions.${index}.description`}
-              render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
-                <FormMDEditor
-                  disabled={allFormDisabled}
-                  isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
-                  error={error}
-                  colorable
-                  {...field}
-                />
-              )}
-            />
-
-            {!submissionDescription.isEncrypted && !allFormDisabled && (
-              <Controller
-                control={control}
-                name={`descriptions.${index}.files`}
-                render={({ field, fieldState: { error } }) => (
-                  <FormSupportFilesInput label={t("Submissions.selectSupportFiles")} error={error} {...field} />
-                )}
-              />
-            )}
+            {submissionDescription.type === "new"
+              ? getNewIssueForm(submissionDescription, index)
+              : getComplementIssueForm(submissionDescription, index)}
 
             {controlledDescriptions.length > 1 && !allFormDisabled && (
               <div className="buttons mt-3">

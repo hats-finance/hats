@@ -5,13 +5,69 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
   Yup.object().shape({
     descriptions: Yup.array().of(
       Yup.object({
-        title: Yup.string()
-          .min(5, intl("min-characters", { min: 5 }))
-          .required(intl("required")),
-        severity: Yup.string().required(intl("required")),
+        type: Yup.string().required(intl("required")),
+
+        // new fields
+        title: Yup.string().when("type", (type: "new" | "complement", schema: any) => {
+          if (type === "complement") return schema;
+          return schema.min(5, intl("min-characters", { min: 5 })).required(intl("required"));
+        }),
+        severity: Yup.string().when("type", (type: "new" | "complement", schema: any) => {
+          if (type === "complement") return schema;
+          return schema.required(intl("required"));
+        }),
         description: Yup.string()
           .min(20, intl("min-characters", { min: 20 }))
-          .required(intl("required")),
+          .when("type", (type: "new" | "complement", schema: any) => {
+            if (type === "complement") return schema;
+            return schema.required(intl("required"));
+          }),
+
+        // complement fields
+        testNotApplicable: Yup.boolean(),
+        complementGhIssueNumber: Yup.string().when("type", (type: "new" | "complement", schema: any) => {
+          if (type === "new") return schema;
+          return schema.required(intl("required"));
+        }),
+        complementGhIssue: Yup.object().when("type", (type: "new" | "complement", schema: any) => {
+          if (type === "new") return schema;
+          return schema.required(intl("required"));
+        }),
+        complementFixFiles: Yup.array()
+          .of(
+            Yup.object({
+              file: Yup.object().required(intl("required")),
+              path: Yup.string()
+                .required(intl("required"))
+                .test("pathEndsWithFileNameError", intl("pathEndsWithFileNameError"), (val, ctx: any) => {
+                  const fileName = ctx.from[0].value.file.name;
+                  return val?.endsWith(fileName) ?? false;
+                }),
+            })
+          )
+          .when("type", (type: "new" | "complement", schema: any) => {
+            if (type === "new") return schema;
+            return schema.required(intl("required")).min(1, intl("required"));
+          }),
+        complementTestFiles: Yup.array()
+          .of(
+            Yup.object({
+              file: Yup.object().required(intl("required")),
+              path: Yup.string()
+                .required(intl("required"))
+                .test("pathEndsWithFileNameError", intl("pathEndsWithFileNameError"), (val, ctx: any) => {
+                  const fileName = ctx.from[0].value.file.name;
+                  return val?.endsWith(fileName) ?? false;
+                }),
+            })
+          )
+          .test("min", intl("required"), (val, ctx: any) => {
+            const type = ctx.from[0].value.type;
+            const testNotApplicable = ctx.from[0].value.testNotApplicable;
+            if (type === "new") return true;
+            if (testNotApplicable) return true;
+            return (val?.length ?? 0) > 0 ?? false;
+          }),
       })
     ),
   });
