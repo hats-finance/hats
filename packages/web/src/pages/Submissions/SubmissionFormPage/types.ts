@@ -38,6 +38,8 @@ export interface ISubmissionsDescriptionsData {
     complementFixFiles: { file: ISavedFile; path: string }[];
     complementGhIssueNumber?: string;
     complementGhIssue?: GithubIssue;
+    needsFix: boolean;
+    needsTest: boolean;
 
     // new fields
     title: string;

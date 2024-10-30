@@ -313,6 +313,8 @@ export const SubmissionFormPage = () => {
           isEncrypted: desc.isEncrypted,
           files: desc.files || [],
           testNotApplicable: false,
+          needsFix: false,
+          needsTest: false,
         })),
       },
       submissionResult: undefined,
@@ -397,7 +399,7 @@ export const SubmissionFormPage = () => {
         </div>
       </StyledSubmissionFormPage>
 
-      {isLoadingCollectedSignature && <Loading fixed extraText={`${t("loading")}...`} />}
+      {requireMessageSignature && isLoadingCollectedSignature && <Loading fixed extraText={`${t("loading")}...`} />}
     </>
   );
 };

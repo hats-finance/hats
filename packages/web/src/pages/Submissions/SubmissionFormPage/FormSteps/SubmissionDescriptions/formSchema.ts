@@ -25,6 +25,8 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
         isFixApplicable: Yup.boolean(),
 
         // complement fields
+        needsFix: Yup.boolean(),
+        needsTest: Yup.boolean(),
         testNotApplicable: Yup.boolean(),
         complementGhIssueNumber: Yup.string().when("type", (type: "new" | "complement", schema: any) => {
           if (type === "new") return schema;
@@ -46,9 +48,12 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
                 }),
             })
           )
-          .when("type", (type: "new" | "complement", schema: any) => {
-            if (type === "new") return schema;
-            return schema.required(intl("required")).min(1, intl("required"));
+          .test("min", intl("required"), (val, ctx: any) => {
+            const type = ctx.from[0].value.type;
+            const needsFix = ctx.from[0].value.needsFix;
+            if (type === "new") return true;
+            if (!needsFix) return true;
+            return (val?.length ?? 0) > 0 ?? false;
           }),
         complementTestFiles: Yup.array()
           .of(
@@ -65,8 +70,9 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
           .test("min", intl("required"), (val, ctx: any) => {
             const type = ctx.from[0].value.type;
             const testNotApplicable = ctx.from[0].value.testNotApplicable;
+            const needsTest = ctx.from[0].value.needsTest;
             if (type === "new") return true;
-            if (testNotApplicable) return true;
+            if (testNotApplicable || !needsTest) return true;
             return (val?.length ?? 0) > 0 ?? false;
           }),
       })
