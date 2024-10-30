@@ -142,6 +142,7 @@ export function SubmissionDescriptions() {
       const ghIssues = await getGithubIssuesFromVault(vault);
       const ghIssuesOpts = ghIssues
         .filter((ghIssue) => claimedIssues?.some((ci) => +ci.issueNumber === +ghIssue.number))
+        .filter((ghIssue) => ghIssue.bonusPointsLabels.needsFix || ghIssue.bonusPointsLabels.needsTest)
         .map((ghIssue) => ({
           label: `[#${ghIssue.number}] ${ghIssue.title}`,
           value: `${ghIssue.number}`,
