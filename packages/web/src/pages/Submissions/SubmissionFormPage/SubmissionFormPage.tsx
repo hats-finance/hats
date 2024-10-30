@@ -190,7 +190,7 @@ export const SubmissionFormPage = () => {
         });
       }
     },
-    [vault]
+    [vault, hackerProfile]
   );
 
   const submitSubmission = useCallback(async () => {

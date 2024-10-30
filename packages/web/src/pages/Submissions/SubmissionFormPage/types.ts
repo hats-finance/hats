@@ -92,6 +92,7 @@ export interface ISubmitSubmissionRequest {
     issueTitle: string;
     issueDescription: string;
     issueFiles: string[];
+    isFixApplicable?: boolean;
   }[];
   createPRsRequests: {
     pullRequestTitle: string;
