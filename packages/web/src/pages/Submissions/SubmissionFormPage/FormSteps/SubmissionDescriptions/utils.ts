@@ -1,5 +1,6 @@
 import { IPFS_PREFIX } from "constants/constants";
 import { BASE_SERVICE_URL } from "settings";
+import { IHackerProfile } from "types";
 import { ISubmissionData, ISubmissionsDescriptionsData } from "../../types";
 
 export const SUBMISSION_DESCRIPTION_TEMPLATE = `**Description**\\
@@ -21,7 +22,8 @@ Describe how the vulnerability can be exploited.
 
 export const getAuditSubmissionTexts = (
   submissionData: ISubmissionData,
-  descriptions: ISubmissionsDescriptionsData["descriptions"]
+  descriptions: ISubmissionsDescriptionsData["descriptions"],
+  hackerProfile: IHackerProfile | undefined
 ) => {
   const toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${
     submissionData.contact?.communicationChannelType
@@ -49,7 +51,8 @@ ${description.complementTestFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX
   const decrypted = `**Project Name:** ${submissionData.project?.projectName}\n
 **Project Id:** ${submissionData.project?.projectId}\n
 **Github username:** ${submissionData.contact?.githubUsername || "---"}\n
-**Twitter username:** ${submissionData.contact?.twitterUsername || "---"}
+**Twitter username:** ${submissionData.contact?.twitterUsername || "---"}\n
+**HATS Profile:** ${hackerProfile ? `@${hackerProfile?.username}` : "---"}
     
     ${descriptions
       .filter((description) => !description.isEncrypted)
@@ -85,11 +88,13 @@ ${description.complementTestFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX
 
 export const getBountySubmissionTexts = (
   submissionData: ISubmissionData,
-  descriptions: ISubmissionsDescriptionsData["descriptions"]
+  descriptions: ISubmissionsDescriptionsData["descriptions"],
+  hackerProfile: IHackerProfile | undefined
 ) => {
   const toEncrypt = `**Project Name:** ${submissionData.project?.projectName}\n
 **Project Id:** ${submissionData.project?.projectId}\n
 **Beneficiary:** ${submissionData.contact?.beneficiary}\n
+**HATS Profile:** ${hackerProfile ? `@${hackerProfile?.username}` : "---"}\n
 **Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})
     
     ${descriptions
@@ -112,12 +117,14 @@ ${description.description.trim()}
 
 export const getGithubIssueDescription = (
   submissionData: ISubmissionData,
-  description: ISubmissionsDescriptionsData["descriptions"][0]
+  description: ISubmissionsDescriptionsData["descriptions"][0],
+  hackerProfile: IHackerProfile | undefined
 ) => {
   if (description.type === "new") {
     return `${submissionData.ref === "audit-wizard" ? "***Submitted via auditwizard.io***\n" : ""}
   **Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
   **Twitter username:** ${submissionData.contact?.twitterUsername ? `${submissionData.contact?.twitterUsername}` : "--"}
+  **HATS Profile:** ${hackerProfile ? `@${hackerProfile?.username}` : "---"}
   **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
   **Severity:** ${description.severity}
   

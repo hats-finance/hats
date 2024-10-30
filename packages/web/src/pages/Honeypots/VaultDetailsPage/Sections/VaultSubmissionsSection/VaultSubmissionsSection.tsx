@@ -66,7 +66,7 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
       {!isPrivateAudit && savedSubmissions && savedSubmissions?.length > 0 && (
         <div className="public-submissions">
           {savedSubmissions.map((submission) => (
-            <PublicSubmissionCard key={submission._id} vault={vault} submission={submission} />
+            <PublicSubmissionCard key={submission.number} vault={vault} submission={submission} />
           ))}
         </div>
       )}

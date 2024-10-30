@@ -20,6 +20,12 @@ export const StyledPublicSubmissionCard = styled.div<{ isOpen: boolean }>(
         border-color: var(--primary);
       }
 
+      .labels {
+        display: flex;
+        gap: ${getSpacing(1)};
+        align-items: center;
+      }
+
       .date {
         position: absolute;
         top: ${getSpacing(3)};
@@ -28,8 +34,13 @@ export const StyledPublicSubmissionCard = styled.div<{ isOpen: boolean }>(
 
       .submission-title {
         font-size: var(--small);
-        padding-left: ${getSpacing(1)};
-        font-weight: 700;
+        font-weight: 400;
+        margin-top: ${getSpacing(1.5)};
+
+        span {
+          font-weight: 700;
+          color: var(--secondary-light);
+        }
       }
     }
 

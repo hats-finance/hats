@@ -5,6 +5,7 @@ import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
+import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useUserHasCollectedSignature } from "pages/Honeypots/VaultDetailsPage/hooks";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { calcCid } from "pages/Submissions/SubmissionFormPage/encrypt";
@@ -14,7 +15,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { IS_PROD } from "settings";
 import { getAppVersion } from "utils";
 import { slugify } from "utils/slug.utils";
-import { useNetwork, useWaitForTransaction } from "wagmi";
+import { useAccount, useNetwork, useWaitForTransaction } from "wagmi";
 import {
   SubmissionContactInfo,
   SubmissionDescriptions,
@@ -41,6 +42,9 @@ export const SubmissionFormPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { chain } = useNetwork();
+  const { address } = useAccount();
+  const { data: hackerProfile } = useProfileByAddress(address);
+
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
   const [allFormDisabled, setAllFormDisabled] = useState(false);
@@ -167,7 +171,7 @@ export const SubmissionFormPage = () => {
       });
 
       try {
-        const res = await submitVulnerabilitySubmission(data, vault);
+        const res = await submitVulnerabilitySubmission(data, vault, hackerProfile);
 
         if (res.success) {
           setSubmissionData({

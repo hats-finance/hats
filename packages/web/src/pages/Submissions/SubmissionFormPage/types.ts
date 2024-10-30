@@ -46,6 +46,7 @@ export interface ISubmissionsDescriptionsData {
     files: ISavedFile[];
     sessionKey?: SessionKey;
     isEncrypted?: boolean;
+    isFixApplicable?: boolean;
   }[];
 }
 

@@ -1,18 +1,18 @@
-import { IVault } from "@hats.finance/shared";
+import { GithubIssue, IVault } from "@hats.finance/shared";
 import { UseMutationResult, UseQueryResult, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
 import { useAccount, useMutation } from "wagmi";
 import * as messageSignaturesService from "./messageSignaturesService";
 import * as savedSubmissionsService from "./savedSubmissionsService";
-import { IGithubIssue } from "./types";
 
 /**
  * Returns all saved submissions for a vault
  */
-export const useSavedSubmissions = (vault: IVault | undefined): UseQueryResult<IGithubIssue[]> => {
+export const useSavedSubmissions = (vault: IVault | undefined): UseQueryResult<GithubIssue[]> => {
   return useQuery({
     queryKey: ["github-issues", vault?.id],
-    queryFn: () => savedSubmissionsService.getSavedSubmissions(vault?.id),
+    queryFn: () => getGithubIssuesFromVault(vault!),
     refetchOnWindowFocus: false,
     enabled: !!vault,
   });
