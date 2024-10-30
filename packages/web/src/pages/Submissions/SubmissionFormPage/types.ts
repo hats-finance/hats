@@ -34,8 +34,8 @@ export interface ISubmissionsDescriptionsData {
 
     // complement fields
     testNotApplicable: boolean;
-    complementTestFiles: { file: ISavedFile; path: string }[];
-    complementFixFiles: { file: ISavedFile; path: string }[];
+    complementTestFiles: { file: ISavedFile; path: string; pathOpts: string[] }[];
+    complementFixFiles: { file: ISavedFile; path: string; pathOpts: string[] }[];
     complementGhIssueNumber?: string;
     complementGhIssue?: GithubIssue;
     needsFix: boolean;

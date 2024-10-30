@@ -21,11 +21,13 @@ import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
 import { getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
 import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useClaimedIssuesByVaultAndClaimedBy } from "pages/Honeypots/VaultDetailsPage/Sections/VaultSubmissionsSection/PublicSubmissionCard/hooks";
+import { getVaultRepoName } from "pages/Honeypots/VaultDetailsPage/savedSubmissionsService";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { searchFileInHatsRepo } from "utils/github.utils";
 import { slugify } from "utils/slug.utils";
 import { useAccount } from "wagmi";
 import { encryptWithHatsKey, encryptWithKeys } from "../../encrypt";
@@ -382,12 +384,33 @@ export function SubmissionDescriptions() {
                       ? (errors.descriptions?.[index]?.complementFixFiles as never)
                       : undefined
                   }
-                  onChange={(a) => {
+                  onChange={async (a) => {
                     if (!a?.length) return;
                     for (const file of a) {
                       const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
                       if (fixFiles.some((f) => f.file.ipfsHash === file.ipfsHash)) continue;
-                      setValue(`descriptions.${index}.complementFixFiles`, [...fixFiles, { file, path: `test/${file.name}` }]);
+                      const newFile = { file, path: "", pathOpts: [] };
+
+                      const repoName = await getVaultRepoName(vault?.id);
+                      if (!repoName) {
+                        setValue(`descriptions.${index}.complementFixFiles`, [...fixFiles, newFile]);
+                        return;
+                      }
+
+                      const pathOptions = await searchFileInHatsRepo(repoName, file.name);
+                      if (pathOptions.length === 0) {
+                        setValue(`descriptions.${index}.complementFixFiles`, [...fixFiles, newFile]);
+                      } else if (pathOptions.length === 1) {
+                        setValue(`descriptions.${index}.complementFixFiles`, [
+                          ...fixFiles,
+                          { ...newFile, path: pathOptions[0], pathOpts: [] },
+                        ]);
+                      } else {
+                        setValue(`descriptions.${index}.complementFixFiles`, [
+                          ...fixFiles,
+                          { ...newFile, path: "", pathOpts: pathOptions },
+                        ]);
+                      }
                     }
                   }}
                 />
@@ -396,29 +419,41 @@ export function SubmissionDescriptions() {
                   <div className="files">
                     {(submissionDescription.complementFixFiles ?? []).map((item, idx) => (
                       <li key={idx}>
-                        <div className="file">
-                          <CloseIcon
-                            className="remove-icon"
-                            onClick={() => {
-                              const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
-                              setValue(
-                                `descriptions.${index}.complementFixFiles`,
-                                fixFiles.filter((_, fileIndex) => fileIndex !== idx)
-                              );
-                            }}
-                          />
-                          <p>{item.file.name}</p>
+                        <div className="file-container">
+                          <div className="file">
+                            <CloseIcon
+                              className="remove-icon"
+                              onClick={() => {
+                                const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
+                                setValue(
+                                  `descriptions.${index}.complementFixFiles`,
+                                  fixFiles.filter((_, fileIndex) => fileIndex !== idx)
+                                );
+                              }}
+                            />
+                            <p>{item.file?.name}</p>
+                          </div>
+
+                          <div className="file-path">
+                            <p>{t("Submissions.filePath")}:</p>
+                            <div className="file-path-input">
+                              <FormInput
+                                {...register(`descriptions.${index}.complementFixFiles.${idx}.path`)}
+                                disabled={allFormDisabled}
+                                label={`${t("Submissions.filePath")}`}
+                                placeholder={t("Submissions.filePathPlaceholder")}
+                                colorable
+                              />
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="file-path">
-                          <p>{t("Submissions.filePath")}:</p>
-                          <FormInput
-                            {...register(`descriptions.${index}.complementFixFiles.${idx}.path`)}
-                            disabled={allFormDisabled}
-                            label={`${t("Submissions.filePath")}`}
-                            placeholder={t("Submissions.filePathPlaceholder")}
-                            colorable
-                          />
+                        <div className="file-opts">
+                          {item.pathOpts?.map((opt) => (
+                            <div key={opt} onClick={() => setValue(`descriptions.${index}.complementFixFiles.${idx}.path`, opt)}>
+                              <Pill isSeverity textColor="white" text={opt} capitalize={false} />
+                            </div>
+                          ))}
                         </div>
                       </li>
                     ))}
@@ -446,12 +481,33 @@ export function SubmissionDescriptions() {
                       ? (errors.descriptions?.[index]?.complementTestFiles as never)
                       : undefined
                   }
-                  onChange={(a) => {
+                  onChange={async (a) => {
                     if (!a?.length) return;
                     for (const file of a) {
                       const testFiles = getValues(`descriptions.${index}.complementTestFiles`);
                       if (testFiles.some((f) => f.file.ipfsHash === file.ipfsHash)) continue;
-                      setValue(`descriptions.${index}.complementTestFiles`, [...testFiles, { file, path: `test/${file.name}` }]);
+                      const newFile = { file, path: "", pathOpts: [] };
+
+                      const repoName = await getVaultRepoName(vault?.id);
+                      if (!repoName) {
+                        setValue(`descriptions.${index}.complementTestFiles`, [...testFiles, newFile]);
+                        return;
+                      }
+
+                      const pathOptions = await searchFileInHatsRepo(repoName, file.name);
+                      if (pathOptions.length === 0) {
+                        setValue(`descriptions.${index}.complementTestFiles`, [...testFiles, newFile]);
+                      } else if (pathOptions.length === 1) {
+                        setValue(`descriptions.${index}.complementTestFiles`, [
+                          ...testFiles,
+                          { ...newFile, path: pathOptions[0], pathOpts: [] },
+                        ]);
+                      } else {
+                        setValue(`descriptions.${index}.complementTestFiles`, [
+                          ...testFiles,
+                          { ...newFile, path: "", pathOpts: pathOptions },
+                        ]);
+                      }
                     }
                   }}
                 />
@@ -461,29 +517,41 @@ export function SubmissionDescriptions() {
                   <div className="files">
                     {(submissionDescription.complementTestFiles ?? []).map((item, idx) => (
                       <li key={idx}>
-                        <div className="file">
-                          <CloseIcon
-                            className="remove-icon"
-                            onClick={() => {
-                              const testFiles = getValues(`descriptions.${index}.complementTestFiles`);
-                              setValue(
-                                `descriptions.${index}.complementTestFiles`,
-                                testFiles.filter((_, fileIndex) => fileIndex !== idx)
-                              );
-                            }}
-                          />
-                          <p>{item.file.name}</p>
+                        <div className="file-container">
+                          <div className="file">
+                            <CloseIcon
+                              className="remove-icon"
+                              onClick={() => {
+                                const testFiles = getValues(`descriptions.${index}.complementTestFiles`);
+                                setValue(
+                                  `descriptions.${index}.complementTestFiles`,
+                                  testFiles.filter((_, fileIndex) => fileIndex !== idx)
+                                );
+                              }}
+                            />
+                            <p>{item.file?.name}</p>
+                          </div>
+
+                          <div className="file-path">
+                            <p>{t("Submissions.filePath")}:</p>
+                            <div className="file-path-input">
+                              <FormInput
+                                {...register(`descriptions.${index}.complementTestFiles.${idx}.path`)}
+                                disabled={allFormDisabled}
+                                label={`${t("Submissions.filePath")}`}
+                                placeholder={t("Submissions.filePathPlaceholder")}
+                                colorable
+                              />
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="file-path">
-                          <p>{t("Submissions.filePath")}:</p>
-                          <FormInput
-                            {...register(`descriptions.${index}.complementTestFiles.${idx}.path`)}
-                            disabled={allFormDisabled}
-                            label={`${t("Submissions.filePath")}`}
-                            placeholder={t("Submissions.filePathPlaceholder")}
-                            colorable
-                          />
+                        <div className="file-opts">
+                          {item.pathOpts?.map((opt) => (
+                            <div key={opt} onClick={() => setValue(`descriptions.${index}.complementTestFiles.${idx}.path`, opt)}>
+                              <Pill isSeverity textColor="white" text={opt} capitalize={false} />
+                            </div>
+                          ))}
                         </div>
                       </li>
                     ))}

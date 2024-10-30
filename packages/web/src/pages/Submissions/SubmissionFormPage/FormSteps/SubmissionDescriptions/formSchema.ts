@@ -43,7 +43,7 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
               path: Yup.string()
                 .required(intl("required"))
                 .test("pathEndsWithFileNameError", intl("pathEndsWithFileNameError"), (val, ctx: any) => {
-                  const fileName = ctx.from[0].value.file.name;
+                  const fileName = ctx.from[0].value.file?.name;
                   return val?.endsWith(fileName) ?? false;
                 }),
             })
@@ -62,7 +62,7 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
               path: Yup.string()
                 .required(intl("required"))
                 .test("pathEndsWithFileNameError", intl("pathEndsWithFileNameError"), (val, ctx: any) => {
-                  const fileName = ctx.from[0].value.file.name;
+                  const fileName = ctx.from[0].value.file?.name;
                   return val?.endsWith(fileName) ?? false;
                 }),
             })

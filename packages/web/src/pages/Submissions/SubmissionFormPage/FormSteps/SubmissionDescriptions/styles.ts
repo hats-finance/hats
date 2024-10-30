@@ -132,39 +132,65 @@ export const StyledSubmissionDescription = styled.div<{ isEncrypted: boolean }>(
         li {
           list-style: none;
           display: flex;
-          gap: ${getSpacing(5)};
           width: 100%;
           align-items: flex-start;
+          flex-direction: column;
 
-          .file {
+          .file-container {
             display: flex;
-            align-items: center;
-            gap: ${getSpacing(1)};
-            border: 1px solid var(--primary);
-            border-radius: 50px;
-            padding: ${getSpacing(0.5)} ${getSpacing(1)};
-            font-size: var(--xxsmall);
-            margin-top: ${getSpacing(2)};
+            gap: ${getSpacing(5)};
+            width: 100%;
+            align-items: flex-start;
 
-            .remove-icon {
-              cursor: pointer;
-              transition: 0.1s;
+            .file {
+              display: flex;
+              align-items: center;
+              gap: ${getSpacing(1)};
+              border: 1px solid var(--primary);
+              border-radius: 50px;
+              padding: ${getSpacing(0.5)} ${getSpacing(1)};
+              font-size: var(--xxsmall);
+              margin-top: ${getSpacing(2)};
 
-              &:hover {
-                color: var(--error-red);
+              .remove-icon {
+                cursor: pointer;
+                transition: 0.1s;
+
+                &:hover {
+                  color: var(--error-red);
+                }
+              }
+            }
+
+            .file-path {
+              display: flex;
+              align-items: flex-start;
+              gap: ${getSpacing(2)};
+              width: 100%;
+
+              p {
+                white-space: nowrap;
+                margin-top: ${getSpacing(2.5)};
+              }
+
+              .file-path-input {
+                width: 100%;
               }
             }
           }
 
-          .file-path {
+          .file-opts {
             display: flex;
-            align-items: flex-start;
-            gap: ${getSpacing(2)};
-            width: 100%;
+            gap: ${getSpacing(0.5)};
+            flex-wrap: wrap;
 
-            p {
-              white-space: nowrap;
-              margin-top: ${getSpacing(2.5)};
+            div {
+              cursor: pointer;
+              transition: 0.2s;
+
+              &:hover {
+                opacity: 0.8;
+              }
             }
           }
         }
