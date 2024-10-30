@@ -40,8 +40,8 @@ export const SplitPointsActions = ({ vault, submission }: SplitPointsActionsProp
 
   const connectedChain = chain ? appChains[chain.id] : null;
   const isTestnet = !IS_PROD && connectedChain?.chain.testnet;
-  const TOP_LEADERBOARD_PERCENTAGE = isTestnet ? 1 : 0.2;
-  const TOP_LEADERBOARD_MIN_REWARDS = isTestnet ? 0 : 5000;
+  const TOP_LEADERBOARD_PERCENTAGE = 0.2;
+  const TOP_LEADERBOARD_MIN_REWARDS = 5000;
 
   const isConnected = !!address;
   const isProfileCreated = !!profile;
@@ -56,9 +56,9 @@ export const SplitPointsActions = ({ vault, submission }: SplitPointsActionsProp
   const leaderboardInBoundaries = leaderboard
     .slice(0, Math.floor(leaderboard.length * TOP_LEADERBOARD_PERCENTAGE))
     .filter((entry) => entry.totalAmount.usd >= TOP_LEADERBOARD_MIN_REWARDS);
-  const isInLeadearboardBoundaries = leaderboardInBoundaries.find(
-    (entry) => entry.address.toLowerCase() === address?.toLowerCase()
-  );
+  const isInLeadearboardBoundaries = isTestnet
+    ? true
+    : leaderboardInBoundaries.find((entry) => entry.address.toLowerCase() === address?.toLowerCase());
 
   const claimInfo = claimedIssues?.find((issue) => +issue.issueNumber === +submission.number);
   const claimedByInfo = getClaimedBy(claimInfo);
