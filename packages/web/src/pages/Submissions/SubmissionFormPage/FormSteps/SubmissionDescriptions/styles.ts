@@ -46,6 +46,19 @@ export const StyledSubmissionDescription = styled.div<{ isEncrypted: boolean }>(
       }
     }
 
+    .gh-labels {
+      display: flex;
+      flex-direction: column;
+      gap: ${getSpacing(1)};
+      margin-bottom: ${getSpacing(2.5)};
+      margin-top: ${getSpacing(-1.5)};
+
+      .labels {
+        display: flex;
+        gap: ${getSpacing(1)};
+      }
+    }
+
     .options {
       display: flex;
       gap: ${getSpacing(3)};

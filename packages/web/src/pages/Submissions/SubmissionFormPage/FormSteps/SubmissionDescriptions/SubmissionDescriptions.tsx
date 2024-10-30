@@ -13,6 +13,7 @@ import {
   FormSelectInputOption,
   FormSupportFilesInput,
   Loading,
+  Pill,
   WithTooltip,
 } from "components";
 import download from "downloadjs";
@@ -48,7 +49,6 @@ export function SubmissionDescriptions() {
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
 
   const { data: claimedIssues, isLoading: isLoadingClaimedIssues } = useClaimedIssuesByVaultAndClaimedBy(vault, address);
-  console.log(claimedIssues);
 
   const [vaultGithubIssuesOpts, setVaultGithubIssuesOpts] = useState<FormSelectInputOption[] | undefined>();
   const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
@@ -71,7 +71,6 @@ export function SubmissionDescriptions() {
     append: appendSubmissionDescription,
     remove: removeSubmissionDescription,
   } = useFieldArray({ control, name: `descriptions` });
-
   const watchDescriptions = useWatch({ control, name: `descriptions` });
   const controlledDescriptions = fields.map((field, index) => {
     return {
@@ -311,6 +310,8 @@ export function SubmissionDescriptions() {
   };
 
   const getComplementIssueForm = (submissionDescription: (typeof controlledDescriptions)[number], index: number) => {
+    const { complementGhIssue, needsFix, needsTest } = submissionDescription;
+
     return (
       <>
         <p className="mb-4">{t("Submissions.selectIssueToComplement")}</p>
@@ -345,76 +346,90 @@ export function SubmissionDescriptions() {
                   onChange={(a) => {
                     field.onChange(a);
                     const ghIssue = vaultGithubIssues?.find((gh) => gh.number === Number(a as string));
-                    if (ghIssue) setValue(`descriptions.${index}.complementGhIssue`, ghIssue);
+                    if (ghIssue) {
+                      setValue(`descriptions.${index}.complementGhIssue`, ghIssue);
+                      setValue(`descriptions.${index}.needsFix`, ghIssue.bonusPointsLabels.needsFix);
+                      setValue(`descriptions.${index}.needsTest`, ghIssue.bonusPointsLabels.needsTest);
+                    }
                   }}
                 />
               )}
             />
 
-            {/* Fix PR section */}
-            <>
-              <p className="mb-2">{t("Submissions.addFixFiles")}:</p>
-              <p className="mb-4">{t("Submissions.addFixFilesExplanation")}</p>
-              <FormSupportFilesInput
-                label={t("Submissions.selectFixFiles")}
-                name={`descriptions.${index}.complementFixFiles`}
-                uploadTo="ipfs"
-                noFilesAttachedInfo
-                value={[]}
-                colorable
-                error={
-                  errors.descriptions?.[index]?.complementFixFiles?.type === "min"
-                    ? (errors.descriptions?.[index]?.complementFixFiles as never)
-                    : undefined
-                }
-                onChange={(a) => {
-                  if (!a?.length) return;
-                  for (const file of a) {
-                    const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
-                    if (fixFiles.some((f) => f.file.ipfsHash === file.ipfsHash)) continue;
-                    setValue(`descriptions.${index}.complementFixFiles`, [...fixFiles, { file, path: `test/${file.name}` }]);
-                  }
-                }}
-              />
-
-              <div className="files-attached-container">
-                <div className="files">
-                  {(submissionDescription.complementFixFiles ?? []).map((item, idx) => (
-                    <li key={idx}>
-                      <div className="file">
-                        <CloseIcon
-                          className="remove-icon"
-                          onClick={() => {
-                            const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
-                            setValue(
-                              `descriptions.${index}.complementFixFiles`,
-                              fixFiles.filter((_, fileIndex) => fileIndex !== idx)
-                            );
-                          }}
-                        />
-                        <p>{item.file.name}</p>
-                      </div>
-
-                      <div className="file-path">
-                        <p>{t("Submissions.filePath")}:</p>
-                        <FormInput
-                          {...register(`descriptions.${index}.complementFixFiles.${idx}.path`)}
-                          disabled={allFormDisabled}
-                          label={`${t("Submissions.filePath")}`}
-                          placeholder={t("Submissions.filePathPlaceholder")}
-                          colorable
-                        />
-                      </div>
-                    </li>
-                  ))}
-                </div>
+            {/* labels */}
+            <div className="gh-labels">
+              <div className="labels">
+                {complementGhIssue?.bonusPointsLabels.needsFix && <Pill dotColor="yellow" textColor="white" text="Needs Fix" />}
+                {complementGhIssue?.bonusPointsLabels.needsTest && <Pill dotColor="yellow" textColor="white" text="Needs Test" />}
               </div>
-            </>
+            </div>
+
+            {/* Fix PR section */}
+            {needsFix && (
+              <>
+                <p className="mb-2">{t("Submissions.addFixFiles")}:</p>
+                <p className="mb-4">{t("Submissions.addFixFilesExplanation")}</p>
+                <FormSupportFilesInput
+                  label={t("Submissions.selectFixFiles")}
+                  name={`descriptions.${index}.complementFixFiles`}
+                  uploadTo="ipfs"
+                  noFilesAttachedInfo
+                  value={[]}
+                  colorable
+                  error={
+                    errors.descriptions?.[index]?.complementFixFiles?.type === "min"
+                      ? (errors.descriptions?.[index]?.complementFixFiles as never)
+                      : undefined
+                  }
+                  onChange={(a) => {
+                    if (!a?.length) return;
+                    for (const file of a) {
+                      const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
+                      if (fixFiles.some((f) => f.file.ipfsHash === file.ipfsHash)) continue;
+                      setValue(`descriptions.${index}.complementFixFiles`, [...fixFiles, { file, path: `test/${file.name}` }]);
+                    }
+                  }}
+                />
+
+                <div className="files-attached-container">
+                  <div className="files">
+                    {(submissionDescription.complementFixFiles ?? []).map((item, idx) => (
+                      <li key={idx}>
+                        <div className="file">
+                          <CloseIcon
+                            className="remove-icon"
+                            onClick={() => {
+                              const fixFiles = getValues(`descriptions.${index}.complementFixFiles`);
+                              setValue(
+                                `descriptions.${index}.complementFixFiles`,
+                                fixFiles.filter((_, fileIndex) => fileIndex !== idx)
+                              );
+                            }}
+                          />
+                          <p>{item.file.name}</p>
+                        </div>
+
+                        <div className="file-path">
+                          <p>{t("Submissions.filePath")}:</p>
+                          <FormInput
+                            {...register(`descriptions.${index}.complementFixFiles.${idx}.path`)}
+                            disabled={allFormDisabled}
+                            label={`${t("Submissions.filePath")}`}
+                            placeholder={t("Submissions.filePathPlaceholder")}
+                            colorable
+                          />
+                        </div>
+                      </li>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
 
             <div className="mt-5" />
 
             {/* Test PR section */}
-            {!submissionDescription.testNotApplicable && (
+            {!submissionDescription.testNotApplicable && needsTest && (
               <>
                 <p className="mb-2">{t("Submissions.addTestFiles")}:</p>
                 <p className="mb-4">{t("Submissions.addTestFilesExplanation")}</p>
@@ -475,14 +490,16 @@ export function SubmissionDescriptions() {
                 </div>
               </>
             )}
-            <div>
-              <FormInput
-                {...register(`descriptions.${index}.testNotApplicable`)}
-                noMargin
-                type="checkbox"
-                label={t("Submissions.testNotApplicable")}
-              />
-            </div>
+            {needsTest && needsFix && (
+              <div>
+                <FormInput
+                  {...register(`descriptions.${index}.testNotApplicable`)}
+                  noMargin
+                  type="checkbox"
+                  label={t("Submissions.testNotApplicable")}
+                />
+              </div>
+            )}
           </>
         )}
       </>
