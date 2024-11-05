@@ -18,6 +18,7 @@ import {
 } from "components";
 import download from "downloadjs";
 import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
+import moment from "moment";
 import { getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
 import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useClaimedIssuesByVaultAndClaimedBy } from "pages/Honeypots/VaultDetailsPage/Sections/VaultSubmissionsSection/PublicSubmissionCard/hooks";
@@ -51,6 +52,7 @@ export function SubmissionDescriptions() {
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
 
   const { data: claimedIssues, isLoading: isLoadingClaimedIssues } = useClaimedIssuesByVaultAndClaimedBy(vault, address);
+  console.log(claimedIssues);
 
   const [vaultGithubIssuesOpts, setVaultGithubIssuesOpts] = useState<FormSelectInputOption[] | undefined>();
   const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
@@ -143,7 +145,9 @@ export function SubmissionDescriptions() {
       setIsLoadingGH(true);
       const ghIssues = await getGithubIssuesFromVault(vault);
       const ghIssuesOpts = ghIssues
-        .filter((ghIssue) => claimedIssues?.some((ci) => +ci.issueNumber === +ghIssue.number))
+        .filter((ghIssue) =>
+          claimedIssues?.some((ci) => +ci.issueNumber === +ghIssue.number && !moment(ci.expiresAt).isBefore(moment()))
+        )
         .filter((ghIssue) => ghIssue.bonusPointsLabels.needsFix || ghIssue.bonusPointsLabels.needsTest)
         .map((ghIssue) => ({
           label: `[#${ghIssue.number}] ${ghIssue.title}`,
