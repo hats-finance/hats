@@ -201,5 +201,9 @@ export const StyledSubmissionDescription = styled.div<{ isEncrypted: boolean }>(
       display: flex;
       justify-content: flex-end;
     }
+
+    .error-text {
+      color: var(--error-red);
+    }
   `
 );

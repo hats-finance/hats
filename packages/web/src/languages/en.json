@@ -1358,6 +1358,8 @@
       "filePathPlaceholder": "src/path/to/file.sol",
       "testNotApplicable": "Test not applicable",
       "youNeedUploadAtLeastOneFile": "You need to upload at least one file",
+      "pocIsApplicable": "PoC is applicable",
+      "pocIsNotApplicable": "PoC is not applicable",
       "terms": {
         "bugBounty": {
           "submissionSection": "<p>Your submission will be sent to the committee who will process your submission.</p> <p>The committee of the vault will respond within 24 hours to acknowledge the receipt of submission via the communication channel you provided.<p/>",
