@@ -155,7 +155,12 @@ export function SubmissionDescriptions() {
       setIsLoadingGH(false);
     };
     loadGhIssues();
-  }, [vault, vaultGithubIssues, isLoadingGH, someComplementSubmission, claimedIssues]);
+  }, [vault, vaultGithubIssues, isLoadingGH, someComplementSubmission, claimedIssues, address]);
+
+  useEffect(() => {
+    setVaultGithubIssuesOpts(undefined);
+    setVaultGithubIssues(undefined);
+  }, [address]);
 
   const handleSaveAndDownloadDescription = async (formData: ISubmissionsDescriptionsData) => {
     if (!vault) return;
@@ -294,17 +299,17 @@ export function SubmissionDescriptions() {
 
         <p className="mb-4">Does this issue needs a fix?</p>
         <div className="options mt-3 mb-5">
-          <div className="option" onClick={() => setValue(`descriptions.${index}.isFixApplicable`, true)}>
-            <div className={`check-circle ${submissionDescription.isFixApplicable === true ? "selected" : ""}`} />
+          <div className="option" onClick={() => setValue(`descriptions.${index}.isTestApplicable`, true)}>
+            <div className={`check-circle ${submissionDescription.isTestApplicable === true ? "selected" : ""}`} />
             <div className="info">
-              <p>Fix is applicable</p>
+              <p>PoC is applicable</p>
             </div>
           </div>
 
-          <div className="option" onClick={() => setValue(`descriptions.${index}.isFixApplicable`, false)}>
-            <div className={`check-circle ${submissionDescription.isFixApplicable === false ? "selected" : ""}`} />
+          <div className="option" onClick={() => setValue(`descriptions.${index}.isTestApplicable`, false)}>
+            <div className={`check-circle ${submissionDescription.isTestApplicable === false ? "selected" : ""}`} />
             <div className="info">
-              <p>Fix is not applicable</p>
+              <p>PoC is not applicable</p>
             </div>
           </div>
         </div>
