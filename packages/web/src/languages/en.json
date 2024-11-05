@@ -736,7 +736,7 @@
     "onlyShowLabeledIssues": "Show only labeled issues",
     "ghIssue": "GH issue",
     "newSubmission": "New issue",
-    "complementSubmission": "Add Fix & Test to existing issue",
+    "complementSubmission": "Add Fix & Test to an existing issue",
     "pathEndsWithFileNameError": "Invalid path (path needs to end with file name)",
     "youNeedToConnectYourWallet": "You need to connect your wallet.",
     "youAreNotInTopLeaderboardPercentage": "This action is reserved for participants in the top of HATS leaderboard. Improve your ranking to unlock or connect with your profile.",

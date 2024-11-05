@@ -37,7 +37,7 @@ export async function submitVulnerabilitySubmission(
               issueTitle: description.title,
               issueDescription: getGithubIssueDescription(submissionData, description, hackerProfile),
               issueFiles: description.files?.map((file) => file.ipfsHash),
-              isFixApplicable: description.isFixApplicable,
+              isTestApplicable: description.isTestApplicable,
             }))
         : [],
     createPRsRequests:

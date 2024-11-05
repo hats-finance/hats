@@ -39,7 +39,7 @@ export const SUBMISSION_INIT_DATA = {
         complementFixFiles: [],
         complementTestFiles: [],
         testNotApplicable: false,
-        isFixApplicable: false,
+        isTestApplicable: false,
         needsFix: false,
         needsTest: false,
       },
