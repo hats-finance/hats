@@ -50,9 +50,9 @@ export function SubmissionDescriptions() {
 
   const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
+  const bonusPointsEnabled = vault?.description?.["project-metadata"].bonusPointsEnabled;
 
   const { data: claimedIssues, isLoading: isLoadingClaimedIssues } = useClaimedIssuesByVaultAndClaimedBy(vault, address);
-  console.log(claimedIssues);
 
   const [vaultGithubIssuesOpts, setVaultGithubIssuesOpts] = useState<FormSelectInputOption[] | undefined>();
   const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
@@ -611,21 +611,23 @@ export function SubmissionDescriptions() {
               )}
             </p>
 
-            <div className="options mt-3 mb-5">
-              <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "new")}>
-                <div className={`check-circle ${submissionDescription.type === "new" ? "selected" : ""}`} />
-                <div className="info">
-                  <p>{t("newSubmission")}</p>
+            {bonusPointsEnabled && (
+              <div className="options mt-3 mb-5">
+                <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "new")}>
+                  <div className={`check-circle ${submissionDescription.type === "new" ? "selected" : ""}`} />
+                  <div className="info">
+                    <p>{t("newSubmission")}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "complement")}>
-                <div className={`check-circle ${submissionDescription.type === "complement" ? "selected" : ""}`} />
-                <div className="info">
-                  <p>{t("complementSubmission")}</p>
+                <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "complement")}>
+                  <div className={`check-circle ${submissionDescription.type === "complement" ? "selected" : ""}`} />
+                  <div className="info">
+                    <p>{t("complementSubmission")}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {submissionDescription.type === "new"
               ? getNewIssueForm(submissionDescription, index)

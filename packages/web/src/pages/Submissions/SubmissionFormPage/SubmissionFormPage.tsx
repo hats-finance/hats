@@ -54,6 +54,7 @@ export const SubmissionFormPage = () => {
   const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
 
   const requireMessageSignature = vault?.description?.["project-metadata"].requireMessageSignature;
+
   const { data: userHasCollectedSignature, isLoading: isLoadingCollectedSignature } = useUserHasCollectedSignature(vault);
 
   const steps = useMemo(

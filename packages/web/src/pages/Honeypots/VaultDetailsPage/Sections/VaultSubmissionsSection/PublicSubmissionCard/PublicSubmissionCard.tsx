@@ -18,6 +18,7 @@ function PublicSubmissionCard({ vault, submission }: PublicSubmissionCardProps) 
   const [isOpen, setIsOpen] = useState(false);
 
   const showExtraInfo = submission.number !== -1;
+  const bonusPointsEnabled = vault.description?.["project-metadata"]?.bonusPointsEnabled;
 
   return (
     <StyledPublicSubmissionCard isOpen={isOpen}>
@@ -39,9 +40,11 @@ function PublicSubmissionCard({ vault, submission }: PublicSubmissionCardProps) 
           </p>
         </div>
 
-        {showExtraInfo && (submission.bonusPointsLabels.needsFix || submission.bonusPointsLabels.needsTest) && (
-          <SplitPointsActions vault={vault} submission={submission} />
-        )}
+        {showExtraInfo &&
+          bonusPointsEnabled &&
+          (submission.bonusPointsLabels.needsFix || submission.bonusPointsLabels.needsTest) && (
+            <SplitPointsActions vault={vault} submission={submission} />
+          )}
       </div>
 
       <div className="card-content">

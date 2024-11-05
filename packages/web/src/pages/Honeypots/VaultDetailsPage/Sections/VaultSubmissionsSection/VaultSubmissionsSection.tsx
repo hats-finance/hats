@@ -21,7 +21,9 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
 
   const { data: savedSubmissions, isLoading } = useSavedSubmissions(vault);
   const { data: repoName } = useVaultRepoName(vault);
+
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
+  const bonusPointsEnabled = vault.description?.["project-metadata"]?.bonusPointsEnabled;
 
   const goToGithubIssues = async () => {
     if (!repoName) return;
@@ -69,7 +71,7 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
           {t("privateAuditSubmissionsOnlyOnGithub")}
         </Alert>
       )}
-      {getBonusPointsSection()}
+      {bonusPointsEnabled && getBonusPointsSection()}
       <h2>
         {t("submissions")}
 

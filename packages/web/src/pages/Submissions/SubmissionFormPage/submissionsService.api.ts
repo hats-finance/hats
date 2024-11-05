@@ -21,6 +21,8 @@ export async function submitVulnerabilitySubmission(
     throw new Error(`Invalid params on 'submitVulnerabilitySubmission' function: ${submissionData}`);
   }
 
+  const bonusPointsEnabled = vault?.description?.["project-metadata"]?.bonusPointsEnabled;
+
   const submissionRequest: ISubmitSubmissionRequest = {
     submitVulnerabilityRequest: {
       chainId: submissionData.submissionResult.chainId,
@@ -38,6 +40,7 @@ export async function submitVulnerabilitySubmission(
               issueDescription: getGithubIssueDescription(submissionData, description, hackerProfile),
               issueFiles: description.files?.map((file) => file.ipfsHash),
               isTestApplicable: description.isTestApplicable,
+              bonusPointsEnabled,
             }))
         : [],
     createPRsRequests:

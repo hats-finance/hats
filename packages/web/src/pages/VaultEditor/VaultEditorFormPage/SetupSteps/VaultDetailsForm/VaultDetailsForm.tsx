@@ -159,6 +159,15 @@ export function VaultDetailsForm() {
                 label={t("requireMessageSignature")}
               />
             ) : null}
+            {vaultType === "audit" && (
+              <FormInput
+                {...register("project-metadata.bonusPointsEnabled")}
+                noMargin
+                disabled={allFormDisabled}
+                type="toggle"
+                label={t("bonusPointsEnabled")}
+              />
+            )}
           </div>
         </div>
 

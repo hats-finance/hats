@@ -95,6 +95,7 @@ export interface ISubmitSubmissionRequest {
     issueDescription: string;
     issueFiles: string[];
     isTestApplicable?: boolean;
+    bonusPointsEnabled?: boolean;
   }[];
   createPRsRequests: {
     pullRequestTitle: string;

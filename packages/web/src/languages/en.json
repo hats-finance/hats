@@ -747,6 +747,8 @@
     "bonusPointsTitle": "New: Boost Your Rewards, Claim and Submit Fixes and Tests!",
     "bonusPointsDescription": "As a top performer, you now have the exclusive opportunity to claim and submit fixes and tests for identified issues.\n <ul><li>Increase your potential earnings by up to 15% per issue</li> <li>Demonstrate your problem-solving skills</li> <li>Contribute directly to improving security</li></ul> \n <ul><li>Ensure you're in the top 20% of the leaderboard and won 5k of reward</li> <li>Connect your profile if you haven't already</li> <li>Browse the issues below and click \"Claim fix and test\" to get started</li> <li>The fix and the test should be written in the same style of the project code.</li></ul>",
     "bonusPointsReminder": "Remember, you have 12 hours to submit after claiming. Happy fixing and testing!",
+    "bonusPointsEnabled": "Enable bonus points?",
+    "claimFixAndTest": "Claim fix and test",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",

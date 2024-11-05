@@ -27,6 +27,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       isPrivateAudit: Yup.boolean(),
       isContinuousAudit: Yup.boolean(),
       requireMessageSignature: Yup.boolean(),
+      bonusPointsEnabled: Yup.boolean(),
       messageToSign: Yup.string().when("requireMessageSignature", (requireMessageSignature: boolean, schema: any) => {
         if (requireMessageSignature) return schema.required(intl("required")).typeError(intl("required"));
       }),
