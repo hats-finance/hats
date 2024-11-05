@@ -1,5 +1,7 @@
 import { IPayoutGraph, IVault } from "@hats.finance/shared";
+import ClockIcon from "@mui/icons-material/AccessTimeOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
+import VerifiedIcon from "@mui/icons-material/VerifiedOutlined";
 import { Alert, Button, HatSpinner } from "components";
 import useConfirm from "hooks/useConfirm";
 import { useTranslation } from "react-i18next";
@@ -38,6 +40,28 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
     window.open(githubLink, "_blank");
   };
 
+  const getBonusPointsSection = () => {
+    if (isPrivateAudit) return null;
+    if (savedSubmissions?.length === 0) return null;
+
+    return (
+      <div className="bonus-points-section">
+        <div className="title-container">
+          <div className="icon">
+            <VerifiedIcon />
+          </div>
+          <p>{t("bonusPointsTitle")}</p>
+        </div>
+
+        <div className="content" dangerouslySetInnerHTML={{ __html: t("bonusPointsDescription") }} />
+        <div className="remember">
+          <ClockIcon />
+          <p>{t("bonusPointsReminder")}</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <StyledSubmissionsSection>
       {isPrivateAudit && (
@@ -45,6 +69,7 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
           {t("privateAuditSubmissionsOnlyOnGithub")}
         </Alert>
       )}
+      {getBonusPointsSection()}
       <h2>
         {t("submissions")}
 
