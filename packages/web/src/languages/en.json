@@ -741,7 +741,7 @@
     "youNeedToConnectYourWallet": "You need to connect your wallet.",
     "youAreNotInTopLeaderboardPercentage": "This action is reserved for participants in the top of HATS leaderboard. Improve your ranking to unlock or connect with your profile.",
     "claimIssue": "Claim issue",
-    "claimIssueDescription": "Are you sure you want to claim this issue?",
+    "claimIssueDescription": "-CODE STYLE ALERT-\n\nPlease note you need to write the fix and the test in the same style of the project code.",
     "claimedByYou": "Claimed by you",
     "issueAlreadyClaimed": "This issue has already been claimed.",
     "bonusPointsTitle": "New: Boost Your Rewards, Claim and Submit Fixes and Tests!",
