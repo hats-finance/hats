@@ -303,14 +303,20 @@ export function SubmissionDescriptions() {
 
         <p className="mb-4">Does this issue needs a fix?</p>
         <div className={`options mt-3 mb-5 ${errors.descriptions?.[index]?.isTestApplicable ? "error-text" : ""}`}>
-          <div className="option" onClick={() => setValue(`descriptions.${index}.isTestApplicable`, true)}>
+          <div
+            className="option"
+            onClick={() => setValue(`descriptions.${index}.isTestApplicable`, true, { shouldValidate: true })}
+          >
             <div className={`check-circle ${submissionDescription.isTestApplicable === true ? "selected" : ""}`} />
             <div className="info">
               <p>{t("Submissions.pocIsApplicable")}</p>
             </div>
           </div>
 
-          <div className="option" onClick={() => setValue(`descriptions.${index}.isTestApplicable`, false)}>
+          <div
+            className="option"
+            onClick={() => setValue(`descriptions.${index}.isTestApplicable`, false, { shouldValidate: true })}
+          >
             <div className={`check-circle ${submissionDescription.isTestApplicable === false ? "selected" : ""}`} />
             <div className="info">
               <p>{t("Submissions.pocIsNotApplicable")}</p>

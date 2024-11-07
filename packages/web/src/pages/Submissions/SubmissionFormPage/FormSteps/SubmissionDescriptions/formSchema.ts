@@ -22,7 +22,10 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
             if (type === "complement") return schema;
             return schema.required(intl("required"));
           }),
-        isTestApplicable: Yup.boolean().required(intl("required")),
+        isTestApplicable: Yup.boolean().when("type", (type: "new" | "complement", schema: any) => {
+          if (type === "new") return schema.required(intl("required"));
+          return schema;
+        }),
 
         // complement fields
         needsFix: Yup.boolean(),
