@@ -3,7 +3,6 @@ import { VaultAssetsPillsList, WithTooltip } from "components";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "utils";
-import { VaultNftRewards } from "./VaultNftRewards/VaultNftRewards";
 import { VaultRewardDivision } from "./VaultRewardDivision/VaultRewardDivision";
 import { VaultSeverityRewards } from "./VaultSeverityRewards/VaultSeverityRewards";
 import { StyledRewardsSection } from "./styles";
@@ -18,6 +17,7 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
   const { t } = useTranslation();
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
+  const bonusPointsEnabled = (vault.description && vault.description["project-metadata"].bonusPointsEnabled) ?? false;
   const showIntended = vault.amountsInfo?.showCompetitionIntendedAmount ?? false;
 
   return (
@@ -90,6 +90,25 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
           <div className="card">
             <h4 className="title">{t("severityRewards")}</h4>
             <VaultSeverityRewards vault={vault} />
+            {bonusPointsEnabled && (
+              <div className="bonus-points-info-container">
+                <p>Bonuses</p>
+                <div className="points">
+                  <div className="point">
+                    <span className="secondary-text">Fix:</span>
+                    <span>
+                      <strong>10%</strong> of issue points
+                    </span>
+                  </div>
+                  <div className="point">
+                    <span className="primary-text">Test:</span>
+                    <span>
+                      <strong>5%</strong> of issue points
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -67,6 +67,40 @@ export const StyledRewardsSection = styled.div<{ showIntended: boolean; isAudit:
           grid-column-start: 1;
           grid-column-end: 3;
         }
+
+        .bonus-points-info-container {
+          border-top: 1px solid var(--primary-light);
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: ${getSpacing(1)};
+          padding-top: ${getSpacing(3)};
+
+          p {
+            font-weight: 700;
+          }
+
+          .points {
+            display: flex;
+            gap: ${getSpacing(2)};
+
+            .point {
+              display: flex;
+              align-items: center;
+              gap: ${getSpacing(1)};
+
+              .secondary-text {
+                color: var(--secondary);
+                font-weight: 700;
+              }
+
+              .primary-text {
+                color: var(--primary);
+                font-weight: 700;
+              }
+            }
+          }
+        }
       }
 
       .card {
