@@ -7,12 +7,14 @@ export const isGithubUsernameValid = async (username: string) => {
 };
 
 export const searchFileInHatsRepo = async (repoName: string, fileName: string): Promise<string[]> => {
+  if (!repoName || !fileName) return [];
+
   try {
     const res = await axiosClient.get(`${BASE_SERVICE_URL}/utils/search-file-in-repo?repoName=${repoName}&fileName=${fileName}`);
 
     return res.data.files ?? [];
   } catch (err) {
     console.error(err);
-    throw new Error(`Error getting prices: ${err}`);
+    return [];
   }
 };
