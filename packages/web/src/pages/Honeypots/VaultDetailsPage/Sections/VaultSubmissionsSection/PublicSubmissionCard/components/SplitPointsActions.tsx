@@ -64,8 +64,7 @@ export const SplitPointsActions = ({ vault, submission }: SplitPointsActionsProp
   const claimedByInfo = getClaimedBy(claimInfo);
   const { data: claimedByProfile } = useProfileByAddress(claimedByInfo?.claimedBy);
 
-  // const isClaimedByCurrentUser = claimedByInfo?.claimedBy.toLowerCase() === address?.toLowerCase();
-  const isClaimedByCurrentUser = false;
+  const isClaimedByCurrentUser = claimedByInfo?.claimedBy.toLowerCase() === address?.toLowerCase();
 
   const canExecuteAction = () => {
     if (isClaimedByCurrentUser) return { can: true };
