@@ -16,12 +16,10 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
           if (type === "complement") return schema;
           return schema.required(intl("required"));
         }),
-        description: Yup.string()
-          .min(20, intl("min-characters", { min: 20 }))
-          .when("type", (type: "new" | "complement", schema: any) => {
-            if (type === "complement") return schema;
-            return schema.required(intl("required"));
-          }),
+        description: Yup.string().when("type", (type: "new" | "complement", schema: any) => {
+          if (type === "complement") return schema;
+          return schema.min(20, intl("min-characters", { min: 20 })).required(intl("required"));
+        }),
         isTestApplicable: Yup.boolean().when("type", (type: "new" | "complement", schema: any) => {
           if (type === "new") return schema.required(intl("required"));
           return schema;
