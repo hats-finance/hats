@@ -1,3 +1,4 @@
+import { GithubIssue } from "@hats.finance/shared";
 import PrevIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import NextIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import { Alert, Pill, WithTooltip } from "components";
@@ -5,7 +6,6 @@ import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo
 import useWindowDimensions from "hooks/useWindowDimensions";
 import moment from "moment";
 import PublicSubmissionCard from "pages/Honeypots/VaultDetailsPage/Sections/VaultSubmissionsSection/PublicSubmissionCard/PublicSubmissionCard";
-import { IGithubIssue } from "pages/Honeypots/VaultDetailsPage/types";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { formatNumber, ipfsTransformUri } from "utils";
@@ -153,16 +153,18 @@ export const HackerActivity = ({ activity }: IHackerActivityProps) => {
               <div className="submissions">
                 {findings?.length === 0 && <Alert type="info" content={t("HackerProfile.thereIsNoSubmissionToShow")} />}
                 {findings?.map((finding, idx) => {
-                  const submission: IGithubIssue = {
-                    _id: finding.id,
-                    createdAt: new Date(+finding.createdAt * 1000),
-                    vaultId: payout.vault!.id,
-                    severity: finding.submissionDataStructure?.severity,
-                    repoName: "",
-                    issueData: {
-                      issueFiles: [],
-                      issueTitle: finding.submissionDataStructure?.title ?? "",
-                      issueDescription: finding.submissionDataStructure?.content ?? "",
+                  const submission: GithubIssue = {
+                    createdAt: new Date(+finding.createdAt * 1000).toISOString(),
+                    body: finding.submissionDataStructure?.content ?? "",
+                    title: finding.submissionDataStructure?.title ?? "",
+                    validLabels: finding.submissionDataStructure?.severity ? [finding.submissionDataStructure.severity] : [],
+                    id: +finding.id,
+                    number: -1,
+                    labels: [],
+                    createdBy: 0,
+                    bonusPointsLabels: {
+                      needsFix: false,
+                      needsTest: false,
                     },
                   };
 

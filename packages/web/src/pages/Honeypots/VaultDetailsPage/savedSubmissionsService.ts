@@ -5,7 +5,7 @@ import { IGithubIssue } from "./types";
 /**
  * Get all saved github issues for a vault
  */
-export async function getSavedSubmissions(vaultId: string | undefined): Promise<IGithubIssue[]> {
+export async function getGHSubmissions(vaultId: string | undefined): Promise<IGithubIssue[]> {
   if (!vaultId) return [];
 
   try {

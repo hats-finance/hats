@@ -1,4 +1,4 @@
-import { IVault } from "@hats.finance/shared";
+import { GithubIssue, IHackerProfile, IVault } from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { auditWizardVerifyService } from "constants/constants";
 import { BASE_SERVICE_URL } from "settings";
@@ -14,11 +14,14 @@ import { IAuditWizardSubmissionData, ISubmissionData, ISubmitSubmissionRequest }
  */
 export async function submitVulnerabilitySubmission(
   submissionData: ISubmissionData,
-  vault: IVault
+  vault: IVault,
+  hackerProfile: IHackerProfile | undefined
 ): Promise<{ success: boolean; auditCompetitionRepo?: string }> {
   if (!submissionData.project || !submissionData.submissionsDescriptions || !submissionData.submissionResult) {
     throw new Error(`Invalid params on 'submitVulnerabilitySubmission' function: ${submissionData}`);
   }
+
+  const bonusPointsEnabled = vault?.description?.["project-metadata"]?.bonusPointsEnabled;
 
   const submissionRequest: ISubmitSubmissionRequest = {
     submitVulnerabilityRequest: {
@@ -31,11 +34,28 @@ export async function submitVulnerabilitySubmission(
     createIssueRequests:
       vault.description?.["project-metadata"].type === "audit"
         ? submissionData.submissionsDescriptions.descriptions
-            ?.filter((desc) => !desc.isEncrypted)
+            ?.filter((desc) => !desc.isEncrypted && desc.type === "new")
             ?.map((description) => ({
               issueTitle: description.title,
-              issueDescription: getGithubIssueDescription(submissionData, description),
+              issueDescription: getGithubIssueDescription(submissionData, description, hackerProfile),
               issueFiles: description.files?.map((file) => file.ipfsHash),
+              isTestApplicable: description.isTestApplicable,
+              bonusPointsEnabled,
+            }))
+        : [],
+    createPRsRequests:
+      vault.description?.["project-metadata"].type === "audit"
+        ? submissionData.submissionsDescriptions.descriptions
+            ?.filter((desc) => !desc.isEncrypted && desc.type === "complement")
+            ?.map((description) => ({
+              pullRequestTitle: `Complementary submission for #${description.complementGhIssueNumber}`,
+              pullRequestDescription: getGithubIssueDescription(submissionData, description, hackerProfile),
+              pullRequestFiles: [...description.complementFixFiles, ...description.complementTestFiles].map((file) => ({
+                path: file.path,
+                fileIpfsHash: file.file.ipfsHash,
+              })),
+              githubIssue: description.complementGhIssue as GithubIssue,
+              githubIssueNumber: Number(description.complementGhIssueNumber),
             }))
         : [],
   };

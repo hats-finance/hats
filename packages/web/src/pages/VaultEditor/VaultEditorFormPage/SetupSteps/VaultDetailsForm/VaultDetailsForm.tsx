@@ -99,6 +99,10 @@ export function VaultDetailsForm() {
     if (isAudit) setValue("usingPointingSystem", true);
     else setValue("usingPointingSystem", false);
     trigger("vulnerability-severities-spec");
+
+    // Change the bonus points enabled value
+    if (vaultType === "audit") setValue("project-metadata.bonusPointsEnabled", true);
+    else setValue("project-metadata.bonusPointsEnabled", false);
   });
 
   return (
@@ -159,6 +163,15 @@ export function VaultDetailsForm() {
                 label={t("requireMessageSignature")}
               />
             ) : null}
+            {isAdvancedMode && vaultType === "audit" && (
+              <FormInput
+                {...register("project-metadata.bonusPointsEnabled")}
+                noMargin
+                disabled={allFormDisabled}
+                type="toggle"
+                label={t("bonusPointsEnabled")}
+              />
+            )}
           </div>
         </div>
 

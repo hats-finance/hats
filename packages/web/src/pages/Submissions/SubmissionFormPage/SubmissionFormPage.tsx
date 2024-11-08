@@ -1,4 +1,3 @@
-import { IVulnerabilitySeverity } from "@hats.finance/shared";
 import ErrorIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ClearIcon from "@mui/icons-material/HighlightOffOutlined";
 import { Button, Loading, Seo } from "components";
@@ -6,6 +5,7 @@ import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
+import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useUserHasCollectedSignature } from "pages/Honeypots/VaultDetailsPage/hooks";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { calcCid } from "pages/Submissions/SubmissionFormPage/encrypt";
@@ -15,7 +15,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { IS_PROD } from "settings";
 import { getAppVersion } from "utils";
 import { slugify } from "utils/slug.utils";
-import { useNetwork, useWaitForTransaction } from "wagmi";
+import { useAccount, useNetwork, useWaitForTransaction } from "wagmi";
 import {
   SubmissionContactInfo,
   SubmissionDescriptions,
@@ -42,6 +42,9 @@ export const SubmissionFormPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { chain } = useNetwork();
+  const { address } = useAccount();
+  const { data: hackerProfile } = useProfileByAddress(address);
+
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
   const [allFormDisabled, setAllFormDisabled] = useState(false);
@@ -51,6 +54,7 @@ export const SubmissionFormPage = () => {
   const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
 
   const requireMessageSignature = vault?.description?.["project-metadata"].requireMessageSignature;
+
   const { data: userHasCollectedSignature, isLoading: isLoadingCollectedSignature } = useUserHasCollectedSignature(vault);
 
   const steps = useMemo(
@@ -59,7 +63,7 @@ export const SubmissionFormPage = () => {
       { title: t("Submissions.termsAndProcess"), component: SubmissionTermsAndProcess, card: SubmissionStep.terms },
       { title: t("Submissions.communicationChannel"), component: SubmissionContactInfo, card: SubmissionStep.contact },
       {
-        title: t("Submissions.describeVulnerability"),
+        title: t("Submissions.submissionDescription"),
         component: SubmissionDescriptions,
         card: SubmissionStep.submissionsDescriptions,
       },
@@ -168,7 +172,7 @@ export const SubmissionFormPage = () => {
       });
 
       try {
-        const res = await submitVulnerabilitySubmission(data, vault);
+        const res = await submitVulnerabilitySubmission(data, vault, hackerProfile);
 
         if (res.success) {
           setSubmissionData({
@@ -187,7 +191,7 @@ export const SubmissionFormPage = () => {
         });
       }
     },
-    [vault]
+    [vault, hackerProfile]
   );
 
   const submitSubmission = useCallback(async () => {
@@ -300,20 +304,19 @@ export const SubmissionFormPage = () => {
         verified: false,
         submission: "",
         submissionMessage: "",
-        descriptions: auditWizardSubmission.submissionsDescriptions.descriptions.map((desc: any) => {
-          const severity = (vault.description?.severities as IVulnerabilitySeverity[]).find(
-            (sev) =>
-              desc.severity.toLowerCase()?.includes(sev.name.toLowerCase()) ||
-              sev.name.toLowerCase()?.includes(desc.severity.toLowerCase())
-          );
-          return {
-            title: desc.title,
-            description: desc.description,
-            severity: severity?.name.toLowerCase() ?? desc.severity.toLowerCase(),
-            isEncrypted: !severity?.decryptSubmissions,
-            files: [],
-          };
-        }),
+        descriptions: auditWizardSubmission.submissionsDescriptions.descriptions.map((desc: any) => ({
+          type: "new", // or "complement" based on your logic
+          complementTestFiles: [],
+          complementFixFiles: [],
+          title: desc.title,
+          description: desc.description,
+          severity: desc.severity,
+          isEncrypted: desc.isEncrypted,
+          files: desc.files || [],
+          testNotApplicable: false,
+          needsFix: false,
+          needsTest: false,
+        })),
       },
       submissionResult: undefined,
     }));
@@ -397,7 +400,7 @@ export const SubmissionFormPage = () => {
         </div>
       </StyledSubmissionFormPage>
 
-      {isLoadingCollectedSignature && <Loading fixed extraText={`${t("loading")}...`} />}
+      {requireMessageSignature && isLoadingCollectedSignature && <Loading fixed extraText={`${t("loading")}...`} />}
     </>
   );
 };
