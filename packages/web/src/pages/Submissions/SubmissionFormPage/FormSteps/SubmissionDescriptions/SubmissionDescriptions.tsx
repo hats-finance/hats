@@ -217,12 +217,6 @@ export function SubmissionDescriptions() {
       `${submissionData.project?.projectName}-${new Date().getTime()}.json`
     );
 
-    console.log({
-      submissionMessage,
-      submissionInfo: JSON.stringify(submissionInfo),
-      descriptions: formData.descriptions,
-    });
-
     setSubmissionData((prev) => {
       if (!prev) return prev;
       return {
