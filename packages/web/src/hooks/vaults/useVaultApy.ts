@@ -56,7 +56,7 @@ export const useVaultApy = (vault?: IVault): IVaultApy[] => {
           vault.amountsInfo?.depositedAmount ? +vault.amountsInfo.depositedAmount.tokens : 0
         );
 
-        apys.push({ rewardController: controller, apy });
+        if (!isNaN(apy)) apys.push({ rewardController: controller, apy });
       }
 
       setVaultApys(apys);
@@ -87,7 +87,7 @@ function calculateAPY(
   // Calculate the APY
   // Note: vaultTokenStaked should be the total value of tokens staked in the vault
   // in the same currency as tokenPrice for an accurate APY calculation
-  const apy = (annualRewardValue / vaultTokenStaked) * 100;
+  const apy = vaultTokenStaked > 0 ? (annualRewardValue / vaultTokenStaked) * 100 : 0;
 
   return apy > 100 ? +apy.toFixed(0) : +apy.toFixed(2);
 }

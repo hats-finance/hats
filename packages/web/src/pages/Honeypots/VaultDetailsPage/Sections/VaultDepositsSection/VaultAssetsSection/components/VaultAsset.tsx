@@ -17,6 +17,7 @@ export const VaultAsset = ({ vault }: VaultAssetProps) => {
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
   const vaultApy = useVaultApy(vault);
+  console.log(vaultApy);
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
   const depositsDisabled = !vault.committeeCheckedIn || vault.depositPause;
