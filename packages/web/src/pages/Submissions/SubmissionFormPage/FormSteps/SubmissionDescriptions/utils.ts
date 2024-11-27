@@ -1,4 +1,6 @@
+import { IPFS_PREFIX } from "constants/constants";
 import { BASE_SERVICE_URL } from "settings";
+import { IHackerProfile } from "types";
 import { ISubmissionData, ISubmissionsDescriptionsData } from "../../types";
 
 export const SUBMISSION_DESCRIPTION_TEMPLATE = `**Description**\\
@@ -20,7 +22,8 @@ Describe how the vulnerability can be exploited.
 
 export const getAuditSubmissionTexts = (
   submissionData: ISubmissionData,
-  descriptions: ISubmissionsDescriptionsData["descriptions"]
+  descriptions: ISubmissionsDescriptionsData["descriptions"],
+  hackerProfile: IHackerProfile | undefined
 ) => {
   const toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${
     submissionData.contact?.communicationChannelType
@@ -29,10 +32,18 @@ export const getAuditSubmissionTexts = (
 
   ${descriptions
     .filter((description) => description.isEncrypted)
-    .map(
-      (description, idx) => `
+    .map((description, idx) =>
+      description.type === "new"
+        ? `
 ## [ISSUE #${idx + 1}]: ${description.title} (${description.severity})\n
 ${description.description.trim()}
+##`
+        : `
+## [ISSUE #${idx + 1}]: COMPLEMENTARY [Issue #${description.complementGhIssueNumber}] ${description.complementGhIssue?.title}\n\n
+### Fix files
+${description.complementFixFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}\n
+### Test files
+${description.complementTestFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}
 ##`
     )
     .join("\n")}`;
@@ -40,12 +51,15 @@ ${description.description.trim()}
   const decrypted = `**Project Name:** ${submissionData.project?.projectName}\n
 **Project Id:** ${submissionData.project?.projectId}\n
 **Github username:** ${submissionData.contact?.githubUsername || "---"}\n
-**Twitter username:** ${submissionData.contact?.twitterUsername || "---"}
+**Twitter username:** ${submissionData.contact?.twitterUsername || "---"}\n
+**HATS Profile:** ${hackerProfile ? `${hackerProfile?.username}` : "---"}\n
+**Beneficiary:** ${submissionData.contact?.beneficiary}
     
     ${descriptions
       .filter((description) => !description.isEncrypted)
-      .map(
-        (description, idx) => `
+      .map((description, idx) =>
+        description.type === "new"
+          ? `
 ## [ISSUE #${idx + 1}]: ${description.title} (${description.severity})\n
 ${description.description.trim()}
 ${
@@ -53,6 +67,13 @@ ${
     ? `**Files:**\n${description.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}`
     : ""
 }
+##`
+          : `
+## [ISSUE #${idx + 1}]: COMPLEMENTARY [Issue #${description.complementGhIssueNumber}] ${description.complementGhIssue?.title}\n\n
+### Fix files
+${description.complementFixFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}\n
+### Test files ${description.testNotApplicable ? "(NOT APPLICABLE) " : ""}
+${description.complementTestFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}
 ##`
       )
       .join("\n")}`;
@@ -68,11 +89,13 @@ ${
 
 export const getBountySubmissionTexts = (
   submissionData: ISubmissionData,
-  descriptions: ISubmissionsDescriptionsData["descriptions"]
+  descriptions: ISubmissionsDescriptionsData["descriptions"],
+  hackerProfile: IHackerProfile | undefined
 ) => {
   const toEncrypt = `**Project Name:** ${submissionData.project?.projectName}\n
 **Project Id:** ${submissionData.project?.projectId}\n
 **Beneficiary:** ${submissionData.contact?.beneficiary}\n
+**HATS Profile:** ${hackerProfile ? `${hackerProfile?.username}` : "---"}\n
 **Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})
     
     ${descriptions
@@ -95,21 +118,42 @@ ${description.description.trim()}
 
 export const getGithubIssueDescription = (
   submissionData: ISubmissionData,
-  description: ISubmissionsDescriptionsData["descriptions"][0]
+  description: ISubmissionsDescriptionsData["descriptions"][0],
+  hackerProfile: IHackerProfile | undefined
 ) => {
-  return `${submissionData.ref === "audit-wizard" ? "***Submitted via auditwizard.io***\n" : ""}
-**Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
+  if (description.type === "new") {
+    return `${submissionData.ref === "audit-wizard" ? "***Submitted via auditwizard.io***\n" : ""}
+  **Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
+  **Twitter username:** ${submissionData.contact?.twitterUsername ? `${submissionData.contact?.twitterUsername}` : "--"}
+  **HATS Profile:** ${hackerProfile ? `${hackerProfile?.username}` : "---"}
+  **Beneficiary:** ${submissionData.contact?.beneficiary}
+  **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
+  **Severity:** ${description.severity}
+  
+  **Description:**
+  ${description.description.trim()}
+    
+  ${
+    description.files && description.files.length > 0
+      ? `**Files:**\n${description.files
+          .map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`)
+          .join("\n")}`
+      : ""
+  }
+  `;
+  }
+
+  return `**Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
 **Twitter username:** ${submissionData.contact?.twitterUsername ? `${submissionData.contact?.twitterUsername}` : "--"}
+**HATS Profile:** ${hackerProfile ? `${hackerProfile?.username}` : "---"}
+**Beneficiary:** ${submissionData.contact?.beneficiary}
 **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
-**Severity:** ${description.severity}
 
 **Description:**
-${description.description.trim()}
-  
-${
-  description.files && description.files.length > 0
-    ? `**Files:**\n${description.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}`
-    : ""
-}
+### Fix files
+${description.complementFixFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}\n
+### Test files ${description.testNotApplicable ? "(NOT APPLICABLE) " : ""}
+${description.complementTestFiles.map((file) => `  - ${file.path} (${IPFS_PREFIX}/${file.file.ipfsHash})`).join("\n")}
+##
 `;
 };

@@ -212,6 +212,8 @@ export async function createPayoutFromSubmissions(
 }
 
 export async function getGithubIssuesFromVault(vault: IVault): Promise<GithubIssue[]> {
+  if (!vault) return [];
+
   const extractTxHashFromBody = (issue: GithubIssue): any => {
     // const txHash = issue.body.match(/(0x[a-fA-F0-9]{64})/)?.[0];
     const txHash = issue.body.match(/(\*\*Submission hash \(on-chain\):\*\* (.*)\n)/)?.[2] ?? undefined;
@@ -228,6 +230,10 @@ export async function getGithubIssuesFromVault(vault: IVault): Promise<GithubIss
       validLabels: issue.labels
         .filter((label: any) => severitiesOrder.includes((label.name as string).toLowerCase()))
         .map((label: any) => (label.name as string).toLowerCase()),
+      bonusPointsLabels: {
+        needsFix: issue.labels.some((label: any) => (label.name as string).toLowerCase() === "needs-fix"),
+        needsTest: issue.labels.some((label: any) => (label.name as string).toLowerCase() === "needs-test"),
+      },
       createdAt: issue.created_at,
       body: issue.body,
       txHash: extractTxHashFromBody(issue),

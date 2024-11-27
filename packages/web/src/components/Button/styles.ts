@@ -36,6 +36,8 @@ const getVariableByTextColor = (textColor: ButtonProps["textColor"], styleType: 
       return "--primary";
     case "error":
       return "--error-red";
+    case "white":
+      return "--white";
     default:
       if (styleType === "invisible") return "--secondary";
       return "--white";

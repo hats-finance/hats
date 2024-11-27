@@ -240,7 +240,7 @@ export const StyledVaultCard = styled.div<{
       margin-top: ${getSpacing(3)};
       display: grid;
       align-items: flex-start;
-      grid-template-columns: ${isAudit ? "2fr 3fr" : "1fr 1fr"};
+      grid-template-columns: ${isAudit ? "1fr 3fr" : "1fr 1fr"};
       gap: ${getSpacing(2)};
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
@@ -249,8 +249,8 @@ export const StyledVaultCard = styled.div<{
 
       .assets {
         display: flex;
-        flex-wrap: wrap;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
         gap: ${getSpacing(1)};
 
         @media (max-width: ${breakpointsDefinition.mediumMobile}) {
@@ -258,6 +258,12 @@ export const StyledVaultCard = styled.div<{
           border-bottom: 1px solid var(--primary-light);
           padding-bottom: ${getSpacing(3)};
           gap: ${getSpacing(2)};
+        }
+
+        .assets-list {
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(1)};
         }
 
         .subtitle {

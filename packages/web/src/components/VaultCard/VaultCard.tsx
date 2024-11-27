@@ -159,6 +159,8 @@ export const VaultCard = ({
     ONE_LINER_FALLBACK[vault.id] ??
     "Nulla facilisi. Donec nec dictum eros. Cras et velit viverra, dapibus velit fringilla, bibendum mi aptent. Class aptent taciti sociosqu ad litora.";
 
+  const bonusPointsEnabled = vault.description?.["project-metadata"]?.bonusPointsEnabled;
+
   const getAuditStatusPill = () => {
     if (!vault.description) return null;
     if (!vault.description["project-metadata"].endtime) return null;
@@ -470,9 +472,10 @@ export const VaultCard = ({
       {!reducedStyles && (
         <div className="vault-actions">
           <div className="assets">
-            <span className="subtitle">{auditPayout ? t("paidAssets") : t("assetsInVault")}</span>
-            <VaultAssetsPillsList auditPayout={auditPayout} vaultData={vaultData} />
-
+            <div className="assets-list">
+              <span className="subtitle">{auditPayout ? t("paidAssets") : t("assetsInVault")}</span>
+              <VaultAssetsPillsList auditPayout={auditPayout} vaultData={vaultData} />
+            </div>
             <OptedInList editSessionIdOrAddress={vault.id} />
           </div>
           <div className="actions">
@@ -485,6 +488,17 @@ export const VaultCard = ({
                 onClick={goToDeposits}
               >
                 {t("deposits")}
+              </Button>
+            )}
+            {isAudit && vault.dateStatus === "on_time" && !auditPayout && !hideSubmit && bonusPointsEnabled && (
+              <Button
+                disabled={noActions}
+                size="medium"
+                filledColor={isAudit ? "primary" : "secondary"}
+                styleType="outlined"
+                onClick={goToSubmitVulnerability}
+              >
+                {t("claimFixAndTest")}
               </Button>
             )}
             {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && !hideSubmit && (

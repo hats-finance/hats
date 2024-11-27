@@ -49,6 +49,10 @@ export type GithubIssue = {
   createdBy: number;
   labels: string[];
   validLabels: string[];
+  bonusPointsLabels: {
+    needsFix: boolean;
+    needsTest: boolean;
+  };
   createdAt: string;
   body: string;
   txHash?: string;
