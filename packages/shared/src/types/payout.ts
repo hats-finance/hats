@@ -49,13 +49,26 @@ export type GithubIssue = {
   createdBy: number;
   labels: string[];
   validLabels: string[];
+  createdAt: string;
+  body: string;
+  txHash?: string;
   bonusPointsLabels: {
     needsFix: boolean;
     needsTest: boolean;
   };
+};
+
+export type GithubPR = {
+  id: number;
+  number: number;
+  title: string;
+  createdBy: number;
+  labels: string[];
   createdAt: string;
   body: string;
   txHash?: string;
+  bonusSubmissionStatus: "COMPLETE" | "INCOMPLETE" | "PENDING";
+  linkedIssueNumber?: number;
 };
 
 export type IPayoutData = ISinglePayoutData | ISplitPayoutData;

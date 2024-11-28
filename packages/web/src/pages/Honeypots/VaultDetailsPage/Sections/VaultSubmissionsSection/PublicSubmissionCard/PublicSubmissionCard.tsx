@@ -1,4 +1,4 @@
-import { GithubIssue, IVault, allowedElementsMarkdown, parseSeverityName } from "@hats.finance/shared";
+import { GithubIssue, GithubPR, IVault, allowedElementsMarkdown, parseSeverityName } from "@hats.finance/shared";
 import MDEditor from "@uiw/react-md-editor";
 import { Pill } from "components";
 import moment from "moment";
@@ -10,9 +10,10 @@ import { StyledPublicSubmissionCard } from "./styles";
 type PublicSubmissionCardProps = {
   vault: IVault;
   submission: GithubIssue;
+  linkedPRs?: GithubPR[];
 };
 
-function PublicSubmissionCard({ vault, submission }: PublicSubmissionCardProps) {
+function PublicSubmissionCard({ vault, submission, linkedPRs = [] }: PublicSubmissionCardProps) {
   const { t } = useTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +44,7 @@ function PublicSubmissionCard({ vault, submission }: PublicSubmissionCardProps) 
         {showExtraInfo &&
           bonusPointsEnabled &&
           (submission.bonusPointsLabels.needsFix || submission.bonusPointsLabels.needsTest) && (
-            <SplitPointsActions vault={vault} submission={submission} />
+            <SplitPointsActions vault={vault} submission={submission} linkedPRs={linkedPRs} />
           )}
       </div>
 
