@@ -14,11 +14,11 @@
   "private": false,
   "devDependencies": {
     "@types/uuid": "^9.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@safe-global/protocol-kit": "^1.0.1",
-    "@safe-global/safe-core-sdk-types": "^2.0.0",
+    "@safe-global/protocol-kit": "^5.0.4",
+    "@safe-global/types-kit": "^1.0.0",
     "@wagmi/chains": "1.8.0-cjs",
     "ethers": "^5.7.2",
     "uuid": "^9.0.0"

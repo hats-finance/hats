@@ -1,7 +1,7 @@
 import { HATTimelockController_abi, IVault, getGnosisSafeTxServiceBaseUrl } from "@hats.finance/shared";
 import SafeApiKit from "@safe-global/api-kit";
-import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
-import { MetaTransactionData } from "@safe-global/safe-core-sdk-types";
+import Safe from "@safe-global/protocol-kit";
+import { MetaTransactionData } from "@safe-global/types-kit";
 import { Signer, ethers } from "ethers";
 import { utils } from "ethers";
 import { appChains } from "settings";
@@ -25,10 +25,14 @@ export const createVaultGovActionsProposalOnSafe = async (
       return false;
     }
 
-    const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: extra.signer as Signer });
+    const protocolKit = await Safe.init({
+      provider: (extra.signer.provider as any)?.provider as never,
+      safeAddress: vault.committee,
+      signer: (await extra.signer.getAddress()) as never,
+    });
+
     const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
-    const safeService = new SafeApiKit({ txServiceUrl, ethAdapter });
-    const safeSdk = await Safe.create({ ethAdapter, safeAddress: multisigAddress });
+    const safeService = new SafeApiKit({ txServiceUrl: `${txServiceUrl}/api`, chainId: BigInt(vault.chainId) });
 
     const timelockContractInterface = new ethers.utils.Interface(HATTimelockController_abi);
 
@@ -68,12 +72,12 @@ export const createVaultGovActionsProposalOnSafe = async (
     }
 
     const nonce = await safeService.getNextNonce(multisigAddress);
-    const safeTransaction = await safeSdk.createTransaction({
-      safeTransactionData,
+    const safeTransaction = await protocolKit.createTransaction({
+      transactions: safeTransactionData,
       options: { nonce },
     });
-    const safeTxHash = await safeSdk.getTransactionHash(safeTransaction);
-    const senderSignature = await safeSdk.signTypedData(safeTransaction);
+    const safeTxHash = await protocolKit.getTransactionHash(safeTransaction);
+    const senderSignature = await protocolKit.signTypedData(safeTransaction);
     await safeService.proposeTransaction({
       safeAddress: multisigAddress,
       safeTransactionData: safeTransaction.data,
