@@ -1,7 +1,7 @@
-import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
-import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
+import Safe from "@safe-global/protocol-kit";
+import { SafeTransaction } from "@safe-global/types-kit";
 import axios, { AxiosResponse } from "axios";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, Signer, ethers } from "ethers";
 import { formatUnits, getAddress, parseUnits } from "ethers/lib/utils.js";
 import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3ClaimsManager_abi } from "../abis";
 import {
@@ -55,14 +55,18 @@ export const createNewSplitPayoutBeneficiary = (): ISplitPayoutBeneficiary => {
 };
 
 export const getExecutePayoutSafeTransaction = async (
-  provider: ethers.providers.Provider,
+  signer: Signer,
   committee: string,
   payout: IPayoutResponse
 ): Promise<{ tx: SafeTransaction; txHash: string }> => {
-  const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: provider });
-  const safeSdk = await Safe.create({ ethAdapter: ethAdapter, safeAddress: committee });
-
   const vaultInfo = payout.vaultInfo;
+
+  const protocolKit = await Safe.init({
+    provider: (signer.provider as any)?.provider as never,
+    safeAddress: committee,
+    signer: (await signer.getAddress()) as never,
+  });
+
   const percentageToPay = Math.round(Number(payout.payoutData.percentageToPay) * 100);
 
   if (payout.payoutData.type === "single") {
@@ -100,15 +104,16 @@ export const getExecutePayoutSafeTransaction = async (
       ]);
     }
 
-    const safeTransaction = await safeSdk.createTransaction({
-      safeTransactionData: {
-        to: contractAddress,
-        data: encodedExecPayoutData,
-        value: "0",
-        safeTxGas: "0",
-      },
+    const safeTransaction = await protocolKit.createTransaction({
+      transactions: [
+        {
+          to: contractAddress,
+          data: encodedExecPayoutData,
+          value: "0",
+        },
+      ],
     });
-    const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
+    const safeTransactionHash = await protocolKit.getTransactionHash(safeTransaction);
 
     return { tx: safeTransaction, txHash: safeTransactionHash };
   } else {
@@ -232,8 +237,8 @@ export const getExecutePayoutSafeTransaction = async (
       payout.payoutDescriptionHash,
     ]);
 
-    const safeTransaction = await safeSdk.createTransaction({
-      safeTransactionData: [
+    const safeTransaction = await protocolKit.createTransaction({
+      transactions: [
         {
           to: paymentSplitterFactoryAddress,
           data: encodedPaymentSplitterCreation,
@@ -246,7 +251,7 @@ export const getExecutePayoutSafeTransaction = async (
         },
       ],
     });
-    const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
+    const safeTransactionHash = await protocolKit.getTransactionHash(safeTransaction);
 
     return { tx: safeTransaction, txHash: safeTransactionHash };
   }

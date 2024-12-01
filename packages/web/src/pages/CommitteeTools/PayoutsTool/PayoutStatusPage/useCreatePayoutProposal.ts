@@ -1,20 +1,19 @@
 import { IPayoutResponse, IVault, getExecutePayoutSafeTransaction, getGnosisSafeTxServiceBaseUrl } from "@hats.finance/shared";
 import SafeApiKit from "@safe-global/api-kit";
-import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
-import { Signer, ethers, utils } from "ethers";
+import Safe from "@safe-global/protocol-kit";
+import { utils } from "ethers";
 import { useState } from "react";
-import { useAccount, useProvider, useSigner } from "wagmi";
+import { useAccount, useSigner } from "wagmi";
 
 export const useCreatePayoutProposal = (vault?: IVault, payout?: IPayoutResponse) => {
   const { address: account } = useAccount();
-  const provider = useProvider();
   const { data: signer } = useSigner();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const create = async () => {
     try {
-      if (!vault || !payout || !account) return false;
+      if (!vault || !payout || !account || !signer) return false;
       setIsLoading(true);
 
       let multisigAddress: string | undefined;
@@ -30,15 +29,19 @@ export const useCreatePayoutProposal = (vault?: IVault, payout?: IPayoutResponse
         return false;
       }
 
-      const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer as Signer });
+      const protocolKit = await Safe.init({
+        provider: (signer.provider as any)?.provider as never,
+        safeAddress: multisigAddress,
+        signer: (await signer.getAddress()) as never,
+      });
+
       const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
-      const safeService = new SafeApiKit({ txServiceUrl, ethAdapter });
-      const safeSdk = await Safe.create({ ethAdapter, safeAddress: multisigAddress });
+      const safeService = new SafeApiKit({ txServiceUrl: `${txServiceUrl}/api`, chainId: BigInt(vault.chainId) });
 
-      const { tx: safeTransaction } = await getExecutePayoutSafeTransaction(provider, multisigAddress, payout);
+      const { tx: safeTransaction } = await getExecutePayoutSafeTransaction(signer, multisigAddress, payout);
 
-      const safeTxHash = await safeSdk.getTransactionHash(safeTransaction);
-      const senderSignature = await safeSdk.signTypedData(safeTransaction);
+      const safeTxHash = await protocolKit.getTransactionHash(safeTransaction);
+      const senderSignature = await protocolKit.signTypedData(safeTransaction);
       await safeService.proposeTransaction({
         safeAddress: multisigAddress,
         safeTransactionData: safeTransaction.data,
