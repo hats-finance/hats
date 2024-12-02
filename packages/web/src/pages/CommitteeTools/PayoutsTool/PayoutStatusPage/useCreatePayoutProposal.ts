@@ -3,11 +3,12 @@ import SafeApiKit from "@safe-global/api-kit";
 import Safe from "@safe-global/protocol-kit";
 import { utils } from "ethers";
 import { useState } from "react";
-import { useAccount, useSigner } from "wagmi";
+import { useAccount, useProvider, useSigner } from "wagmi";
 
 export const useCreatePayoutProposal = (vault?: IVault, payout?: IPayoutResponse) => {
   const { address: account } = useAccount();
   const { data: signer } = useSigner();
+  const provider = useProvider();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,7 +39,10 @@ export const useCreatePayoutProposal = (vault?: IVault, payout?: IPayoutResponse
       const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
       const safeService = new SafeApiKit({ txServiceUrl: `${txServiceUrl}/api`, chainId: BigInt(vault.chainId) });
 
-      const { tx: safeTransaction } = await getExecutePayoutSafeTransaction(signer, multisigAddress, payout);
+      const providerUrl = provider.chains?.find((c) => c.id === vault.chainId)?.rpcUrls.default.http[0];
+      if (!providerUrl) return;
+
+      const { tx: safeTransaction } = await getExecutePayoutSafeTransaction(providerUrl, multisigAddress, payout);
 
       const safeTxHash = await protocolKit.getTransactionHash(safeTransaction);
       const senderSignature = await protocolKit.signTypedData(safeTransaction);
