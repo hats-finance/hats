@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { useNetwork, useSigner } from "wagmi";
+import { useNetwork, useProvider, useSigner } from "wagmi";
 
 export class ExecutePayoutContract {
   /**
@@ -20,6 +20,7 @@ export class ExecutePayoutContract {
     const { t } = useTranslation();
     const { chain } = useNetwork();
     const { data: signer } = useSigner();
+    const provider = useProvider();
 
     const [data, setData] = useState<TransactionResult | undefined>();
     const [isLoading, setIsLoading] = useState(false);
@@ -49,8 +50,11 @@ export class ExecutePayoutContract {
           console.log("Safe SDK done");
 
           console.log("Getting safe TX");
+          const providerUrl = provider.chains?.find((c) => c.id === chain?.id)?.rpcUrls.default.http[0];
+          if (!providerUrl) return;
+
           const { tx: safeTransaction, txHash: safeTransactionHash } = await getExecutePayoutSafeTransaction(
-            signer,
+            providerUrl,
             vault.committee,
             payout
           );
