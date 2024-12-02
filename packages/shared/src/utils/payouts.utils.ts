@@ -55,16 +55,15 @@ export const createNewSplitPayoutBeneficiary = (): ISplitPayoutBeneficiary => {
 };
 
 export const getExecutePayoutSafeTransaction = async (
-  signer: Signer,
+  providerUrl: string,
   committee: string,
   payout: IPayoutResponse
 ): Promise<{ tx: SafeTransaction; txHash: string }> => {
   const vaultInfo = payout.vaultInfo;
 
   const protocolKit = await Safe.init({
-    provider: (signer.provider as any)?.provider as never,
+    provider: providerUrl,
     safeAddress: committee,
-    signer: (await signer.getAddress()) as never,
   });
 
   const percentageToPay = Math.round(Number(payout.payoutData.percentageToPay) * 100);
