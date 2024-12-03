@@ -1,4 +1,4 @@
-import { GithubIssue, ISubmittedSubmission, IVulnerabilitySeverity, parseSeverityName } from "@hats.finance/shared";
+import { GithubIssue, GithubPR, ISubmittedSubmission, IVulnerabilitySeverity, parseSeverityName } from "@hats.finance/shared";
 import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import BoxUnselected from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
@@ -18,7 +18,7 @@ type SubmissionCardProps = {
   inPayout?: boolean;
   isChecked?: boolean;
   onCheckChange?: (submission: ISubmittedSubmission) => void;
-  ghIssue?: GithubIssue;
+  ghIssue?: GithubIssue | GithubPR;
 };
 
 export const SubmissionCard = ({
@@ -36,6 +36,8 @@ export const SubmissionCard = ({
   const submissionData = submission?.submissionDataStructure;
   const commChannel = submissionData?.communicationChannel;
   const severityColors = getSeveritiesColorsArray(vault);
+
+  const isComplementary = !!(ghIssue as GithubPR)?.linkedIssueNumber;
 
   const createdAt = new Date(+submission?.createdAt * 1000);
 
@@ -67,25 +69,55 @@ export const SubmissionCard = ({
         <div className="content">
           {submissionData?.severity && (
             <span className="severity">
-              {ghIssue && (
+              {ghIssue && !isComplementary && (
                 <span>
                   {t("ghIssue")} #{ghIssue.number} -
                 </span>
               )}
-              <span>{t("submittedAs")}:</span>
+              {!isComplementary && <span>{t("submittedAs")}:</span>}
               <Pill
                 textColor={severityColors[severityIndex ?? 0]}
                 isSeverity={!ghIssue}
                 text={parseSeverityName(submissionData?.severity) ?? t("noSeverity")}
               />
-              {ghIssue && ghIssue?.validLabels.length > 0 && (
+              {ghIssue && isComplementary ? (
+                (() => {
+                  const getText = () => {
+                    const labels = (ghIssue as GithubPR).labels;
+                    if (labels.includes("complete-fix") && labels.includes("complete-test")) {
+                      return `COMPLETE (fix & test) -> ${(ghIssue as GithubPR).linkedIssue?.severity}`;
+                    } else if (labels.includes("complete-fix")) {
+                      return `COMPLETE (fix) -> ${(ghIssue as GithubPR).linkedIssue?.severity}`;
+                    } else if (labels.includes("complete-test")) {
+                      return `COMPLETE (test) -> ${(ghIssue as GithubPR).linkedIssue?.severity}`;
+                    }
+
+                    return (ghIssue as GithubPR).bonusSubmissionStatus;
+                  };
+
+                  return (
+                    <>
+                      <span>{t("status")}:</span>
+                      <Pill
+                        textColor={(ghIssue as GithubPR).bonusSubmissionStatus === "COMPLETE" ? "#3ee136" : "#bab441"}
+                        isSeverity
+                        text={getText()}
+                      />
+                    </>
+                  );
+                })()
+              ) : (
                 <>
-                  <span>{t("labeledAs")}:</span>
-                  <Pill
-                    textColor={severityColors[severityIndex ?? 0]}
-                    isSeverity
-                    text={parseSeverityName(ghIssue.validLabels[0])}
-                  />
+                  {ghIssue && (ghIssue as GithubIssue)?.validLabels?.length > 0 && (
+                    <>
+                      <span>{t("labeledAs")}:</span>
+                      <Pill
+                        textColor={severityColors[severityIndex ?? 0]}
+                        isSeverity
+                        text={parseSeverityName((ghIssue as GithubIssue).validLabels[0])}
+                      />
+                    </>
+                  )}
                 </>
               )}
             </span>

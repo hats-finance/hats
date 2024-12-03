@@ -140,7 +140,9 @@ export const extractSubmissionData = (
 
       return {
         beneficiary: beneficiary ?? "--",
-        severity: firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1),
+        severity: firstLine?.startsWith("COMPLEMENTARY")
+          ? "complementary"
+          : firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1),
         title: firstLine?.slice(0, firstLine.lastIndexOf("(") - 1) ?? "--",
         content: messageToUse ?? "--",
         githubUsername: githubUsername ?? "--",
@@ -237,7 +239,10 @@ export async function getGithubPRsFromVault(vault: IVault): Promise<GithubPR[]> 
       createdAt: pr.created_at,
       body: pr.body,
       txHash: extractTxHashFromBody(pr),
-      bonusSubmissionStatus: pr.labels.some((label: any) => (label.name as string).toLowerCase() === "complete")
+      bonusSubmissionStatus: pr.labels.some(
+        (label: any) =>
+          (label.name as string).toLowerCase() === "complete-fix" || (label.name as string).toLowerCase() === "complete-test"
+      )
         ? "COMPLETE"
         : pr.labels.some((label: any) => (label.name as string).toLowerCase() === "incomplete")
         ? "INCOMPLETE"
@@ -294,4 +299,28 @@ export function getGhIssueFromSubmission(submission?: ISubmittedSubmission, ghIs
   const sameTitle = sameTxHash.filter((issue) => issue.title === submission.submissionDataStructure?.title);
 
   return sameTitle[0];
+}
+
+export function getGhPRFromSubmission(
+  submission?: ISubmittedSubmission,
+  ghPRs?: GithubPR[],
+  ghIssues?: GithubIssue[]
+): GithubPR | undefined {
+  if (!ghPRs || !submission) return undefined;
+
+  const sameTxHash = ghPRs.filter((pr) => pr.txHash === submission.txid);
+  const sameTitle = sameTxHash.filter((pr) =>
+    submission.submissionDataStructure?.title.startsWith(`COMPLEMENTARY [Issue #${pr.linkedIssueNumber}]`)
+  );
+
+  const prFound = sameTitle[0];
+  const linkedIssue = ghIssues?.find((issue) => issue.number === prFound?.linkedIssueNumber);
+
+  return {
+    ...prFound,
+    linkedIssue: {
+      ...(linkedIssue as GithubIssue),
+      severity: linkedIssue?.validLabels[0],
+    },
+  };
 }

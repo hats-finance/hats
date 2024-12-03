@@ -1,4 +1,4 @@
-import { GithubIssue, IPayoutResponse, ISplitPayoutData, IVault } from "@hats.finance/shared";
+import { GithubIssue, GithubPR, IPayoutResponse, ISplitPayoutData, IVault } from "@hats.finance/shared";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";
@@ -8,7 +8,12 @@ import useModal from "hooks/useModal";
 import { useOnChange } from "hooks/usePrevious";
 import { hasSubmissionData } from "pages/CommitteeTools/PayoutsTool/utils/hasSubmissionData";
 import { SubmissionCard } from "pages/CommitteeTools/SubmissionsTool/SubmissionsListPage/SubmissionCard";
-import { getGhIssueFromSubmission, getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
+import {
+  getGhIssueFromSubmission,
+  getGhPRFromSubmission,
+  getGithubIssuesFromVault,
+  getGithubPRsFromVault,
+} from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
 import { useVaultSubmissionsByKeystore } from "pages/CommitteeTools/SubmissionsTool/submissionsService.hooks";
 import { useEffect, useState } from "react";
 import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
@@ -99,6 +104,7 @@ export const SplitPayoutBeneficiaryForm = ({
   });
 
   const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
+  const [vaultGithubPRs, setVaultGithubPRs] = useState<GithubPR[] | undefined>(undefined);
   const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
 
   // Get information from github
@@ -113,6 +119,12 @@ export const SplitPayoutBeneficiaryForm = ({
       setIsLoadingGH(false);
     };
     loadGhIssues();
+
+    const loadGhPRs = async () => {
+      const ghPRs = await getGithubPRsFromVault(vault);
+      setVaultGithubPRs(ghPRs);
+    };
+    loadGhPRs();
   }, [vault, vaultGithubIssues, beneficiarySubmission, isLoadingGH]);
 
   const getMoreOptions = () => {
@@ -153,6 +165,15 @@ export const SplitPayoutBeneficiaryForm = ({
     ];
   };
 
+  console.log(
+    getGhIssueFromSubmission(
+      isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!,
+      vaultGithubIssues
+    )
+  );
+  console.log(isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!);
+  console.log(vaultGithubIssues);
+
   return (
     <div>
       <div className="mb-1">{index + 1}.</div>
@@ -166,10 +187,21 @@ export const SplitPayoutBeneficiaryForm = ({
                 submission={
                   isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!
                 }
-                ghIssue={getGhIssueFromSubmission(
-                  isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!,
-                  vaultGithubIssues
-                )}
+                ghIssue={
+                  getGhIssueFromSubmission(
+                    isPayoutCreated
+                      ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission!
+                      : beneficiarySubmission!,
+                    vaultGithubIssues
+                  ) ||
+                  getGhPRFromSubmission(
+                    isPayoutCreated
+                      ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission!
+                      : beneficiarySubmission!,
+                    vaultGithubPRs,
+                    vaultGithubIssues
+                  )
+                }
               />
             </div>
           ) : (
