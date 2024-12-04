@@ -85,6 +85,7 @@ export const SubmissionCard = ({
                   const getText = () => {
                     const labels = (ghIssue as GithubPR).labels;
                     if (labels.includes("complete-fix") && labels.includes("complete-test")) {
+                      console.log(ghIssue);
                       return `COMPLETE (fix & test) -> ${(ghIssue as GithubPR).linkedIssue?.severity}`;
                     } else if (labels.includes("complete-fix")) {
                       return `COMPLETE (fix) -> ${(ghIssue as GithubPR).linkedIssue?.severity}`;

@@ -695,7 +695,7 @@ export const SubmissionsListPage = () => {
                                   submission={submission}
                                   ghIssue={
                                     getGhIssueFromSubmission(submission, vaultGithubIssues) ||
-                                    getGhPRFromSubmission(submission, vaultGithubPRs)
+                                    getGhPRFromSubmission(submission, vaultGithubPRs, vaultGithubIssues)
                                   }
                                 />
                               );
