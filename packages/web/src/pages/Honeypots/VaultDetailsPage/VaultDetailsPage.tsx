@@ -12,7 +12,7 @@ import { HoneypotsRoutePaths } from "../router";
 import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection, VaultSubmissionsSection } from "./Sections";
 import { VaultLeaderboardSection } from "./Sections/VaultLeaderboardSection/VaultLeaderboardSection";
 import { EulerCTFTAndC } from "./extra/EulerCTFTAndC";
-import { useCollectMessageSignature, useSavedSubmissions, useUserHasCollectedSignature } from "./hooks";
+import { useCollectMessageSignature, useGHIssues, useUserHasCollectedSignature } from "./hooks";
 import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
 const DETAILS_SECTIONS = [
@@ -80,7 +80,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
     error: errorCollectingSig,
   } = useCollectMessageSignature();
 
-  const { data: savedSubmissions } = useSavedSubmissions(vault);
+  const { data: savedSubmissions } = useGHIssues(vault);
   const { finished: finishedAuditPayouts } = useAuditCompetitionsVaults();
   const oldAudits = useOldAuditCompetitions();
   const allFinishedAuditCompetitions = [...finishedAuditPayouts, ...(oldAudits ?? [])];

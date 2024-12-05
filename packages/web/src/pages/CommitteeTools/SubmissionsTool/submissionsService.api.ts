@@ -1,5 +1,6 @@
 import {
   GithubIssue,
+  GithubPR,
   IPayoutData,
   ISubmittedSubmission,
   IVault,
@@ -139,7 +140,9 @@ export const extractSubmissionData = (
 
       return {
         beneficiary: beneficiary ?? "--",
-        severity: firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1),
+        severity: firstLine?.startsWith("COMPLEMENTARY")
+          ? "complementary"
+          : firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1),
         title: firstLine?.slice(0, firstLine.lastIndexOf("(") - 1) ?? "--",
         content: messageToUse ?? "--",
         githubUsername: githubUsername ?? "--",
@@ -211,6 +214,49 @@ export async function createPayoutFromSubmissions(
   return res.data.upsertedId;
 }
 
+export async function getGithubPRsFromVault(vault: IVault): Promise<GithubPR[]> {
+  if (!vault) return [];
+
+  const extractLinkedIssueNumberFromTitle = (pr: GithubPR): number | undefined => {
+    // const txHash = issue.body.match(/(0x[a-fA-F0-9]{64})/)?.[0];
+    const issueNumber = pr.title.match(/#(\d+)/)?.[1] ?? undefined;
+    return issueNumber ? parseInt(issueNumber) : undefined;
+  };
+
+  const extractTxHashFromBody = (pr: GithubPR): any => {
+    // const txHash = issue.body.match(/(0x[a-fA-F0-9]{64})/)?.[0];
+    const txHash = pr.body.match(/(\*\*Submission hash \(on-chain\):\*\* (.*)\n)/)?.[2] ?? undefined;
+    return txHash;
+  };
+
+  const mapGithubPRs = (pr: any): GithubPR => {
+    return {
+      id: pr.id,
+      number: pr.number,
+      title: pr.title,
+      createdBy: pr.user.id,
+      labels: pr.labels.map((label: any) => label.name),
+      createdAt: pr.created_at,
+      body: pr.body,
+      txHash: extractTxHashFromBody(pr),
+      bonusSubmissionStatus: pr.labels.some(
+        (label: any) =>
+          (label.name as string).toLowerCase() === "complete-fix" || (label.name as string).toLowerCase() === "complete-test"
+      )
+        ? "COMPLETE"
+        : pr.labels.some((label: any) => (label.name as string).toLowerCase() === "incomplete")
+        ? "INCOMPLETE"
+        : "PENDING",
+      linkedIssueNumber: extractLinkedIssueNumberFromTitle(pr),
+    };
+  };
+
+  const res = await axiosClient.get(`${BASE_SERVICE_URL}/github-repos/gh-prs/${vault.id}`);
+  const issues = res.data.githubPRs.map(mapGithubPRs) as GithubPR[];
+
+  return issues.filter((issue) => issue.createdBy === HATS_GITHUB_BOT_ID) ?? [];
+}
+
 export async function getGithubIssuesFromVault(vault: IVault): Promise<GithubIssue[]> {
   if (!vault) return [];
 
@@ -253,4 +299,28 @@ export function getGhIssueFromSubmission(submission?: ISubmittedSubmission, ghIs
   const sameTitle = sameTxHash.filter((issue) => issue.title === submission.submissionDataStructure?.title);
 
   return sameTitle[0];
+}
+
+export function getGhPRFromSubmission(
+  submission?: ISubmittedSubmission,
+  ghPRs?: GithubPR[],
+  ghIssues?: GithubIssue[]
+): GithubPR | undefined {
+  if (!ghPRs || !submission) return undefined;
+
+  const sameTxHash = ghPRs.filter((pr) => pr.txHash === submission.txid);
+  const sameTitle = sameTxHash.filter((pr) =>
+    submission.submissionDataStructure?.title.startsWith(`COMPLEMENTARY [Issue #${pr.linkedIssueNumber}]`)
+  );
+
+  const prFound = sameTitle[0];
+  const linkedIssue = ghIssues?.find((issue) => issue.number === prFound?.linkedIssueNumber);
+
+  return {
+    ...prFound,
+    linkedIssue: {
+      ...(linkedIssue as GithubIssue),
+      severity: linkedIssue?.validLabels[0],
+    },
+  };
 }

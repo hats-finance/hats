@@ -5,7 +5,7 @@ import VerifiedIcon from "@mui/icons-material/VerifiedOutlined";
 import { Alert, Button, HatSpinner } from "components";
 import useConfirm from "hooks/useConfirm";
 import { useTranslation } from "react-i18next";
-import { useSavedSubmissions, useVaultRepoName } from "../../hooks";
+import { useGHIssues, useGHPRs, useVaultRepoName } from "../../hooks";
 import PublicSubmissionCard from "./PublicSubmissionCard/PublicSubmissionCard";
 import { StyledSubmissionsSection } from "./styles";
 
@@ -19,8 +19,11 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
   const { t } = useTranslation();
   const confirm = useConfirm();
 
-  const { data: savedSubmissions, isLoading } = useSavedSubmissions(vault);
+  const { data: ghIssues, isLoading: isLoadingIssues } = useGHIssues(vault);
+  const { data: ghPRs, isLoading: isLoadingPRs } = useGHPRs(vault);
   const { data: repoName } = useVaultRepoName(vault);
+
+  console.log(ghPRs);
 
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
   const bonusPointsEnabled = vault.description?.["project-metadata"]?.bonusPointsEnabled;
@@ -44,7 +47,7 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
 
   const getBonusPointsSection = () => {
     if (isPrivateAudit) return null;
-    if (savedSubmissions?.length === 0) return null;
+    if (ghIssues?.length === 0) return null;
 
     return (
       <div className="bonus-points-section">
@@ -82,18 +85,23 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
         )}
       </h2>
 
-      {!isPrivateAudit && savedSubmissions?.length === 0 && (
+      {!isPrivateAudit && ghIssues?.length === 0 && (
         <Alert className="mt-5 mb-5" type="info">
           {t("thereIsNoPublicSubmission")}
         </Alert>
       )}
 
-      {!isPrivateAudit && isLoading && <HatSpinner text={`${t("gettingSubmissions")}...`} />}
+      {!isPrivateAudit && isLoadingIssues && isLoadingPRs && <HatSpinner text={`${t("gettingSubmissions")}...`} />}
 
-      {!isPrivateAudit && savedSubmissions && savedSubmissions?.length > 0 && (
+      {!isPrivateAudit && ghIssues && ghIssues?.length > 0 && (
         <div className="public-submissions">
-          {savedSubmissions.map((submission) => (
-            <PublicSubmissionCard key={submission.number} vault={vault} submission={submission} />
+          {ghIssues.map((submission) => (
+            <PublicSubmissionCard
+              key={submission.number}
+              vault={vault}
+              submission={submission}
+              linkedPRs={ghPRs?.filter((pr) => pr.linkedIssueNumber === submission.number) ?? []}
+            />
           ))}
         </div>
       )}

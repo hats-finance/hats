@@ -1,4 +1,4 @@
-import { GithubIssue, IClaimedIssue } from "@hats.finance/shared";
+import { GithubIssue, GithubPR, IClaimedIssue } from "@hats.finance/shared";
 import { IVault } from "@hats.finance/shared";
 import UploadIcon from "@mui/icons-material/FileUploadOutlined";
 import FlagIcon from "@mui/icons-material/OutlinedFlagOutlined";
@@ -26,9 +26,10 @@ export const getClaimedBy = (claimedIssue: IClaimedIssue | undefined) => {
 type SplitPointsActionsProps = {
   vault: IVault;
   submission: GithubIssue;
+  linkedPRs: GithubPR[];
 };
 
-export const SplitPointsActions = ({ vault, submission }: SplitPointsActionsProps) => {
+export const SplitPointsActions = ({ vault, submission, linkedPRs }: SplitPointsActionsProps) => {
   const { t } = useTranslation();
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -65,6 +66,7 @@ export const SplitPointsActions = ({ vault, submission }: SplitPointsActionsProp
   const { data: claimedByProfile } = useProfileByAddress(claimedByInfo?.claimedBy);
 
   const isClaimedByCurrentUser = claimedByInfo?.claimedBy.toLowerCase() === address?.toLowerCase();
+  const isOpenToSubmissions = linkedPRs.length === 0 ? true : linkedPRs?.every((pr) => pr.bonusSubmissionStatus === "INCOMPLETE");
 
   const canExecuteAction = () => {
     if (isClaimedByCurrentUser) return { can: true };
@@ -72,6 +74,10 @@ export const SplitPointsActions = ({ vault, submission }: SplitPointsActionsProp
 
     if (!isConnected) return { can: false, reason: t("youNeedToConnectYourWallet") };
     if (!isInLeadearboardBoundaries || !isProfileCreated) return { can: false, reason: t("youAreNotInTopLeaderboardPercentage") };
+    if (!isOpenToSubmissions) {
+      const isCompleted = linkedPRs.some((pr) => pr.bonusSubmissionStatus === "COMPLETE");
+      return { can: false, reason: isCompleted ? t("issueAlreadyHaveValidSubmission") : t("oneSubmissionIsBeingReviewed") };
+    }
     return { can: true };
   };
 
