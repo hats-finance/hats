@@ -29,7 +29,7 @@ export const useMultiChainVaultsV2 = () => {
     queries: Object.keys(appChains).map((chainId) => ({
       queryKey: ["subgraph", chainId],
       queryFn: () => getSubgraphData(+chainId, account),
-      refetchInterval: DATA_REFRESH_TIME,
+      // refetchInterval: DATA_REFRESH_TIME, // We dont want to refetch data automatically anymore
       refetchIntervalInBackground: false,
       retry: false,
     })),
