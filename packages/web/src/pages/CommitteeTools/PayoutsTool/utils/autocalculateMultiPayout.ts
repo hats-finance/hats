@@ -1,5 +1,10 @@
-import { ISplitPayoutBeneficiary, ISplitPayoutData } from "@hats.finance/shared";
+import { GithubPR, ISplitPayoutBeneficiary, ISplitPayoutData } from "@hats.finance/shared";
 import millify from "millify";
+
+const BONUS_POINTS_CONSTRAINTS = {
+  fix: 0.1, // 10%
+  test: 0.05, // 5%
+};
 
 const DECIMALS_TO_USE = 4;
 
@@ -98,16 +103,39 @@ export const autocalculateMultiPayoutPointingSystem = (
 
   const needPoints = beneficiaries.every((ben) => ben.percentageOfPayout === "" || ben.percentageOfPayout === undefined);
   for (let beneficiary of beneficiaries) {
-    const sevInfo = constraints.find((constraint) => constraint.severity.toLowerCase() === beneficiary.severity.toLowerCase());
-    const defaultPoints = sevInfo?.points ? `${sevInfo.points.value.first}` : "1";
+    if (beneficiary.severity.toLowerCase() === "complementary") {
+      const mainIssueSev = (beneficiary.ghIssue as GithubPR).linkedIssue?.severity;
+      const mainIssueSevInfo = constraints.find(
+        (constraint) => constraint.severity.toLowerCase() === mainIssueSev?.toLowerCase()
+      );
+      const mainIssuePoints = mainIssueSevInfo?.points ? `${mainIssueSevInfo.points.value.first}` : "1";
 
-    const beneficiaryCalculated: IBeneficiaryWithCalcs = {
-      ...beneficiary,
-      percentageOfPayout: needPoints ? defaultPoints : beneficiary.percentageOfPayout,
-      amount: 0,
-      calculatedReward: 0,
-    };
-    beneficiariesCalculated.push(beneficiaryCalculated);
+      let totalMultiplier = 0;
+
+      if (beneficiary.ghIssue?.labels?.includes("complete-fix")) totalMultiplier += BONUS_POINTS_CONSTRAINTS.fix;
+      if (beneficiary.ghIssue?.labels?.includes("complete-test")) totalMultiplier += BONUS_POINTS_CONSTRAINTS.test;
+
+      const complementaryPoints = totalMultiplier * +mainIssuePoints;
+
+      const beneficiaryCalculated: IBeneficiaryWithCalcs = {
+        ...beneficiary,
+        percentageOfPayout: needPoints ? `${complementaryPoints.toFixed(4)}` : beneficiary.percentageOfPayout,
+        amount: 0,
+        calculatedReward: 0,
+      };
+      beneficiariesCalculated.push(beneficiaryCalculated);
+    } else {
+      const sevInfo = constraints.find((constraint) => constraint.severity.toLowerCase() === beneficiary.severity.toLowerCase());
+      const defaultPoints = sevInfo?.points ? `${sevInfo.points.value.first}` : "1";
+
+      const beneficiaryCalculated: IBeneficiaryWithCalcs = {
+        ...beneficiary,
+        percentageOfPayout: needPoints ? defaultPoints : beneficiary.percentageOfPayout,
+        amount: 0,
+        calculatedReward: 0,
+      };
+      beneficiariesCalculated.push(beneficiaryCalculated);
+    }
   }
 
   const totalPointsToPay = beneficiariesCalculated.reduce((prev, curr) => prev + +curr.percentageOfPayout, 0);

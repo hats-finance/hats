@@ -1,5 +1,6 @@
 import {
   GithubIssue,
+  GithubPR,
   IPayoutData,
   ISinglePayoutData,
   ISplitPayoutData,
@@ -56,7 +57,12 @@ import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { getVaultCurator } from "utils/curator.utils";
 import { useAccount } from "wagmi";
-import { getGhIssueFromSubmission, getGithubIssuesFromVault } from "../submissionsService.api";
+import {
+  getGhIssueFromSubmission,
+  getGhPRFromSubmission,
+  getGithubIssuesFromVault,
+  getGithubPRsFromVault,
+} from "../submissionsService.api";
 import { useCreatePayoutFromSubmissions, useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
 import { StyledSubmissionsListPage } from "./styles";
@@ -102,6 +108,7 @@ export const SubmissionsListPage = () => {
   };
 
   const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
+  const [vaultGithubPRs, setVaultGithubPRs] = useState<GithubPR[] | undefined>(undefined);
   const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
 
   const { data: committeeSubmissions, isLoading, loadingProgress } = useVaultSubmissionsByKeystore();
@@ -136,11 +143,21 @@ export const SubmissionsListPage = () => {
     if (vaultFilter && vaultFilter !== "all" && onlyShowLabeled && vaultGithubIssues && vaultGithubIssues.length > 0) {
       filteredSubmissions = filteredSubmissions.filter((submission) => {
         const ghIssue = getGhIssueFromSubmission(submission, vaultGithubIssues);
-        return ghIssue && ghIssue.validLabels.length > 0;
+        const ghPR = getGhPRFromSubmission(submission, vaultGithubPRs);
+        return (ghIssue && ghIssue.validLabels.length > 0) || (ghPR && ghPR.bonusSubmissionStatus === "COMPLETE");
       });
     }
     return filteredSubmissions;
-  }, [committeeSubmissions, dateFilter, severityFilter, titleFilter, vaultFilter, onlyShowLabeled, vaultGithubIssues]);
+  }, [
+    committeeSubmissions,
+    dateFilter,
+    severityFilter,
+    titleFilter,
+    vaultFilter,
+    onlyShowLabeled,
+    vaultGithubIssues,
+    vaultGithubPRs,
+  ]);
 
   const allSeveritiesOptions = useMemo(() => {
     if (!committeeSubmissions) return [];
@@ -284,7 +301,11 @@ export const SubmissionsListPage = () => {
     };
     loadGhIssues();
 
-    console.log(filteredSubmissions);
+    const loadGhPRs = async () => {
+      const ghPRs = await getGithubPRsFromVault(vault);
+      setVaultGithubPRs(ghPRs);
+    };
+    loadGhPRs();
   }, [vaultFilter, filteredSubmissions, allVaults, vaultGithubIssues, isLoadingGH]);
 
   // const handleDownloadAsCsv = () => {
@@ -398,6 +419,7 @@ export const SubmissionsListPage = () => {
           ?.name.toLowerCase() ?? submission?.submissionDataStructure?.severity;
 
       const ghIssue = getGhIssueFromSubmission(submission, vaultGithubIssues);
+      const ghPR = getGhPRFromSubmission(submission, vaultGithubPRs, vaultGithubIssues);
 
       payoutData = {
         ...(createNewPayoutData("single") as ISinglePayoutData),
@@ -406,7 +428,7 @@ export const SubmissionsListPage = () => {
         submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
         depositors: getVaultDepositors(vault),
         curator: await getVaultCurator(vault),
-        ghIssue,
+        ghIssue: ghIssue || ghPR,
       } as ISinglePayoutData;
     } else {
       const submissions = committeeSubmissions.filter((sub) => selectedSubmissions.includes(sub.subId));
@@ -420,13 +442,14 @@ export const SubmissionsListPage = () => {
               ?.name.toLowerCase() ?? submission?.submissionDataStructure?.severity;
 
           const ghIssue = getGhIssueFromSubmission(submission, vaultGithubIssues);
+          const ghPR = getGhPRFromSubmission(submission, vaultGithubPRs, vaultGithubIssues);
 
           return {
             ...createNewSplitPayoutBeneficiary(),
             beneficiary: submission?.submissionDataStructure?.beneficiary,
             severity: ghIssue ? ghIssue?.validLabels[0] ?? "" : severity ?? "",
             submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
-            ghIssue,
+            ghIssue: ghIssue || ghPR,
           };
         }),
         usingPointingSystem: (vault.description as IVaultDescriptionV2).usingPointingSystem,
@@ -434,6 +457,8 @@ export const SubmissionsListPage = () => {
         curator: await getVaultCurator(vault),
       } as ISplitPayoutData;
     }
+
+    console.log(payoutData);
 
     try {
       const payoutId = await createPayoutFromSubmissions.mutateAsync({ vaultInfo, type: payoutType, payoutData });
@@ -550,6 +575,7 @@ export const SubmissionsListPage = () => {
                               setVaultFilter(vaultId as string);
                               localStorage.setItem(LocalStorage.SelectedVaultInSubmissions, vaultId as string);
                               setVaultGithubIssues(undefined);
+                              setVaultGithubPRs(undefined);
                               setSelectedSubmissions([]);
                               setPage(1);
                             }}
@@ -667,7 +693,10 @@ export const SubmissionsListPage = () => {
                                   isChecked={selectedSubmissions.includes(submission.subId)}
                                   key={submission.subId}
                                   submission={submission}
-                                  ghIssue={getGhIssueFromSubmission(submission, vaultGithubIssues)}
+                                  ghIssue={
+                                    getGhIssueFromSubmission(submission, vaultGithubIssues) ||
+                                    getGhPRFromSubmission(submission, vaultGithubPRs, vaultGithubIssues)
+                                  }
                                 />
                               );
                             })}
