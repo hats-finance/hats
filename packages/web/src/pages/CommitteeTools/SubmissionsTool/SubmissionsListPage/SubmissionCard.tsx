@@ -37,7 +37,11 @@ export const SubmissionCard = ({
   const commChannel = submissionData?.communicationChannel;
   const severityColors = getSeveritiesColorsArray(vault);
 
-  const isComplementary = !!(ghIssue as GithubPR)?.linkedIssueNumber;
+  const isGithubPR = (issue: GithubIssue | GithubPR): issue is GithubPR => {
+    return "linkedIssueNumber" in issue;
+  };
+
+  const isComplementary = ghIssue ? isGithubPR(ghIssue) && !!ghIssue.linkedIssueNumber : false;
 
   const createdAt = new Date(+submission?.createdAt * 1000);
 
@@ -85,7 +89,6 @@ export const SubmissionCard = ({
                   const getText = () => {
                     const labels = (ghIssue as GithubPR).labels;
                     if (labels.includes("complete-fix") && labels.includes("complete-test")) {
-                      console.log(ghIssue);
                       return `COMPLETE (fix & test) -> ${(ghIssue as GithubPR).linkedIssue?.severity}`;
                     } else if (labels.includes("complete-fix")) {
                       return `COMPLETE (fix) -> ${(ghIssue as GithubPR).linkedIssue?.severity}`;

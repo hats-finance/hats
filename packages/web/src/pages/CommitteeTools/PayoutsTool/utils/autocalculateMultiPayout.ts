@@ -99,8 +99,6 @@ export const autocalculateMultiPayoutPointingSystem = (
   if (!constraints || !constraints.length) return undefined;
   if (!beneficiaries || beneficiaries.length === 0) return undefined;
 
-  console.log({ beneficiaries, constraints, totalAmountToPay, maxCapPerPoint });
-
   const beneficiariesCalculated = [] as IBeneficiaryWithCalcs[];
 
   const needPoints = beneficiaries.every((ben) => ben.percentageOfPayout === "" || ben.percentageOfPayout === undefined);
@@ -114,8 +112,8 @@ export const autocalculateMultiPayoutPointingSystem = (
 
       let totalMultiplier = 0;
 
-      if (beneficiary.ghIssue?.labels.includes("complete-fix")) totalMultiplier += BONUS_POINTS_CONSTRAINTS.fix;
-      if (beneficiary.ghIssue?.labels.includes("complete-test")) totalMultiplier += BONUS_POINTS_CONSTRAINTS.test;
+      if (beneficiary.ghIssue?.labels?.includes("complete-fix")) totalMultiplier += BONUS_POINTS_CONSTRAINTS.fix;
+      if (beneficiary.ghIssue?.labels?.includes("complete-test")) totalMultiplier += BONUS_POINTS_CONSTRAINTS.test;
 
       const complementaryPoints = totalMultiplier * +mainIssuePoints;
 

@@ -165,6 +165,10 @@ export const SplitPayoutBeneficiaryForm = ({
     ];
   };
 
+  const selectedSubmission = isPayoutCreated
+    ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission!
+    : beneficiarySubmission!;
+
   return (
     <div>
       <div className="mb-1">{index + 1}.</div>
@@ -179,19 +183,8 @@ export const SplitPayoutBeneficiaryForm = ({
                   isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!
                 }
                 ghIssue={
-                  getGhIssueFromSubmission(
-                    isPayoutCreated
-                      ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission!
-                      : beneficiarySubmission!,
-                    vaultGithubIssues
-                  ) ||
-                  getGhPRFromSubmission(
-                    isPayoutCreated
-                      ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission!
-                      : beneficiarySubmission!,
-                    vaultGithubPRs,
-                    vaultGithubIssues
-                  )
+                  getGhIssueFromSubmission(selectedSubmission, vaultGithubIssues) ||
+                  getGhPRFromSubmission(selectedSubmission, vaultGithubPRs, vaultGithubIssues)
                 }
               />
             </div>
