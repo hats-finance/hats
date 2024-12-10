@@ -165,15 +165,6 @@ export const SplitPayoutBeneficiaryForm = ({
     ];
   };
 
-  console.log(
-    getGhIssueFromSubmission(
-      isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!,
-      vaultGithubIssues
-    )
-  );
-  console.log(isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!);
-  console.log(vaultGithubIssues);
-
   return (
     <div>
       <div className="mb-1">{index + 1}.</div>
