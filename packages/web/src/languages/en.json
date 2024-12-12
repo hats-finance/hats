@@ -749,6 +749,7 @@
     "bonusPointsReminder": "Remember, you have 12 hours to submit after claiming. Happy fixing and testing!",
     "bonusPointsEnabled": "Enable bonus points?",
     "claimFixAndTest": "Claim fix and test",
+    "linesOfCode": "Lines of code (LoC)",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",
@@ -1650,7 +1651,9 @@
         "curator-placeholder": "Select curator of the vault",
         "curatorRole": "Curator role",
         "curatorRole-placeholder": "Select the role of the curator",
-        "clearCurator": "Clear curator"
+        "clearCurator": "Clear curator",
+        "loc-placeholder": "Enter number of lines of code",
+        "loc": "Lines of code"
       },
       "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",
