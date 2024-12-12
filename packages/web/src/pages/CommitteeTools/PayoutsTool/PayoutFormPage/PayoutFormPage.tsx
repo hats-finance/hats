@@ -114,6 +114,13 @@ export const PayoutFormPage = () => {
           });
         }
       } else {
+        if (vault.description["project-metadata"].bonusPointsEnabled) {
+          severities.push({
+            label: "Complementary",
+            value: "complementary",
+          });
+        }
+
         for (const splitPayoutBeneficiary of payout.payoutData.beneficiaries) {
           if (
             splitPayoutBeneficiary.severity &&
