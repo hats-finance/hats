@@ -17,20 +17,6 @@ export const Seo = ({ isMainPage, title, description, image }: SeoProps) => {
     image: image ?? require("../../assets/images/hats_og.png"),
   };
 
-  // const allowedEndpoints = [
-  //   "'self'",
-  //   "https://*.hats.finance",
-  //   "https://*.infura.io",
-  //   "https://api.coingecko.com/",
-  //   "https://cloudflare-eth.com/",
-  //   new URL(stagingServiceUrl).protocol + "//" + new URL(stagingServiceUrl).host,
-  //   new URL(prodServiceUrl).protocol + "//" + new URL(prodServiceUrl).host,
-  //   ...Object.values(appChains).map((chain) => chain.subgraph),
-  //   ...Object.values(appChains).map((chain) => chain.uniswapSubgraph),
-  //   ...Object.values(externalPricingProvidersUrls),
-  // ];
-  // const connectSrc = allowedEndpoints.join(" ");
-
   return (
     <Helmet prioritizeSeoTags htmlAttributes={{ lang: "en" }} titleTemplate="%s | HatsFinance" title={seo.title}>
       {isMainPage && (

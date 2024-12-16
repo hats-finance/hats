@@ -175,7 +175,15 @@ export const getVaultInfoWithCommittee = async (
 
 export const getAllVaultsAddressesByChain = async (
   chainId: number
-): Promise<{ id: string; registered: boolean; version: IVault["version"]; claimsManager: IVault["claimsManager"] }[]> => {
+): Promise<
+  {
+    id: string;
+    descriptionHash: string;
+    registered: boolean;
+    version: IVault["version"];
+    claimsManager: IVault["claimsManager"];
+  }[]
+> => {
   if (!chainId) return [];
 
   try {
@@ -183,6 +191,7 @@ export const getAllVaultsAddressesByChain = async (
     query getVaults {
       vaults(where: {version_not: "v1"}) {
         id
+        descriptionHash
         registered
         claimsManager
         version
