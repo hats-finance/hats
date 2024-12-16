@@ -148,6 +148,7 @@ interface IBaseVaultDescription {
     starttime?: number;
     oneLiner?: string;
     intendedCompetitionAmount?: number;
+    loc?: number;
     curator?: {
       username: string;
       role: CuratorRole;

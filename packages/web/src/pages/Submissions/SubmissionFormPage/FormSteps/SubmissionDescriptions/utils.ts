@@ -95,7 +95,7 @@ export const getBountySubmissionTexts = (
   const toEncrypt = `**Project Name:** ${submissionData.project?.projectName}\n
 **Project Id:** ${submissionData.project?.projectId}\n
 **Beneficiary:** ${submissionData.contact?.beneficiary}\n
-**HATS Profile:** ${hackerProfile ? `${hackerProfile?.username}` : "---"}\n
+**HATS Profile:** ${hackerProfile ? `[HATS Profile](https://app.hats.finance/profile/${hackerProfile?.username})` : "---"}\n
 **Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})
     
     ${descriptions
@@ -125,7 +125,7 @@ export const getGithubIssueDescription = (
     return `${submissionData.ref === "audit-wizard" ? "***Submitted via auditwizard.io***\n" : ""}
   **Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
   **Twitter username:** ${submissionData.contact?.twitterUsername ? `${submissionData.contact?.twitterUsername}` : "--"}
-  **HATS Profile:** ${hackerProfile ? `${hackerProfile?.username}` : "---"}
+  **HATS Profile:** ${hackerProfile ? `[HATS Profile](https://app.hats.finance/profile/${hackerProfile?.username})` : "---"}\n
   **Beneficiary:** ${submissionData.contact?.beneficiary}
   **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
   **Severity:** ${description.severity}

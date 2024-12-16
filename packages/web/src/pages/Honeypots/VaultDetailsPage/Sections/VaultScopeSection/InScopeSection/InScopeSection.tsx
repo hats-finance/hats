@@ -10,6 +10,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DocumentIcon from "@mui/icons-material/DescriptionOutlined";
 import DiffIcon from "@mui/icons-material/DifferenceOutlined";
 import OpenIcon from "@mui/icons-material/LaunchOutlined";
+import HashtagIcon from "@mui/icons-material/NumbersOutlined";
 import OverviewIcon from "@mui/icons-material/SelfImprovementOutlined";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import ContractsIcon from "@mui/icons-material/ViewInAr";
@@ -213,6 +214,17 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
         <Alert type="info" className="mb-4">
           {t("continuousAuditWarning")}
         </Alert>
+      )}
+
+      {/* LoC */}
+      {vault.description["project-metadata"].loc && (
+        <>
+          <h4 className="section-subtitle mb-4">
+            <HashtagIcon className="icon" />
+            <span>{t("linesOfCode")}:</span>
+            <span>{vault.description["project-metadata"].loc}</span>
+          </h4>
+        </>
       )}
 
       {/* Overview */}
