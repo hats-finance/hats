@@ -88,6 +88,7 @@ export interface IBaseEditedVaultDescription {
     emails: IEditedCommunicationEmail[];
     oneLiner?: string;
     intendedCompetitionAmount?: number;
+    loc?: number;
     curator?: {
       username: string;
       role: CuratorRole;

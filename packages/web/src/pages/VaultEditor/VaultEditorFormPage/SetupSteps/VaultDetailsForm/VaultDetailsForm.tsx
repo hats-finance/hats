@@ -204,6 +204,17 @@ export function VaultDetailsForm() {
           helper={watch("project-metadata.oneLiner") ? `${watch("project-metadata.oneLiner")?.length ?? 0} characters` : ""}
         />
 
+        <div className="w-50">
+          <FormInput
+            {...register("project-metadata.loc")}
+            colorable
+            disabled={allFormDisabled}
+            placeholder={t("VaultEditor.vault-details.loc-placeholder")}
+            label={t("VaultEditor.vault-details.loc")}
+            type="number"
+          />
+        </div>
+
         {requireMessageSignature && (
           <>
             <p className="mb-3 helper-text">{t("VaultEditor.vault-details.messageToSign-explanation")}</p>

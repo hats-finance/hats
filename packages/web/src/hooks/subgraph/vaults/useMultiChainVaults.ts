@@ -6,8 +6,6 @@ import { useAccount } from "wagmi";
 import { parseMasters, parsePayouts, parseUserNfts, parseVaults } from "./parser";
 import { IGraphVaultsData, getSubgraphData } from "./vaultsService";
 
-const DATA_REFRESH_TIME = 30000;
-
 const INITIAL_NETWORK_DATA = {
   vaults: [] as IVault[],
   masters: [] as IMaster[],
@@ -29,8 +27,7 @@ export const useMultiChainVaultsV2 = () => {
     queries: Object.keys(appChains).map((chainId) => ({
       queryKey: ["subgraph", chainId],
       queryFn: () => getSubgraphData(+chainId, account),
-      // refetchInterval: DATA_REFRESH_TIME, // We dont want to refetch data automatically anymore
-      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: false,
       retry: false,
     })),
   });
