@@ -27,7 +27,7 @@ export const createVaultGovActionsProposalOnSafe = async (
 
     const protocolKit = await Safe.init({
       provider: (extra.signer.provider as any)?.provider as never,
-      safeAddress: vault.committee,
+      safeAddress: multisigAddress,
       signer: (await extra.signer.getAddress()) as never,
     });
 
