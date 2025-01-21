@@ -49,7 +49,6 @@ export const OnChainDataStatusCard = () => {
         vestedPercentage: vaultData.parameters.bountySplitVested / 100,
         fixedCommitteeControlledPercetange: vaultData.parameters.committeeControlledSplit / 100,
         fixedHatsGovPercetange: vaultData.parameters.hatsGovernanceSplit / 100,
-        hatsManagementGovPercentage: vaultData.parameters.hatsGovernanceSplit / 100 / 2, // By default, half of the hats governance split is for the management
         fixedHatsRewardPercetange: vaultData.parameters.hatsRewardSplit / 100,
       },
     });

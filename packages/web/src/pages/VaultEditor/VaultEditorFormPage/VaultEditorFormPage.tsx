@@ -695,6 +695,7 @@ const VaultEditorFormPage = () => {
   const chainId = useWatch({ control, name: "committee.chainId" });
   // Set default values for the fixed splits. Getting it from subgraph
   useEffect(() => {
+    const isAudit = getValues("project-metadata.type") === "audit";
     const params = getValues("parameters");
     if (!params) return;
     // If we have alredy set a value, we don't want to override it
@@ -717,7 +718,7 @@ const VaultEditorFormPage = () => {
           setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit, { shouldDirty: true });
         if (!isNaN(hatsGovernanceSplit)) {
           setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit, { shouldDirty: true });
-          setValue("parameters.hatsManagementGovPercentage", hatsGovernanceSplit / 2, { shouldDirty: true });
+          setValue("parameters.hatsManagementGovPercentage", isAudit ? hatsGovernanceSplit / 2 : 0, { shouldDirty: true });
         }
         if (!isNaN(hatsRewardSplit)) setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit, { shouldDirty: true });
       }

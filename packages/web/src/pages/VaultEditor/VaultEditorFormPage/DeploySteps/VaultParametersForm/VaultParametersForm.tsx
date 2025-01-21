@@ -78,6 +78,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
   const canEditFixed = isGov || isReviewer || isGrowthMember;
 
   const version = useWatch({ control: methodsToUse.control as Control<FormType>, name: "version" });
+  const isAudit = useWatch({ control: methodsToUse.control as Control<FormType>, name: "project-metadata.type" }) === "audit";
 
   const vestedPercentage =
     useWatch({ control: methodsToUse.control as Control<FormType>, name: "parameters.vestedPercentage" }) ?? 0;
@@ -324,30 +325,32 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                   <label>{t("hatsGov")}</label>
                 </div>
 
-                <div className="splitFixedValue variant">
-                  {canEditFixed && isEditingFixed ? (
-                    <>
-                      <FormInput
-                        {...methodsToUse.register("parameters.hatsManagementGovPercentage")}
-                        disabled={disabled}
-                        onKeyUp={revalidateSplit}
-                        onBlur={revalidateSplit}
-                        type="number"
-                        maxDecimals={0}
-                        min={0}
-                        max={100}
-                        colorable
-                        noMargin
-                        placeholder="-- (%)"
-                      />
-                      <div className="mb-1" />
-                    </>
-                  ) : (
-                    <p>{hatsManagementSplit}%</p>
-                  )}
+                {isAudit && (
+                  <div className="splitFixedValue variant">
+                    {canEditFixed && isEditingFixed ? (
+                      <>
+                        <FormInput
+                          {...methodsToUse.register("parameters.hatsManagementGovPercentage")}
+                          disabled={disabled}
+                          onKeyUp={revalidateSplit}
+                          onBlur={revalidateSplit}
+                          type="number"
+                          maxDecimals={0}
+                          min={0}
+                          max={100}
+                          colorable
+                          noMargin
+                          placeholder="-- (%)"
+                        />
+                        <div className="mb-1" />
+                      </>
+                    ) : (
+                      <p>{hatsManagementSplit}%</p>
+                    )}
 
-                  <label>{t("managementFees")}</label>
-                </div>
+                    <label>{t("managementFees")}</label>
+                  </div>
+                )}
               </div>
             )}
             {renderWithTooltip(
