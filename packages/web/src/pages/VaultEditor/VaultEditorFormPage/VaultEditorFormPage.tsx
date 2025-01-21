@@ -715,8 +715,10 @@ const VaultEditorFormPage = () => {
 
         if (!isNaN(committeeControlledSplit))
           setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit, { shouldDirty: true });
-        if (!isNaN(hatsGovernanceSplit))
+        if (!isNaN(hatsGovernanceSplit)) {
           setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit, { shouldDirty: true });
+          setValue("parameters.hatsManagementGovPercentage", hatsGovernanceSplit / 2, { shouldDirty: true });
+        }
         if (!isNaN(hatsRewardSplit)) setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit, { shouldDirty: true });
       }
     }

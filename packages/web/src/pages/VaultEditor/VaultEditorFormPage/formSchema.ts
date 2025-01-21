@@ -232,6 +232,15 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     parameters: Yup.object({
       fixedCommitteeControlledPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)),
       fixedHatsGovPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 20, true)),
+      hatsManagementGovPercentage: Yup.number()
+        .required(intl("required"))
+        .typeError(intl("required"))
+        .test("max-fixedHatsGovPercetange", intl("max-fixedHatsGovPercetange"), function (managementPercentage) {
+          if (!managementPercentage) return true;
+
+          const { fixedHatsGovPercetange } = this.parent;
+          return fixedHatsGovPercetange ? managementPercentage <= fixedHatsGovPercetange : true;
+        }),
       fixedHatsRewardPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)),
       maxBountyPercentage: Yup.number()
         .test(getTestNumberInBetween(intl, 10, 100, true))

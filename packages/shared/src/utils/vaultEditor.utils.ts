@@ -108,6 +108,7 @@ export const getDefaultVaultParameters = (isAudit = false, version: IVault["vers
   return {
     fixedCommitteeControlledPercetange: undefined,
     fixedHatsGovPercetange: undefined,
+    hatsManagementGovPercentage: undefined,
     fixedHatsRewardPercetange: undefined,
     committeePercentage: isAudit ? 0 : 0,
     immediatePercentage: isAudit ? 100 : 40,

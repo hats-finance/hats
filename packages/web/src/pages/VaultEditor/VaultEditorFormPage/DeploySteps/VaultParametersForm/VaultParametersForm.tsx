@@ -94,6 +94,10 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
     control: methodsToUse.control as Control<FormType>,
     name: "parameters.fixedHatsGovPercetange",
   })?.toString();
+  const hatsManagementSplit = useWatch({
+    control: methodsToUse.control as Control<FormType>,
+    name: "parameters.hatsManagementGovPercentage",
+  })?.toString();
   const hatsRewardSplit = useWatch({
     control: methodsToUse.control as Control<FormType>,
     name: "parameters.fixedHatsRewardPercetange",
@@ -294,29 +298,56 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
           <div className="nonControlled">
             {renderWithTooltip(
               canEditFixed ? t("editable") : t("nonEditable"),
-              <div className="splitFixedValue">
-                {canEditFixed && isEditingFixed ? (
-                  <>
-                    <FormInput
-                      {...methodsToUse.register("parameters.fixedHatsGovPercetange")}
-                      disabled={disabled}
-                      onKeyUp={revalidateSplit}
-                      onBlur={revalidateSplit}
-                      type="number"
-                      maxDecimals={0}
-                      min={0}
-                      max={100}
-                      colorable
-                      noMargin
-                      placeholder="-- (%)"
-                    />
-                    <div className="mb-1" />
-                  </>
-                ) : (
-                  <p>{hatsGovernanceSplit}%</p>
-                )}
+              <div className="fixedContainer">
+                <div className="splitFixedValue">
+                  {canEditFixed && isEditingFixed ? (
+                    <>
+                      <FormInput
+                        {...methodsToUse.register("parameters.fixedHatsGovPercetange")}
+                        disabled={disabled}
+                        onKeyUp={revalidateSplit}
+                        onBlur={revalidateSplit}
+                        type="number"
+                        maxDecimals={0}
+                        min={0}
+                        max={100}
+                        colorable
+                        noMargin
+                        placeholder="-- (%)"
+                      />
+                      <div className="mb-1" />
+                    </>
+                  ) : (
+                    <p>{hatsGovernanceSplit}%</p>
+                  )}
 
-                <label>{t("hatsGov")}</label>
+                  <label>{t("hatsGov")}</label>
+                </div>
+
+                <div className="splitFixedValue variant">
+                  {canEditFixed && isEditingFixed ? (
+                    <>
+                      <FormInput
+                        {...methodsToUse.register("parameters.hatsManagementGovPercentage")}
+                        disabled={disabled}
+                        onKeyUp={revalidateSplit}
+                        onBlur={revalidateSplit}
+                        type="number"
+                        maxDecimals={0}
+                        min={0}
+                        max={100}
+                        colorable
+                        noMargin
+                        placeholder="-- (%)"
+                      />
+                      <div className="mb-1" />
+                    </>
+                  ) : (
+                    <p>{hatsManagementSplit}%</p>
+                  )}
+
+                  <label>{t("managementFees")}</label>
+                </div>
               </div>
             )}
             {renderWithTooltip(
