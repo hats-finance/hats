@@ -223,6 +223,7 @@ export interface IVaultRepoInformation {
 export interface IVaultParameters {
   fixedCommitteeControlledPercetange?: number;
   fixedHatsGovPercetange?: number;
+  hatsManagementGovPercentage?: number;
   fixedHatsRewardPercetange?: number;
   // Editable
   maxBountyPercentage: number;
