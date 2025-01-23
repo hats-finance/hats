@@ -143,12 +143,18 @@ export const getExecutePayoutSafeTransaction = async (
     // If vault is v3, we will pay 100% of the vault. So we need to add the remaining funds to the depositors and governance
     if (vaultInfo.version === "v3") {
       if (!vaultInfo.hatsGovFee) throw new Error(`Hats governance fee not found on vaultInfo for payout id: ${payout._id}`);
-      const hatsGovFee = +vaultInfo.hatsGovFee / 100 / 100;
+      const hatsGovFeeTotal = +vaultInfo.hatsGovFee / 100 / 100; // e.g., 20% = 0.2
+      const hatsManagementFee = vaultInfo.hatsManagementFee ? +vaultInfo.hatsManagementFee / 100 / 100 : 0; // e.g., 10% = 0.1
+      const hatsFeePerRewards = hatsGovFeeTotal - hatsManagementFee; // e.g., 20% - 10% = 10%
 
-      const totalToPay = percentageToPay * 1;
-      const governancePercentage = totalToPay * hatsGovFee;
-      const hackersPercentage = totalToPay * (1 - hatsGovFee);
-      const depositorsPercentage = 10000 - totalToPay;
+      const totalToPay = percentageToPay / 100; // Convert to decimal (e.g., 100% = 1)
+
+      const hatsRewardsFee = totalToPay * hatsFeePerRewards; // Gov fee on rewards from remaining (e.g., 100% * 10% = 10%)
+      const hackers = totalToPay * (1 - (hatsFeePerRewards + hatsManagementFee)); // Hackers get remaining of paid portion (e.g., 100% * (100% - 10% - 10%) * 100 = 80%)
+
+      const hackersPercentage = +(hackers * 100).toFixed(2);
+      const governancePercentage = +(hatsManagementFee * 100 + hatsRewardsFee * 100).toFixed(2);
+      const depositorsPercentage = 100 - governancePercentage - hackersPercentage;
 
       const hackersPoints = beneficiariesToIterate.reduce((acc, beneficiary) => acc + +beneficiary.percentageOfPayout, 0);
       const governancePoints = (governancePercentage * hackersPoints) / hackersPercentage;
@@ -169,7 +175,7 @@ export const getExecutePayoutSafeTransaction = async (
         );
       }
 
-      // Add governance ans curator as beneficiary
+      // Add governance and curator as beneficiary
       // We are doing this because in v3 the govFees on-chain is 0%. We need to calculate it manually
       if (governancePercentage > 0) {
         const govWallet = ChainsConfig[Number(vaultInfo.chainId)].govMultisig;

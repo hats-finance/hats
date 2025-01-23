@@ -29,11 +29,25 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
 
   const curator = payout.payoutData.curator;
 
-  const hatsGovFee = +vault?.governanceHatRewardSplit / 100 / 100;
-  const governancePercentage = curator ? totalToPay * hatsGovFee * (1 - curator.percentage / 100) : totalToPay * hatsGovFee;
-  const curatorPercentage = curator ? totalToPay * hatsGovFee * (curator.percentage / 100) : 0;
-  const hackersPercentage = totalToPay * (1 - hatsGovFee);
-  const depositorsPercentage = 100 - totalToPay;
+  const hatsGovFeeTotal = +vault?.governanceHatRewardSplit / 100 / 100;
+  const hatsManagementFee = vault?.description?.parameters.hatsManagementGovPercentage
+    ? +vault?.description?.parameters.hatsManagementGovPercentage / 100
+    : 0;
+  const hatsFeePerRewards = hatsGovFeeTotal - hatsManagementFee;
+
+  const totalToPayToUse = totalToPay / 100;
+
+  const hatsRewardsFee = totalToPayToUse * hatsFeePerRewards;
+  const hackers = totalToPayToUse * (1 - (hatsFeePerRewards + hatsManagementFee));
+
+  const initialGovernancePercentage = +(hatsManagementFee * 100 + hatsRewardsFee * 100).toFixed(2);
+
+  const hackersPercentage = +(hackers * 100).toFixed(2);
+  const governancePercentage = curator
+    ? initialGovernancePercentage * (1 - curator.percentage / 100)
+    : initialGovernancePercentage;
+  const curatorPercentage = curator ? initialGovernancePercentage * (curator.percentage / 100) : 0;
+  const depositorsPercentage = 100 - governancePercentage - hackersPercentage;
 
   const hackersPoints = beneficiaries.reduce((acc, beneficiary) => acc + +beneficiary.percentageOfPayout, 0);
   const governancePoints = (governancePercentage * hackersPoints) / hackersPercentage;
@@ -61,7 +75,8 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
 
       <div className="section">
         <p className="title">
-          Governance fees{" "}
+          Governance fees [managed: {(hatsManagementFee * 100).toFixed(2)}% + rewards: {(hatsRewardsFee * 100).toFixed(2)}%]{" "}
+          {"-> "}
           <strong>
             {governancePercentage.toFixed(2)}% ({(+truncate(governancePoints, 4) * 10 ** 10).toFixed(0)} points)
           </strong>

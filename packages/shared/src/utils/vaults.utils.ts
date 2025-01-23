@@ -167,6 +167,10 @@ export const getVaultInfoWithCommittee = async (
         Number(vault.governanceHatRewardSplit) === 0 && vault.version === "v3" && description
           ? ((description as IVaultDescriptionV3).parameters.fixedHatsGovPercetange ?? 0) * 100
           : vault.governanceHatRewardSplit,
+      hatsManagementFee:
+        Number(vault.governanceHatRewardSplit) === 0 && vault.version === "v3" && description
+          ? ((description as IVaultDescriptionV3).parameters.hatsManagementGovPercentage ?? 0) * 100
+          : (0 as any),
     };
   } catch (error) {
     return undefined;
@@ -394,6 +398,8 @@ export const getVaultInfoFromVault = (vault: IVault): IVaultInfo => {
     stakingToken: vault.stakingToken,
     claimsManager: vault.claimsManager,
     hatsGovFee: vault.governanceHatRewardSplit,
+    hatsManagementFee:
+      vault.version === "v3" ? vault.description?.parameters.hatsManagementGovPercentage?.toString() ?? "0" : "0",
   };
 };
 

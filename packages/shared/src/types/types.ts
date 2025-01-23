@@ -10,6 +10,7 @@ export interface IVaultInfo {
   pid: string;
   claimsManager: string | null;
   hatsGovFee: string | null;
+  hatsManagementFee?: string | null;
 }
 
 export type IVaultType = "normal" | "audit" | "grants" | "gamification";
