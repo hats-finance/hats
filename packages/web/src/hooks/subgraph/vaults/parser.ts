@@ -116,6 +116,10 @@ const fixVaultsData = (vaults: IVault[]) => {
   if (accumulatedVault && accumulatedVault.descriptionHash === "QmfDcBsAwfUhqG9Mvj6ZmSZfxCwzTMUNTfFxERddBvtFeL")
     accumulatedVault.descriptionHash = "QmSRrEZ3GMDe2CuezSbfRCHFmCNQNWHXmhvHy7VAD4jzDX";
 
+  // Override information for DAOSIS vault
+  const daosisVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x8ef21ecb2af12ce9cc0e475eec25f90a9622b4f4");
+  if (daosisVault) daosisVault.registered = true;
+
   return newVaults;
 };
 
