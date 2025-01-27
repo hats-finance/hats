@@ -183,7 +183,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.goldsky.com/api/public/project_clx0j1z1v44iz01wb4qol83tv/subgraphs/hats_oasis/0.0.1/gn",
     coingeckoId: "oasis-sapphire",
     govMultisig: "0xf2935671015c896D5E1fE4c97caF111F5eEe2b3c",
-    growthMultisig: "0xf2935671015c896D5E1fE4c97caF111F5eEe2b3c",
+    growthMultisig: "0x64792e23DfeDA2d153CF058507d71672aC1d09A0",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0xe198CBb727758b9Ad38a12E1ad475a843e5e730F",
     provider: "https://sapphire2.oasis.io",
