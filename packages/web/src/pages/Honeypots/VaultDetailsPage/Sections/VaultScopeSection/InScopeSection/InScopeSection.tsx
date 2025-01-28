@@ -78,7 +78,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       {
         isMain: false,
         url: forkedRepoUrl,
-        commitHash: vault.description.scope?.reposInformation.find((repo) => repo.isMain)?.commitHash,
+        // commitHash: vault.description.scope?.reposInformation.find((repo) => repo.isMain)?.commitHash,
       },
       ...(vault.description.scope?.reposInformation ?? []),
     ];
