@@ -582,7 +582,18 @@ export function SubmissionDescriptions() {
         throw new Error("This vault doesn't have any valid key, please contact hats team");
       }
 
-      const { encryptedData, sessionKey } = JSON.parse(encryptionResult);
+      let parsed;
+      try {
+        parsed = JSON.parse(encryptionResult);
+        if (!parsed || typeof parsed !== 'object' || !('encryptedData' in parsed) || !('sessionKey' in parsed)) {
+          throw new Error('Invalid encryption result format');
+        }
+      } catch (error) {
+        console.error('Encryption result parsing failed:', error);
+        throw new Error('Failed to parse encryption result. Please try again or contact support.');
+      }
+
+      const { encryptedData, sessionKey } = parsed;
 
       let submissionInfo: ISubmissionMessageObject = {
         ref: submissionData.ref,
