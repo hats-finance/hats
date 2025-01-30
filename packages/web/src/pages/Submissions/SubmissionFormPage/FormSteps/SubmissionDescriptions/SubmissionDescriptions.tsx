@@ -1,45 +1,48 @@
 import { GithubIssue, ISubmissionMessageObject, IVulnerabilitySeverity } from "@hats.finance/shared";
-import { FormSupportFilesInput, ISavedFile } from "../../../../components/FormControls/FormSupportFilesInput/FormSupportFilesInput";
+import { FormSupportFilesInput } from "components/FormControls";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import CloseIcon from "@mui/icons-material/CloseOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlined";
 import FlagIcon from "@mui/icons-material/OutlinedFlagOutlined";
-import {
-  Alert,
-  Button,
-  FormInput,
-  FormMDEditor,
-  FormSelectInput,
-  FormSelectInputOption,
-  Loading,
-  Pill,
-  WithTooltip,
-} from "components";
-import download from "downloadjs";
-import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
-import moment from "moment";
-import { getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
+import { useInView } from 'react-intersection-observer';
+import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import { Loading, Alert, Button, FormInput, FormMDEditor, FormSelectInput, FormSelectInputOption, Pill, WithTooltip } from 'components';
+import { Controller, FieldPath, useFieldArray, useWatch } from 'react-hook-form';
+import { ISubmissionsDescriptionsData } from "../../types";
+import { getCreateDescriptionSchema } from "./formSchema";
+import { StyledSubmissionDescription, StyledSubmissionDescriptionsList as BaseStyledSubmissionDescriptionsList } from "./styles";
+import { getAuditSubmissionTexts, getBountySubmissionTexts } from "./utils";
+import styled from 'styled-components';
+import { useSubmissionDebounce } from "../../hooks/useSubmissionDebounce";
+import { useTranslation } from "react-i18next";
+import { useAccount } from "wagmi";
+import { useNavigate } from "react-router-dom";
 import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useClaimedIssuesByVaultAndClaimedBy } from "pages/Honeypots/VaultDetailsPage/Sections/VaultSubmissionsSection/PublicSubmissionCard/hooks";
 import { getVaultRepoName } from "pages/Honeypots/VaultDetailsPage/savedSubmissionsService";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
-import { useContext, useEffect, useState, useCallback, useMemo } from "react";
-import { Controller, useFieldArray, useWatch } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { searchFileInHatsRepo } from "utils/github.utils";
 import { slugify } from "utils/slug.utils";
-import { useAccount } from "wagmi";
 import { encryptWithHatsKey, encryptWithKeys } from "../../encrypt";
 import { SUBMISSION_INIT_DATA, SubmissionFormContext } from "../../store";
-import { ISubmissionsDescriptionsData } from "../../types";
-import { getCreateDescriptionSchema } from "./formSchema";
-import { StyledSubmissionDescription, StyledSubmissionDescriptionsList } from "./styles";
-import { getAuditSubmissionTexts, getBountySubmissionTexts } from "./utils";
-import { useSubmissionDebounce } from '../../hooks/useSubmissionDebounce';
-import { useInView } from 'react-intersection-observer';
-import styled from 'styled-components';
+import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
+import download from "downloadjs";
+import moment from "moment";
+import { getGithubIssuesFromVault } from "pages/CommitteeTools/SubmissionsTool/submissionsService.api";
+
+// Extend the base styled component
+const StyledSubmissionDescriptionsList = styled(BaseStyledSubmissionDescriptionsList)`
+  .load-more-trigger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    opacity: 0.7;
+    min-height: 60px;
+  }
+`;
 
 export function SubmissionDescriptions() {
   const { t } = useTranslation();
@@ -199,7 +202,7 @@ export function SubmissionDescriptions() {
     const encryptionResult = await encryptWithKeys(keyOrKeys, toEncrypt);
     if (!encryptionResult) return alert("This vault doesn't have any valid key, please contact hats team");
 
-    const { encryptedData, sessionKey } = encryptionResult;
+    const { encryptedData, sessionKey } = JSON.parse(encryptionResult);
 
     let submissionInfo: ISubmissionMessageObject | undefined;
 
@@ -739,7 +742,7 @@ export function SubmissionDescriptions() {
       {/* Load more trigger */}
       {visibleSubmissions < memoizedControlledDescriptions.length && (
         <div ref={loadMoreRef} className="load-more-trigger">
-          <Loading size="small" />
+          <Loading fixed={false} extraText="" />
         </div>
       )}
 
@@ -764,16 +767,4 @@ export function SubmissionDescriptions() {
     </StyledSubmissionDescriptionsList>
   );
 }
-
-// Add styles for the load more trigger
-const StyledSubmissionDescriptionsList = styled.div`
-  .load-more-trigger {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    margin-top: 1rem;
-    opacity: 0.7;
-  }
-`;
 

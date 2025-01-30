@@ -3,49 +3,64 @@ import { getHatsPublicKey } from "./submissionsService.api";
 
 const IpfsHash = require("ipfs-only-hash");
 
-export async function encryptWithKeys(publicKeyOrKeys: string | string[], dataToEncrypt: string) {
-  let encryptionKeys: MaybeArray<Key>;
+const encryptionCache = new Map<string, string>();
 
-  if (Array.isArray(publicKeyOrKeys)) {
-    encryptionKeys = [];
+export async function encryptWithKeys(publicKeyOrKeys: string | string[], dataToEncrypt: string): Promise<string> {
+  const cacheKey = Array.isArray(publicKeyOrKeys) 
+    ? `keys-${dataToEncrypt}-${publicKeyOrKeys.join(',')}`
+    : `key-${dataToEncrypt}-${publicKeyOrKeys}`;
 
-    const encryptionKeysList = await Promise.all(publicKeyOrKeys.map((key) => readKey({ armoredKey: key })));
-    for (let key of encryptionKeysList) {
-      try {
-        await key.verifyPrimaryKey();
-        encryptionKeys.push(key);
-      } catch {
-        continue;
+  if (encryptionCache.has(cacheKey)) {
+    return encryptionCache.get(cacheKey)!;
+  }
+
+  try {
+    const publicKeys = Array.isArray(publicKeyOrKeys) ? publicKeyOrKeys : [publicKeyOrKeys];
+    const validKeys = publicKeys.filter((key): key is string => typeof key === 'string' && key.length > 0);
+    
+    if (validKeys.length === 0) {
+      throw new Error("No valid public keys provided");
+    }
+
+    const keys = await Promise.all(validKeys.map((key) => readKey({ armoredKey: key })));
+
+    const encryptedData = await encrypt({
+      message: await createMessage({ text: dataToEncrypt }),
+      encryptionKeys: keys,
+      config: {
+        rejectPublicKeyAlgorithms: new Set(),
+      },
+    });
+
+    const result = encryptedData as string;
+    encryptionCache.set(cacheKey, result);
+    
+    // Limit cache size to prevent memory leaks
+    if (encryptionCache.size > 100) {
+      const firstKey = Array.from(encryptionCache.keys())[0];
+      if (firstKey) {
+        encryptionCache.delete(firstKey);
       }
     }
 
-    if (encryptionKeys.length === 0) return undefined;
-  } else {
-    encryptionKeys = await readKey({ armoredKey: publicKeyOrKeys });
-
-    try {
-      await encryptionKeys.verifyPrimaryKey();
-    } catch (error) {
-      return undefined;
-    }
+    return result;
+  } catch (error) {
+    console.error('Encryption failed:', error);
+    throw error;
   }
-
-  const sessionKey = await generateSessionKey({ encryptionKeys });
-  const encryptedData = await encrypt({
-    message: await createMessage({ text: dataToEncrypt }),
-    encryptionKeys,
-    sessionKey,
-    config: {
-      rejectPublicKeyAlgorithms: new Set(),
-    },
-  });
-  return { encryptedData, sessionKey };
 }
 
 export async function encryptWithHatsKey(dataToEncrypt: string): Promise<string> {
+  const cacheKey = `hats-${dataToEncrypt}`;
+  if (encryptionCache.has(cacheKey)) {
+    return encryptionCache.get(cacheKey)!;
+  }
+
   try {
     const hatsPublicKeyString = await getHatsPublicKey();
-    if (!hatsPublicKeyString) throw new Error("Hats public key not found on server");
+    if (!hatsPublicKeyString || typeof hatsPublicKeyString !== 'string' || hatsPublicKeyString.length === 0) {
+      throw new Error("Hats public key not found on server or invalid");
+    }
 
     const hatsPublicKey = await readKey({ armoredKey: hatsPublicKeyString });
     const encryptedData = await encrypt({
@@ -56,13 +71,38 @@ export async function encryptWithHatsKey(dataToEncrypt: string): Promise<string>
       },
     });
 
-    return encryptedData as string;
+    // Cache the result
+    const result = encryptedData as string;
+    encryptionCache.set(cacheKey, result);
+    
+    // Limit cache size to prevent memory leaks
+    if (encryptionCache.size > 100) {
+      const firstKey = Array.from(encryptionCache.keys())[0];
+      if (firstKey) {
+        encryptionCache.delete(firstKey);
+      }
+    }
+
+    return result;
   } catch (error) {
-    console.log(error);
+    console.error('Encryption failed:', error);
     throw error;
   }
 }
 
-export async function calcCid(content) {
-  return await IpfsHash.of(content);
+// Add a function to clear the cache if needed
+export const clearEncryptionCache = () => {
+  encryptionCache.clear();
+};
+
+// Calculate CID with caching
+export async function calcCid(content: string): Promise<string> {
+  const cacheKey = `cid-${content}`;
+  if (encryptionCache.has(cacheKey)) {
+    return encryptionCache.get(cacheKey)!;
+  }
+
+  const cid = await IpfsHash.of(content);
+  encryptionCache.set(cacheKey, cid);
+  return cid;
 }
