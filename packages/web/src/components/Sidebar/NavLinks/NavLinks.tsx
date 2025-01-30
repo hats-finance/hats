@@ -174,7 +174,7 @@ export default function NavLinks() {
             </StyledNavLink>
             <StyledNavLink
               className="sub"
-              hidden={!isGrowthMember}
+              hidden={!isGrowthMember && !isGovMember}
               to={`${RoutePaths.committee_tools}/repo-analysis`}
               onClick={handleClick}
             >

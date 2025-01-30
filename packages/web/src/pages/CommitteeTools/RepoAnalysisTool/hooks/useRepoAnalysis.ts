@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnalysisResponse, ExcludePatterns } from "../types";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useIsGrowthMember } from "hooks/useIsGrowthMember";
+import { useIsGovMember } from "hooks/useIsGovMember";
 import { BASE_SERVICE_URL } from "settings";
 
 export const useRepoAnalysis = () => {
@@ -10,10 +11,11 @@ export const useRepoAnalysis = () => {
   const [error, setError] = useState<string | null>(null);
   const { currentSiweData } = useSiweAuth();
   const isGrowthMember = useIsGrowthMember();
+  const isGovMember = useIsGovMember();
 
   const analyzeRepo = async (repoOwner: string, repoName: string, excludePatterns?: ExcludePatterns) => {
-    if (!isGrowthMember) {
-      setError("Unauthorized: Only growth team members can access this feature");
+    if (!isGrowthMember && !isGovMember) {
+      setError("Unauthorized: Only growth team and governance members can access this feature");
       return;
     }
 
