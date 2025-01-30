@@ -1,5 +1,14 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { getSpacing } from "styles";
+
+const shimmer = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
 
 export const StyledRepoAnalysisPage = styled.div`
   padding: ${getSpacing(4)};
@@ -38,6 +47,14 @@ export const StyledRepoAnalysisPage = styled.div`
       }
     }
 
+    .error-message {
+      background: var(--error-light);
+      color: var(--error);
+      padding: ${getSpacing(2)};
+      border-radius: 6px;
+      margin-bottom: ${getSpacing(3)};
+    }
+
     .analysis-results {
       .section {
         background: var(--background-2);
@@ -73,6 +90,18 @@ export const StyledRepoAnalysisPage = styled.div`
               font-weight: 600;
               color: var(--primary);
             }
+
+            &.shimmer {
+              height: 80px;
+              background: linear-gradient(
+                90deg,
+                var(--background-3) 25%,
+                var(--background-2) 50%,
+                var(--background-3) 75%
+              );
+              background-size: 200% 100%;
+              animation: ${shimmer} 1.5s infinite;
+            }
           }
         }
 
@@ -97,6 +126,18 @@ export const StyledRepoAnalysisPage = styled.div`
               font-size: var(--medium);
               font-weight: 600;
               color: var(--white);
+            }
+
+            &.shimmer {
+              height: 70px;
+              background: linear-gradient(
+                90deg,
+                var(--background-3) 25%,
+                var(--background-2) 50%,
+                var(--background-3) 75%
+              );
+              background-size: 200% 100%;
+              animation: ${shimmer} 1.5s infinite;
             }
           }
         }
@@ -129,6 +170,18 @@ export const StyledRepoAnalysisPage = styled.div`
                 color: var(--error);
               }
             }
+
+            &.shimmer {
+              height: 50px;
+              background: linear-gradient(
+                90deg,
+                var(--background-3) 25%,
+                var(--background-2) 50%,
+                var(--background-3) 75%
+              );
+              background-size: 200% 100%;
+              animation: ${shimmer} 1.5s infinite;
+            }
           }
         }
 
@@ -143,6 +196,18 @@ export const StyledRepoAnalysisPage = styled.div`
             border-radius: 6px;
             color: var(--white);
             font-family: monospace;
+
+            &.shimmer {
+              height: 40px;
+              background: linear-gradient(
+                90deg,
+                var(--background-3) 25%,
+                var(--background-2) 50%,
+                var(--background-3) 75%
+              );
+              background-size: 200% 100%;
+              animation: ${shimmer} 1.5s infinite;
+            }
           }
         }
       }

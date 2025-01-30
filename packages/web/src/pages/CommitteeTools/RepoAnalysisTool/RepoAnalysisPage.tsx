@@ -3,111 +3,25 @@ import { useTranslation } from "react-i18next";
 import { Button, FormInput } from "components";
 import { StyledRepoAnalysisPage } from "./styles";
 import { useRepoAnalysis } from "./hooks/useRepoAnalysis";
-import { AnalysisResponse } from "./types";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { RoutePaths } from "navigation";
 import { useNavigate } from "react-router-dom";
+import { AnalysisEstimations } from "./components/AnalysisEstimations";
+import { CodeSummary } from "./components/CodeSummary";
+import { CodeCapabilities } from "./components/CodeCapabilities";
+import { DeployableContracts } from "./components/DeployableContracts";
 
 export const RepoAnalysisPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [repoOwner, setRepoOwner] = useState("");
   const [repoName, setRepoName] = useState("");
-  const { analyzeRepo, isLoading, data } = useRepoAnalysis();
+  const { analyzeRepo, isLoading, data, error } = useRepoAnalysis();
 
   const handleAnalyze = async () => {
     if (!repoOwner || !repoName) return;
     await analyzeRepo(repoOwner, repoName);
-  };
-
-  const renderAnalysisResults = (data: AnalysisResponse) => {
-    return (
-      <div className="analysis-results">
-        <div className="section">
-          <h3>{t("RepoAnalysis.estimations")}</h3>
-          <div className="estimation-grid">
-            <div className="estimation-item">
-              <span className="label">{t("RepoAnalysis.lowEstimate")}</span>
-              <span className="value">${data.estimations.low}</span>
-            </div>
-            <div className="estimation-item">
-              <span className="label">{t("RepoAnalysis.mediumEstimate")}</span>
-              <span className="value">${data.estimations.medium}</span>
-            </div>
-            <div className="estimation-item">
-              <span className="label">{t("RepoAnalysis.highEstimate")}</span>
-              <span className="value">${data.estimations.high}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="section">
-          <h3>{t("RepoAnalysis.summary")}</h3>
-          <div className="summary-grid">
-            <div className="summary-item">
-              <span className="label">{t("RepoAnalysis.totalLines")}</span>
-              <span className="value">{data.analysis.summary.total_lines}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">{t("RepoAnalysis.sourceLines")}</span>
-              <span className="value">{data.analysis.summary.source_lines}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">{t("RepoAnalysis.commentLines")}</span>
-              <span className="value">{data.analysis.summary.comment_lines}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">{t("RepoAnalysis.commentRatio")}</span>
-              <span className="value">{(data.analysis.summary.comment_ratio * 100).toFixed(1)}%</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">{t("RepoAnalysis.complexityScore")}</span>
-              <span className="value">{data.analysis.summary.complexity_score}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">{t("RepoAnalysis.contracts")}</span>
-              <span className="value">{data.analysis.summary.num_contracts}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">{t("RepoAnalysis.interfaces")}</span>
-              <span className="value">{data.analysis.summary.num_interfaces}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">{t("RepoAnalysis.libraries")}</span>
-              <span className="value">{data.analysis.summary.num_libraries}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="section">
-          <h3>{t("RepoAnalysis.capabilities")}</h3>
-          <div className="capabilities-grid">
-            {Object.entries(data.analysis.capabilities).map(([key, value]) => (
-              <div key={key} className="capability-item">
-                <span className="label">{t(`RepoAnalysis.${key}`)}</span>
-                <span className={`value ${value ? "positive" : "negative"}`}>
-                  {value ? "✓" : "✗"}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {data.analysis.summary.deployable_contracts.length > 0 && (
-          <div className="section">
-            <h3>{t("RepoAnalysis.deployableContracts")}</h3>
-            <div className="deployable-contracts">
-              {data.analysis.summary.deployable_contracts.map((contract) => (
-                <div key={contract} className="contract-item">
-                  {contract}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    );
   };
 
   return (
@@ -145,7 +59,52 @@ export const RepoAnalysisPage = () => {
           </Button>
         </div>
 
-        {data && renderAnalysisResults(data)}
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
+
+        {(data || isLoading) && (
+          <div className="analysis-results">
+            <AnalysisEstimations
+              estimations={data?.estimations ?? { low: 0, medium: 0, high: 0 }}
+              isLoading={isLoading}
+            />
+            <CodeSummary
+              summary={data?.analysis.summary ?? {
+                total_lines: 0,
+                source_lines: 0,
+                comment_lines: 0,
+                comment_ratio: 0,
+                complexity_score: 0,
+                num_contracts: 0,
+                num_interfaces: 0,
+                num_abstract: 0,
+                num_libraries: 0,
+                num_public_functions: 0,
+                num_payable_functions: 0,
+                deployable_contracts: [],
+              }}
+              isLoading={isLoading}
+            />
+            <CodeCapabilities
+              capabilities={data?.analysis.capabilities ?? {
+                can_receive_funds: false,
+                has_destroy_function: false,
+                uses_assembly: false,
+                uses_hash_functions: false,
+                uses_unchecked_blocks: false,
+                uses_try_catch: false,
+              }}
+              isLoading={isLoading}
+            />
+            <DeployableContracts
+              contracts={data?.analysis.summary.deployable_contracts ?? []}
+              isLoading={isLoading}
+            />
+          </div>
+        )}
       </div>
     </StyledRepoAnalysisPage>
   );
