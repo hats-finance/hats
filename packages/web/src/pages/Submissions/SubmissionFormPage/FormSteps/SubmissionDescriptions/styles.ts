@@ -5,12 +5,25 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 export const StyledSubmissionDescriptionsList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${getSpacing(2)};
-  margin-bottom: ${getSpacing(2)};
+  gap: ${getSpacing(4)};
+  width: 100%;
+  position: relative;
+
+  .load-more-trigger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: ${getSpacing(4)};
+    margin-top: ${getSpacing(4)};
+    opacity: 0.7;
+    min-height: 60px;
+  }
 
   .buttons {
     display: flex;
-    justify-content: space-between;
+    gap: ${getSpacing(3)};
+    justify-content: flex-end;
+    margin-top: ${getSpacing(4)};
   }
 `;
 
