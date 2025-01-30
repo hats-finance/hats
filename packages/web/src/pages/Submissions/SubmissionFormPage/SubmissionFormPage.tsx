@@ -136,10 +136,35 @@ export const SubmissionFormPage = () => {
 
   // Clear submission data if chain changes
   useEffect(() => {
-    if (submissionData?.submissionResult?.chainId && chain?.id && submissionData.submissionResult.chainId !== chain.id) {
-      reset();
-    }
-  }, [chain?.id]);
+    const checkChainChange = async () => {
+      if (submissionData?.submissionResult?.chainId && chain?.id && submissionData.submissionResult.chainId !== chain.id) {
+        const wantsToReset = await confirm({
+          title: t("chainChanged"),
+          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+          description: t("chainChangedExplanation"),
+          cancelText: t("keepData"),
+          confirmText: t("clearForm"),
+        });
+
+        if (wantsToReset) {
+          reset();
+        } else {
+          // If user wants to keep data, switch back to the original chain
+          // This is handled by the wallet, we just need to show a message
+          confirm({
+            title: t("switchBackToOriginalChain"),
+            titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+            description: t("pleaseSwitch", { 
+              chainId: submissionData.submissionResult.chainId 
+            }),
+            confirmText: t("gotIt"),
+          });
+        }
+      }
+    };
+
+    checkChainChange();
+  }, [chain?.id, submissionData?.submissionResult?.chainId, confirm, reset, t]);
 
   // Loads initial state of the vault
   useEffect(() => {
