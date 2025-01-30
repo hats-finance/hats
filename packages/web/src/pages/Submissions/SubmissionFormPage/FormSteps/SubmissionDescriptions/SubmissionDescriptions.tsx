@@ -560,11 +560,9 @@ export function SubmissionDescriptions() {
       if (vault.version === "v1") {
         keyOrKeys = vault.description?.["communication-channel"]?.["pgp-pk"] ?? [];
       } else {
-        keyOrKeys =
-          vault.description?.committee.members.reduce(
-            (prev: string[], curr) => [...prev, ...curr["pgp-keys"].map((key) => key.publicKey)],
-            []
-          ) ?? [];
+        keyOrKeys = vault.description?.committee.members.flatMap(
+          (member) => member["pgp-keys"].map((key) => key.publicKey)
+        ) ?? [];
       }
 
       keyOrKeys = typeof keyOrKeys === "string" ? keyOrKeys : keyOrKeys.filter((key) => !!key);
