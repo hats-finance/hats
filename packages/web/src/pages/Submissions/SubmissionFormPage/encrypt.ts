@@ -5,6 +5,16 @@ const IpfsHash = require("ipfs-only-hash");
 
 const encryptionCache = new Map<string, string>();
 
+// Helper function to enforce cache size limit
+function enforceCacheLimit(cache: Map<string, string>, limit: number) {
+  if (cache.size > limit) {
+    const firstKey = Array.from(cache.keys())[0];
+    if (firstKey) {
+      cache.delete(firstKey);
+    }
+  }
+}
+
 export async function encryptWithKeys(publicKeyOrKeys: string | string[], dataToEncrypt: string): Promise<string> {
   const cacheKey = Array.isArray(publicKeyOrKeys) 
     ? `keys-${dataToEncrypt}-${publicKeyOrKeys.join(',')}`
@@ -36,12 +46,7 @@ export async function encryptWithKeys(publicKeyOrKeys: string | string[], dataTo
     encryptionCache.set(cacheKey, result);
     
     // Limit cache size to prevent memory leaks
-    if (encryptionCache.size > 100) {
-      const firstKey = Array.from(encryptionCache.keys())[0];
-      if (firstKey) {
-        encryptionCache.delete(firstKey);
-      }
-    }
+    enforceCacheLimit(encryptionCache, 100);
 
     return result;
   } catch (error) {
@@ -76,12 +81,7 @@ export async function encryptWithHatsKey(dataToEncrypt: string): Promise<string>
     encryptionCache.set(cacheKey, result);
     
     // Limit cache size to prevent memory leaks
-    if (encryptionCache.size > 100) {
-      const firstKey = Array.from(encryptionCache.keys())[0];
-      if (firstKey) {
-        encryptionCache.delete(firstKey);
-      }
-    }
+    enforceCacheLimit(encryptionCache, 100);
 
     return result;
   } catch (error) {
@@ -104,5 +104,6 @@ export async function calcCid(content: string): Promise<string> {
 
   const cid = await IpfsHash.of(content);
   encryptionCache.set(cacheKey, cid);
+  enforceCacheLimit(encryptionCache, 100);
   return cid;
 }

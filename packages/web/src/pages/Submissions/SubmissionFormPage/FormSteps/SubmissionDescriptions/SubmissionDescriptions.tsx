@@ -89,6 +89,13 @@ export function SubmissionDescriptions() {
     };
   });
 
+  const {
+    debouncedUpdateDescription,
+    debouncedUpdateTitle,
+    debouncedHandleFixFiles,
+    debouncedHandleTestFiles
+  } = useSubmissionDebounce(setValue);
+
   // Reset form with saved data
   useEffect(() => {
     if (submissionData?.submissionsDescriptions) reset(submissionData.submissionsDescriptions);
@@ -257,9 +264,10 @@ export function SubmissionDescriptions() {
           <FormInput
             {...register(`descriptions.${index}.title`)}
             disabled={allFormDisabled}
-            label={`${t("Submissions.submissionTitle")}`}
+            label={t("Submissions.submissionTitle")}
             placeholder={t("Submissions.submissionTitlePlaceholder")}
             colorable
+            onChange={(e) => debouncedUpdateTitle(index, e.target.value)}
           />
           <Controller
             control={control}
@@ -288,9 +296,9 @@ export function SubmissionDescriptions() {
               isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
               error={error}
               colorable
-              {...field}
+              value={field.value}
+              onChange={(value) => debouncedUpdateDescription(index, value)}
             />
-
           )}
         />
 
@@ -601,17 +609,6 @@ export function SubmissionDescriptions() {
       value: severity.name.toLowerCase(),
     }));
   }, [vault?.description?.severities]);
-
-  // Debounce form updates
-  const debouncedSetValue = useCallback(
-    (name: FieldPath<ISubmissionsDescriptionsData>, value: any) => {
-      const timeoutId = setTimeout(() => {
-        setValue(name, value, { shouldValidate: true });
-      }, 300);
-      return () => clearTimeout(timeoutId);
-    },
-    [setValue]
-  );
 
   // Memoize controlled descriptions to prevent unnecessary re-renders
   const memoizedControlledDescriptions = useMemo(
