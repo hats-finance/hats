@@ -2,6 +2,7 @@ import { ChainsConfig, getAddressSafes } from "@hats.finance/shared";
 import BugIcon from "@mui/icons-material/BugReportOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import DecryptionTool from "@mui/icons-material/VpnKeyOffOutlined";
+import CodeIcon from "@mui/icons-material/CodeOutlined";
 import { toggleMenu } from "actions";
 import { ReactComponent as AuditsIcon } from "assets/icons/custom/audits.svg";
 import { ReactComponent as BountiesIcon } from "assets/icons/custom/bounties.svg";
@@ -145,7 +146,6 @@ export default function NavLinks() {
           <div ref={committeeToolsSubrouteRef} className="committee-tools-subroutes">
             <StyledNavLink
               className="sub"
-              // hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
               to={`${RoutePaths.committee_tools}/submissions`}
               onClick={handleClick}
             >
@@ -155,7 +155,6 @@ export default function NavLinks() {
             </StyledNavLink>
             <StyledNavLink
               className="sub"
-              // hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
               to={`${RoutePaths.committee_tools}/payouts`}
               onClick={handleClick}
             >
@@ -165,7 +164,6 @@ export default function NavLinks() {
             </StyledNavLink>
             <StyledNavLink
               className="sub"
-              // hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
               to={`${RoutePaths.committee_tools}`}
               end
               onClick={handleClick}
@@ -173,6 +171,16 @@ export default function NavLinks() {
               <DecryptionTool />
               <p className="normal">{t("decryptionTool")}</p>
               <p className="collapsed">{t("decryptionTool")}</p>
+            </StyledNavLink>
+            <StyledNavLink
+              className="sub"
+              hidden={!isGrowthMember}
+              to={`${RoutePaths.committee_tools}/repo-analysis`}
+              onClick={handleClick}
+            >
+              <CodeIcon />
+              <p className="normal">{t("RepoAnalysis.title")}</p>
+              <p className="collapsed">{t("RepoAnalysis.title")}</p>
             </StyledNavLink>
           </div>
         )}
