@@ -77,11 +77,15 @@ export const SubmissionFormPage = () => {
     reset: callReset,
     send: sendVulnerabilityOnChain,
     isLoading: isSigningSubmission,
+    error: contractError
   } = LogClaimContract.hook(vault);
   const { isLoading: isSubmitting } = useWaitForTransaction({
     hash: callData?.hash,
     onSettled(data, error) {
-      if (error) return reset();
+      if (error) {
+        reset();
+        return;
+      }
 
       if (submissionData && data?.transactionHash && chain?.id) {
         const newVulnerabilityData: ISubmissionData = {
@@ -97,7 +101,21 @@ export const SubmissionFormPage = () => {
         };
 
         setSubmissionData(newVulnerabilityData);
-        sendSubmissionToServer(newVulnerabilityData);
+        sendSubmissionToServer(newVulnerabilityData).catch(() => {
+          // If server submission fails, update the UI to show the error
+          setSubmissionData({
+            ...newVulnerabilityData,
+            submissionResult: {
+              ...newVulnerabilityData.submissionResult,
+              verified: true,
+              txStatus: SubmissionOpStatus.Fail,
+              botStatus: SubmissionOpStatus.Fail,
+              transactionHash: data?.transactionHash,
+              chainId: chain?.id,
+              auditCompetitionRepo: undefined,
+            },
+          });
+        });
       }
     },
   });
@@ -108,6 +126,20 @@ export const SubmissionFormPage = () => {
     setCurrentStep(0);
     setAllFormDisabled(false);
   };
+
+  // Handle contract errors
+  useEffect(() => {
+    if (contractError) {
+      reset();
+    }
+  }, [contractError]);
+
+  // Clear submission data if chain changes
+  useEffect(() => {
+    if (submissionData?.submissionResult?.chainId && chain?.id && submissionData.submissionResult.chainId !== chain.id) {
+      reset();
+    }
+  }, [chain?.id]);
 
   // Loads initial state of the vault
   useEffect(() => {
