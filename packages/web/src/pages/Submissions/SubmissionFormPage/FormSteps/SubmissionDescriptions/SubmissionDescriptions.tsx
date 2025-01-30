@@ -6,9 +6,9 @@ import CloseIcon from "@mui/icons-material/CloseOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlined";
 import FlagIcon from "@mui/icons-material/OutlinedFlagOutlined";
 import { useInView } from 'react-intersection-observer';
-import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import { Loading, Alert, Button, FormInput, FormMDEditor, FormSelectInput, FormSelectInputOption, Pill, WithTooltip } from 'components';
-import { Controller, FieldPath, useFieldArray, useWatch } from 'react-hook-form';
+import { Controller, useFieldArray, useWatch } from 'react-hook-form';
 import { ISubmissionsDescriptionsData } from "../../types";
 import { getCreateDescriptionSchema } from "./formSchema";
 import { StyledSubmissionDescription, StyledSubmissionDescriptionsList as BaseStyledSubmissionDescriptionsList } from "./styles";
@@ -48,21 +48,22 @@ export function SubmissionDescriptions() {
   const { t } = useTranslation();
   const { address } = useAccount();
   const navigate = useNavigate();
-
   const { data: hackerProfile } = useProfileByAddress(address);
-
   const { submissionData, setSubmissionData, vault, allFormDisabled } = useContext(SubmissionFormContext);
+  
+  // State hooks
   const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
+  const [vaultGithubIssuesOpts, setVaultGithubIssuesOpts] = useState<FormSelectInputOption[] | undefined>();
+  const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
+  const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
+  const [visibleSubmissions, setVisibleSubmissions] = useState<number>(5); // ITEMS_PER_PAGE = 5
+  const { ref: loadMoreRef, inView } = useInView();
 
   const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
   const bonusPointsEnabled = vault?.description?.["project-metadata"].bonusPointsEnabled;
 
   const { data: claimedIssues, isLoading: isLoadingClaimedIssues } = useClaimedIssuesByVaultAndClaimedBy(vault, address);
-
-  const [vaultGithubIssuesOpts, setVaultGithubIssuesOpts] = useState<FormSelectInputOption[] | undefined>();
-  const [vaultGithubIssues, setVaultGithubIssues] = useState<GithubIssue[] | undefined>(undefined);
-  const [isLoadingGH, setIsLoadingGH] = useState<boolean>(false);
 
   const {
     register,
@@ -76,18 +77,14 @@ export function SubmissionDescriptions() {
     resolver: yupResolver(getCreateDescriptionSchema(t)),
     mode: "onChange",
   });
+
   const {
     fields,
     append: appendSubmissionDescription,
     remove: removeSubmissionDescription,
   } = useFieldArray({ control, name: `descriptions` });
+
   const watchDescriptions = useWatch({ control, name: `descriptions` });
-  const controlledDescriptions = fields.map((field, index) => {
-    return {
-      ...field,
-      ...watchDescriptions[index],
-    };
-  });
 
   const {
     debouncedUpdateDescription,
@@ -96,30 +93,40 @@ export function SubmissionDescriptions() {
     debouncedHandleTestFiles
   } = useSubmissionDebounce(setValue);
 
-  // Reset form with saved data
+  // Memoized values
+  const memoizedControlledDescriptions = useMemo(() => 
+    fields.map((field, index) => ({
+      ...field,
+      ...watchDescriptions[index],
+    })),
+    [fields, watchDescriptions]
+  );
+
+  const visibleDescriptions = useMemo(() => 
+    memoizedControlledDescriptions.slice(0, visibleSubmissions),
+    [memoizedControlledDescriptions, visibleSubmissions]
+  );
+
+  // Effects
   useEffect(() => {
-    if (submissionData?.submissionsDescriptions) reset(submissionData.submissionsDescriptions);
+    if (submissionData?.submissionsDescriptions) {
+      reset(submissionData.submissionsDescriptions);
+    }
   }, [submissionData, reset]);
 
-  // Get severities information
   useEffect(() => {
-    if (!vault || !vault.description) return;
-
-    if (vault.description) {
-      const severities = vault.description.severities.map((severity: IVulnerabilitySeverity) => ({
-        label: severity.name.toLowerCase().replace("severity", "").trim(),
-        value: severity.name.toLowerCase(),
-      }));
-
-      setSeveritiesOptions(severities);
-    }
+    if (!vault?.description) return;
+    const severities = vault.description.severities.map((severity: IVulnerabilitySeverity) => ({
+      label: severity.name.toLowerCase().replace("severity", "").trim(),
+      value: severity.name.toLowerCase(),
+    }));
+    setSeveritiesOptions(severities);
   }, [vault, t]);
 
-  // Update isEncrypted field on descriptions
   useEffect(() => {
     if (!vault || !vault.description || !vault.description.severities) return;
 
-    for (const [idx, description] of controlledDescriptions.entries()) {
+    for (const [idx, description] of memoizedControlledDescriptions.entries()) {
       if (description.type === "complement") {
         if (description.isEncrypted === true) setValue(`descriptions.${idx}.isEncrypted`, false);
         continue;
@@ -145,109 +152,22 @@ export function SubmissionDescriptions() {
         }
       }
     }
-  }, [controlledDescriptions, vault, setValue, isAuditSubmission]);
-
-  // Get information from github
-  const someComplementSubmission = controlledDescriptions.some((desc) => desc.type === "complement");
-  useEffect(() => {
-    if (!someComplementSubmission) return;
-    if (!vault) return;
-    if (!claimedIssues) return;
-    if (vaultGithubIssues !== undefined || isLoadingGH) return;
-    const loadGhIssues = async () => {
-      setIsLoadingGH(true);
-      const ghIssues = await getGithubIssuesFromVault(vault);
-      const ghIssuesOpts = ghIssues
-        .filter((ghIssue) =>
-          claimedIssues?.some((ci) => +ci.issueNumber === +ghIssue.number && !moment(ci.expiresAt).isBefore(moment()))
-        )
-        .filter((ghIssue) => ghIssue.bonusPointsLabels.needsFix || ghIssue.bonusPointsLabels.needsTest)
-        .map((ghIssue) => ({
-          label: `[#${ghIssue.number}] ${ghIssue.title}`,
-          value: `${ghIssue.number}`,
-        }));
-
-      setVaultGithubIssuesOpts(ghIssuesOpts);
-      setVaultGithubIssues(ghIssues);
-      setIsLoadingGH(false);
-    };
-    loadGhIssues();
-  }, [vault, vaultGithubIssues, isLoadingGH, someComplementSubmission, claimedIssues, address]);
+  }, [memoizedControlledDescriptions, vault, setValue, isAuditSubmission]);
 
   useEffect(() => {
-    setVaultGithubIssuesOpts(undefined);
-    setVaultGithubIssues(undefined);
-  }, [address]);
-
-  const handleSaveAndDownloadDescription = async (formData: ISubmissionsDescriptionsData) => {
-    if (!vault) return;
-    if (!submissionData) return alert("Please fill previous steps first.");
-
-    let keyOrKeys: string | string[];
-
-    // Get public keys from vault description
-    if (vault.version === "v1") {
-      keyOrKeys = vault.description?.["communication-channel"]?.["pgp-pk"] ?? [];
-    } else {
-      keyOrKeys =
-        vault.description?.committee.members.reduce(
-          (prev: string[], curr) => [...prev, ...curr["pgp-keys"].map((key) => key.publicKey)],
-          []
-        ) ?? [];
+    if (inView && visibleSubmissions < memoizedControlledDescriptions.length) {
+      setVisibleSubmissions(prev => Math.min(prev + 5, memoizedControlledDescriptions.length));
     }
+  }, [inView, memoizedControlledDescriptions.length, visibleSubmissions]);
 
-    keyOrKeys = typeof keyOrKeys === "string" ? keyOrKeys : keyOrKeys.filter((key) => !!key);
-    if (keyOrKeys.length === 0) return alert("This project has no keys to encrypt the description. Please contact HATS team.");
+  useEffect(() => {
+    setVisibleSubmissions(5);
+  }, [fields.length]);
 
-    const getSubmissionTextsFunction = isAuditSubmission ? getAuditSubmissionTexts : getBountySubmissionTexts;
-    const submissionTexts = getSubmissionTextsFunction(submissionData, formData.descriptions, hackerProfile);
-
-    const toEncrypt = submissionTexts.toEncrypt;
-    const decrypted = submissionTexts.decrypted;
-    const submissionMessage = submissionTexts.submissionMessage;
-
-    const encryptionResult = await encryptWithKeys(keyOrKeys, toEncrypt);
-    if (!encryptionResult) return alert("This vault doesn't have any valid key, please contact hats team");
-
-    const { encryptedData, sessionKey } = JSON.parse(encryptionResult);
-
-    let submissionInfo: ISubmissionMessageObject | undefined;
-
-    try {
-      submissionInfo = {
-        ref: submissionData.ref,
-        isEncryptedByHats: isPrivateAudit,
-        decrypted: isPrivateAudit ? await encryptWithHatsKey(decrypted ?? "--Nothing decrypted--") : decrypted,
-        encrypted: encryptedData,
-      };
-    } catch (error) {
-      console.log(error);
-      return alert("There was a problem encrypting the submission with Hats key. Please contact HATS team.");
-    }
-
-    if (!submissionInfo) return;
-
-    download(
-      JSON.stringify({ submission: submissionInfo, sessionKey }),
-      `${submissionData.project?.projectName}-${new Date().getTime()}.json`
-    );
-
-    setSubmissionData((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        submissionsDescriptions: {
-          verified: true,
-          submission: JSON.stringify(submissionInfo),
-          submissionMessage: submissionMessage,
-          descriptions: formData.descriptions,
-        },
-        submissionResult: undefined,
-      };
-    });
-  };
-
-  if (!vault) return <Alert type="error">{t("Submissions.firstYouNeedToSelectAProject")}</Alert>;
+  // Early return with error message
+  if (!vault) {
+    return <Alert type="error">{t("Submissions.firstYouNeedToSelectAProject")}</Alert>;
+  }
 
   const getSubmissionsRoute = () => {
     const mainRoute = `/${isAuditSubmission ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
@@ -256,7 +176,7 @@ export function SubmissionDescriptions() {
     return `${mainRoute}/${vaultSlug}-${vault.id}/submissions`;
   };
 
-  const getNewIssueForm = (submissionDescription: (typeof controlledDescriptions)[number], index: number) => {
+  const getNewIssueForm = (submissionDescription: (typeof memoizedControlledDescriptions)[number], index: number) => {
     return (
       <>
         <p className="mb-4">{t("Submissions.provideExplanation")}</p>
@@ -302,16 +222,6 @@ export function SubmissionDescriptions() {
           )}
         />
 
-        {/* {!submissionDescription.isEncrypted && !allFormDisabled && (
-          <Controller
-            control={control}
-            name={`descriptions.${index}.files`}
-            render={({ field, fieldState: { error } }) => (
-              <FormSupportFilesInput label={t("Submissions.selectSupportFiles")} error={error} {...field} />
-            )}
-          />
-        )} */}
-
         <p className="mb-4">Does this issue needs a fix?</p>
         <div className={`options mt-3 mb-5 ${errors.descriptions?.[index]?.isTestApplicable ? "error-text" : ""}`}>
           <div
@@ -338,7 +248,7 @@ export function SubmissionDescriptions() {
     );
   };
 
-  const getComplementIssueForm = (submissionDescription: (typeof controlledDescriptions)[number], index: number) => {
+  const getComplementIssueForm = (submissionDescription: (typeof memoizedControlledDescriptions)[number], index: number) => {
     const { complementGhIssue, needsFix, needsTest } = submissionDescription;
 
     return (
@@ -538,7 +448,6 @@ export function SubmissionDescriptions() {
                   }}
                 />
 
-                {/* <p className="mb-4">{t("Submissions.filesAttached")}:</p> */}
                 <div className="files-attached-container">
                   <div className="files">
                     {(submissionDescription.complementTestFiles ?? []).map((item, idx) => (
@@ -601,81 +510,73 @@ export function SubmissionDescriptions() {
     );
   };
 
-  // Memoize severities options to prevent unnecessary re-renders
-  const severitiesOptionsMemo = useMemo(() => {
-    if (!vault?.description?.severities) return undefined;
-    return vault.description.severities.map((severity: IVulnerabilitySeverity) => ({
-      label: severity.name.toLowerCase().replace("severity", "").trim(),
-      value: severity.name.toLowerCase(),
-    }));
-  }, [vault?.description?.severities]);
+  const handleSaveAndDownloadDescription = async (formData: ISubmissionsDescriptionsData) => {
+    if (!vault) return;
+    if (!submissionData) return alert("Please fill previous steps first.");
 
-  // Memoize controlled descriptions to prevent unnecessary re-renders
-  const memoizedControlledDescriptions = useMemo(
-    () =>
-      fields.map((field, index) => ({
-        ...field,
-        ...watchDescriptions[index],
-      })),
-    [fields, watchDescriptions]
-  );
+    let keyOrKeys: string | string[];
 
-  // Optimize GitHub issues loading with caching
-  const loadGhIssues = useCallback(async () => {
-    if (!vault || isLoadingGH || vaultGithubIssues) return;
-    
+    // Get public keys from vault description
+    if (vault.version === "v1") {
+      keyOrKeys = vault.description?.["communication-channel"]?.["pgp-pk"] ?? [];
+    } else {
+      keyOrKeys =
+        vault.description?.committee.members.reduce(
+          (prev: string[], curr) => [...prev, ...curr["pgp-keys"].map((key) => key.publicKey)],
+          []
+        ) ?? [];
+    }
+
+    keyOrKeys = typeof keyOrKeys === "string" ? keyOrKeys : keyOrKeys.filter((key) => !!key);
+    if (keyOrKeys.length === 0) return alert("This project has no keys to encrypt the description. Please contact HATS team.");
+
+    const getSubmissionTextsFunction = isAuditSubmission ? getAuditSubmissionTexts : getBountySubmissionTexts;
+    const submissionTexts = getSubmissionTextsFunction(submissionData, formData.descriptions, hackerProfile);
+
+    const toEncrypt = submissionTexts.toEncrypt;
+    const decrypted = submissionTexts.decrypted;
+    const submissionMessage = submissionTexts.submissionMessage;
+
+    const encryptionResult = await encryptWithKeys(keyOrKeys, toEncrypt);
+    if (!encryptionResult) return alert("This vault doesn't have any valid key, please contact hats team");
+
+    const { encryptedData, sessionKey } = JSON.parse(encryptionResult);
+
+    let submissionInfo: ISubmissionMessageObject | undefined;
+
     try {
-      setIsLoadingGH(true);
-      const cachedIssues = sessionStorage.getItem(`gh-issues-${vault.id}`);
-      if (cachedIssues) {
-        const parsed = JSON.parse(cachedIssues);
-        setVaultGithubIssues(parsed);
-        setVaultGithubIssuesOpts(
-          parsed.map((issue: GithubIssue) => ({
-            label: `#${issue.number} - ${issue.title}`,
-            value: issue.number.toString(),
-          }))
-        );
-        return;
-      }
-
-      const issues = await getGithubIssuesFromVault(vault);
-      setVaultGithubIssues(issues);
-      setVaultGithubIssuesOpts(
-        issues.map((issue) => ({
-          label: `#${issue.number} - ${issue.title}`,
-          value: issue.number.toString(),
-        }))
-      );
-      sessionStorage.setItem(`gh-issues-${vault.id}`, JSON.stringify(issues));
+      submissionInfo = {
+        ref: submissionData.ref,
+        isEncryptedByHats: isPrivateAudit,
+        decrypted: isPrivateAudit ? await encryptWithHatsKey(decrypted ?? "--Nothing decrypted--") : decrypted,
+        encrypted: encryptedData,
+      };
     } catch (error) {
-      console.error('Failed to load GitHub issues:', error);
-    } finally {
-      setIsLoadingGH(false);
+      console.log(error);
+      return alert("There was a problem encrypting the submission with Hats key. Please contact HATS team.");
     }
-  }, [vault, isLoadingGH, vaultGithubIssues]);
 
-  const ITEMS_PER_PAGE = 5;
-  const [visibleSubmissions, setVisibleSubmissions] = useState<number>(ITEMS_PER_PAGE);
-  const { ref: loadMoreRef, inView } = useInView();
-  
-  // Load more submissions when the user scrolls to the bottom
-  useEffect(() => {
-    if (inView && visibleSubmissions < memoizedControlledDescriptions.length) {
-      setVisibleSubmissions(prev => Math.min(prev + ITEMS_PER_PAGE, memoizedControlledDescriptions.length));
-    }
-  }, [inView, memoizedControlledDescriptions.length, visibleSubmissions]);
+    if (!submissionInfo) return;
 
-  // Optimize controlled descriptions with windowing
-  const visibleDescriptions = useMemo(
-    () => memoizedControlledDescriptions.slice(0, visibleSubmissions),
-    [memoizedControlledDescriptions, visibleSubmissions]
-  );
+    download(
+      JSON.stringify({ submission: submissionInfo, sessionKey }),
+      `${submissionData.project?.projectName}-${new Date().getTime()}.json`
+    );
 
-  // Reset visible submissions when descriptions change significantly
-  useEffect(() => {
-    setVisibleSubmissions(ITEMS_PER_PAGE);
-  }, [fields.length]);
+    setSubmissionData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        submissionsDescriptions: {
+          verified: true,
+          submission: JSON.stringify(submissionInfo),
+          submissionMessage: submissionMessage,
+          descriptions: formData.descriptions,
+        },
+        submissionResult: undefined,
+      };
+    });
+  };
 
   return (
     <StyledSubmissionDescriptionsList>
@@ -736,7 +637,6 @@ export function SubmissionDescriptions() {
         </StyledSubmissionDescription>
       ))}
 
-      {/* Load more trigger */}
       {visibleSubmissions < memoizedControlledDescriptions.length && (
         <div ref={loadMoreRef} className="load-more-trigger">
           <Loading fixed={false} extraText="" />
@@ -748,7 +648,6 @@ export function SubmissionDescriptions() {
           <Button
             onClick={() => {
               appendSubmissionDescription(SUBMISSION_INIT_DATA.submissionsDescriptions.descriptions[0]);
-              // Automatically show the new submission
               setVisibleSubmissions(prev => prev + 1);
             }}
             styleType="invisible"
