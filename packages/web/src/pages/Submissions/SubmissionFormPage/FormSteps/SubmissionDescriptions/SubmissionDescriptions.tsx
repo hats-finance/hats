@@ -164,6 +164,43 @@ export function SubmissionDescriptions() {
     setVisibleSubmissions(5);
   }, [fields.length]);
 
+  // Add GitHub issues loading effect
+  useEffect(() => {
+    const loadGithubIssues = async () => {
+      if (!vault || !claimedIssues || isLoadingGH) return;
+      
+      try {
+        setIsLoadingGH(true);
+        const ghIssues = await getGithubIssuesFromVault(vault);
+        const filteredIssues = ghIssues.filter((ghIssue) =>
+          claimedIssues?.some(
+            (ci) => +ci.issueNumber === +ghIssue.number && !moment(ci.expiresAt).isBefore(moment())
+          ) && (ghIssue.bonusPointsLabels.needsFix || ghIssue.bonusPointsLabels.needsTest)
+        );
+
+        const issueOptions = filteredIssues.map((ghIssue) => ({
+          label: `[#${ghIssue.number}] ${ghIssue.title}`,
+          value: `${ghIssue.number}`,
+        }));
+
+        setVaultGithubIssues(ghIssues);
+        setVaultGithubIssuesOpts(issueOptions);
+      } catch (error) {
+        console.error('Failed to load GitHub issues:', error);
+      } finally {
+        setIsLoadingGH(false);
+      }
+    };
+
+    loadGithubIssues();
+  }, [vault, claimedIssues, isLoadingGH]);
+
+  // Reset GitHub issues when address changes
+  useEffect(() => {
+    setVaultGithubIssuesOpts(undefined);
+    setVaultGithubIssues(undefined);
+  }, [address]);
+
   // Early return with error message
   if (!vault) {
     return <Alert type="error">{t("Submissions.firstYouNeedToSelectAProject")}</Alert>;
@@ -514,68 +551,72 @@ export function SubmissionDescriptions() {
     if (!vault) return;
     if (!submissionData) return alert("Please fill previous steps first.");
 
-    let keyOrKeys: string | string[];
-
-    // Get public keys from vault description
-    if (vault.version === "v1") {
-      keyOrKeys = vault.description?.["communication-channel"]?.["pgp-pk"] ?? [];
-    } else {
-      keyOrKeys =
-        vault.description?.committee.members.reduce(
-          (prev: string[], curr) => [...prev, ...curr["pgp-keys"].map((key) => key.publicKey)],
-          []
-        ) ?? [];
-    }
-
-    keyOrKeys = typeof keyOrKeys === "string" ? keyOrKeys : keyOrKeys.filter((key) => !!key);
-    if (keyOrKeys.length === 0) return alert("This project has no keys to encrypt the description. Please contact HATS team.");
-
-    const getSubmissionTextsFunction = isAuditSubmission ? getAuditSubmissionTexts : getBountySubmissionTexts;
-    const submissionTexts = getSubmissionTextsFunction(submissionData, formData.descriptions, hackerProfile);
-
-    const toEncrypt = submissionTexts.toEncrypt;
-    const decrypted = submissionTexts.decrypted;
-    const submissionMessage = submissionTexts.submissionMessage;
-
-    const encryptionResult = await encryptWithKeys(keyOrKeys, toEncrypt);
-    if (!encryptionResult) return alert("This vault doesn't have any valid key, please contact hats team");
-
-    const { encryptedData, sessionKey } = JSON.parse(encryptionResult);
-
-    let submissionInfo: ISubmissionMessageObject | undefined;
-
     try {
-      submissionInfo = {
+      setIsLoadingGH(true); // Show loading while processing
+
+      let keyOrKeys: string | string[];
+
+      // Get public keys from vault description
+      if (vault.version === "v1") {
+        keyOrKeys = vault.description?.["communication-channel"]?.["pgp-pk"] ?? [];
+      } else {
+        keyOrKeys =
+          vault.description?.committee.members.reduce(
+            (prev: string[], curr) => [...prev, ...curr["pgp-keys"].map((key) => key.publicKey)],
+            []
+          ) ?? [];
+      }
+
+      keyOrKeys = typeof keyOrKeys === "string" ? keyOrKeys : keyOrKeys.filter((key) => !!key);
+      if (keyOrKeys.length === 0) {
+        throw new Error("This project has no keys to encrypt the description. Please contact HATS team.");
+      }
+
+      const getSubmissionTextsFunction = isAuditSubmission ? getAuditSubmissionTexts : getBountySubmissionTexts;
+      const submissionTexts = getSubmissionTextsFunction(submissionData, formData.descriptions, hackerProfile);
+
+      const toEncrypt = submissionTexts.toEncrypt;
+      const decrypted = submissionTexts.decrypted;
+      const submissionMessage = submissionTexts.submissionMessage;
+
+      const encryptionResult = await encryptWithKeys(keyOrKeys, toEncrypt);
+      if (!encryptionResult) {
+        throw new Error("This vault doesn't have any valid key, please contact hats team");
+      }
+
+      const { encryptedData, sessionKey } = JSON.parse(encryptionResult);
+
+      let submissionInfo: ISubmissionMessageObject = {
         ref: submissionData.ref,
         isEncryptedByHats: isPrivateAudit,
         decrypted: isPrivateAudit ? await encryptWithHatsKey(decrypted ?? "--Nothing decrypted--") : decrypted,
         encrypted: encryptedData,
       };
+
+      download(
+        JSON.stringify({ submission: submissionInfo, sessionKey }),
+        `${submissionData.project?.projectName}-${new Date().getTime()}.json`
+      );
+
+      setSubmissionData((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          submissionsDescriptions: {
+            verified: true,
+            submission: JSON.stringify(submissionInfo),
+            submissionMessage: submissionMessage,
+            descriptions: formData.descriptions,
+          },
+          submissionResult: undefined,
+        };
+      });
     } catch (error) {
-      console.log(error);
-      return alert("There was a problem encrypting the submission with Hats key. Please contact HATS team.");
+      console.error('Submission processing failed:', error);
+      alert(error instanceof Error ? error.message : "There was a problem processing your submission. Please try again.");
+    } finally {
+      setIsLoadingGH(false); // Hide loading when done
     }
-
-    if (!submissionInfo) return;
-
-    download(
-      JSON.stringify({ submission: submissionInfo, sessionKey }),
-      `${submissionData.project?.projectName}-${new Date().getTime()}.json`
-    );
-
-    setSubmissionData((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        submissionsDescriptions: {
-          verified: true,
-          submission: JSON.stringify(submissionInfo),
-          submissionMessage: submissionMessage,
-          descriptions: formData.descriptions,
-        },
-        submissionResult: undefined,
-      };
-    });
   };
 
   return (
