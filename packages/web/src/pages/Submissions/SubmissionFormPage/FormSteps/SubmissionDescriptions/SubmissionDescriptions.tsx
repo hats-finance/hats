@@ -1,4 +1,5 @@
 import { GithubIssue, ISubmissionMessageObject, IVulnerabilitySeverity } from "@hats.finance/shared";
+import { FormSupportFilesInput, ISavedFile } from "../../../../components/FormControls/FormSupportFilesInput/FormSupportFilesInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import CloseIcon from "@mui/icons-material/CloseOutlined";
@@ -11,7 +12,6 @@ import {
   FormMDEditor,
   FormSelectInput,
   FormSelectInputOption,
-  FormSupportFilesInput,
   Loading,
   Pill,
   WithTooltip,
@@ -24,7 +24,7 @@ import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useClaimedIssuesByVaultAndClaimedBy } from "pages/Honeypots/VaultDetailsPage/Sections/VaultSubmissionsSection/PublicSubmissionCard/hooks";
 import { getVaultRepoName } from "pages/Honeypots/VaultDetailsPage/savedSubmissionsService";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +37,9 @@ import { ISubmissionsDescriptionsData } from "../../types";
 import { getCreateDescriptionSchema } from "./formSchema";
 import { StyledSubmissionDescription, StyledSubmissionDescriptionsList } from "./styles";
 import { getAuditSubmissionTexts, getBountySubmissionTexts } from "./utils";
+import { useSubmissionDebounce } from '../../hooks/useSubmissionDebounce';
+import { useInView } from 'react-intersection-observer';
+import styled from 'styled-components';
 
 export function SubmissionDescriptions() {
   const { t } = useTranslation();
@@ -205,12 +208,14 @@ export function SubmissionDescriptions() {
         ref: submissionData.ref,
         isEncryptedByHats: isPrivateAudit,
         decrypted: isPrivateAudit ? await encryptWithHatsKey(decrypted ?? "--Nothing decrypted--") : decrypted,
-        encrypted: encryptedData as string,
+        encrypted: encryptedData,
       };
     } catch (error) {
       console.log(error);
       return alert("There was a problem encrypting the submission with Hats key. Please contact HATS team.");
     }
+
+    if (!submissionInfo) return;
 
     download(
       JSON.stringify({ submission: submissionInfo, sessionKey }),
@@ -282,6 +287,7 @@ export function SubmissionDescriptions() {
               colorable
               {...field}
             />
+
           )}
         />
 
@@ -584,71 +590,167 @@ export function SubmissionDescriptions() {
     );
   };
 
+  // Memoize severities options to prevent unnecessary re-renders
+  const severitiesOptionsMemo = useMemo(() => {
+    if (!vault?.description?.severities) return undefined;
+    return vault.description.severities.map((severity: IVulnerabilitySeverity) => ({
+      label: severity.name.toLowerCase().replace("severity", "").trim(),
+      value: severity.name.toLowerCase(),
+    }));
+  }, [vault?.description?.severities]);
+
+  // Debounce form updates
+  const debouncedSetValue = useCallback(
+    (name: FieldPath<ISubmissionsDescriptionsData>, value: any) => {
+      const timeoutId = setTimeout(() => {
+        setValue(name, value, { shouldValidate: true });
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    },
+    [setValue]
+  );
+
+  // Memoize controlled descriptions to prevent unnecessary re-renders
+  const memoizedControlledDescriptions = useMemo(
+    () =>
+      fields.map((field, index) => ({
+        ...field,
+        ...watchDescriptions[index],
+      })),
+    [fields, watchDescriptions]
+  );
+
+  // Optimize GitHub issues loading with caching
+  const loadGhIssues = useCallback(async () => {
+    if (!vault || isLoadingGH || vaultGithubIssues) return;
+    
+    try {
+      setIsLoadingGH(true);
+      const cachedIssues = sessionStorage.getItem(`gh-issues-${vault.id}`);
+      if (cachedIssues) {
+        const parsed = JSON.parse(cachedIssues);
+        setVaultGithubIssues(parsed);
+        setVaultGithubIssuesOpts(
+          parsed.map((issue: GithubIssue) => ({
+            label: `#${issue.number} - ${issue.title}`,
+            value: issue.number.toString(),
+          }))
+        );
+        return;
+      }
+
+      const issues = await getGithubIssuesFromVault(vault);
+      setVaultGithubIssues(issues);
+      setVaultGithubIssuesOpts(
+        issues.map((issue) => ({
+          label: `#${issue.number} - ${issue.title}`,
+          value: issue.number.toString(),
+        }))
+      );
+      sessionStorage.setItem(`gh-issues-${vault.id}`, JSON.stringify(issues));
+    } catch (error) {
+      console.error('Failed to load GitHub issues:', error);
+    } finally {
+      setIsLoadingGH(false);
+    }
+  }, [vault, isLoadingGH, vaultGithubIssues]);
+
+  const ITEMS_PER_PAGE = 5;
+  const [visibleSubmissions, setVisibleSubmissions] = useState<number>(ITEMS_PER_PAGE);
+  const { ref: loadMoreRef, inView } = useInView();
+  
+  // Load more submissions when the user scrolls to the bottom
+  useEffect(() => {
+    if (inView && visibleSubmissions < memoizedControlledDescriptions.length) {
+      setVisibleSubmissions(prev => Math.min(prev + ITEMS_PER_PAGE, memoizedControlledDescriptions.length));
+    }
+  }, [inView, memoizedControlledDescriptions.length, visibleSubmissions]);
+
+  // Optimize controlled descriptions with windowing
+  const visibleDescriptions = useMemo(
+    () => memoizedControlledDescriptions.slice(0, visibleSubmissions),
+    [memoizedControlledDescriptions, visibleSubmissions]
+  );
+
+  // Reset visible submissions when descriptions change significantly
+  useEffect(() => {
+    setVisibleSubmissions(ITEMS_PER_PAGE);
+  }, [fields.length]);
+
   return (
     <StyledSubmissionDescriptionsList>
-      {controlledDescriptions.map((submissionDescription, index) => {
-        return (
-          <StyledSubmissionDescription key={submissionDescription.id} isEncrypted={!!submissionDescription.isEncrypted}>
-            <p className="title mb-2">
-              <span>
-                {t("submission")} #{index + 1}
-              </span>
-              {((submissionDescription.type === "new" && submissionDescription.severity) ||
-                submissionDescription.type === "complement") && (
-                <WithTooltip
-                  text={
-                    submissionDescription.isEncrypted
-                      ? t("Submissions.encryptedSubmissionExplanation")
-                      : t("Submissions.decryptedSubmissionExplanation")
-                  }
-                >
-                  <span className="encryption-info">
-                    {submissionDescription.isEncrypted
-                      ? t("Submissions.encryptedSubmission")
-                      : t("Submissions.decryptedSubmission")}
-                  </span>
-                </WithTooltip>
-              )}
-            </p>
+      {visibleDescriptions.map((submissionDescription, index) => (
+        <StyledSubmissionDescription key={submissionDescription.id} isEncrypted={!!submissionDescription.isEncrypted}>
+          <p className="title mb-2">
+            <span>
+              {t("submission")} #{index + 1}
+            </span>
+            {((submissionDescription.type === "new" && submissionDescription.severity) ||
+              submissionDescription.type === "complement") && (
+              <WithTooltip
+                text={
+                  submissionDescription.isEncrypted
+                    ? t("Submissions.encryptedSubmissionExplanation")
+                    : t("Submissions.decryptedSubmissionExplanation")
+                }
+              >
+                <span className="encryption-info">
+                  {submissionDescription.isEncrypted
+                    ? t("Submissions.encryptedSubmission")
+                    : t("Submissions.decryptedSubmission")}
+                </span>
+              </WithTooltip>
+            )}
+          </p>
 
-            {bonusPointsEnabled && (
-              <div className="options mt-3 mb-5">
-                <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "new")}>
-                  <div className={`check-circle ${submissionDescription.type === "new" ? "selected" : ""}`} />
-                  <div className="info">
-                    <p>{t("newSubmission")}</p>
-                  </div>
-                </div>
-
-                <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "complement")}>
-                  <div className={`check-circle ${submissionDescription.type === "complement" ? "selected" : ""}`} />
-                  <div className="info">
-                    <p>{t("complementSubmission")}</p>
-                  </div>
+          {bonusPointsEnabled && (
+            <div className="options mt-3 mb-5">
+              <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "new")}>
+                <div className={`check-circle ${submissionDescription.type === "new" ? "selected" : ""}`} />
+                <div className="info">
+                  <p>{t("newSubmission")}</p>
                 </div>
               </div>
-            )}
 
-            {submissionDescription.type === "new"
-              ? getNewIssueForm(submissionDescription, index)
-              : getComplementIssueForm(submissionDescription, index)}
-
-            {controlledDescriptions.length > 1 && !allFormDisabled && (
-              <div className="buttons mt-3">
-                <Button onClick={() => removeSubmissionDescription(index)} styleType="outlined" filledColor="secondary">
-                  <RemoveIcon className="mr-3" />
-                  {t("Submissions.removeIssue")}
-                </Button>
+              <div className="option" onClick={() => setValue(`descriptions.${index}.type`, "complement")}>
+                <div className={`check-circle ${submissionDescription.type === "complement" ? "selected" : ""}`} />
+                <div className="info">
+                  <p>{t("complementSubmission")}</p>
+                </div>
               </div>
-            )}
-          </StyledSubmissionDescription>
-        );
-      })}
+            </div>
+          )}
+
+          {submissionDescription.type === "new"
+            ? getNewIssueForm(submissionDescription, index)
+            : getComplementIssueForm(submissionDescription, index)}
+
+          {visibleDescriptions.length > 1 && !allFormDisabled && (
+            <div className="buttons mt-3">
+              <Button onClick={() => removeSubmissionDescription(index)} styleType="outlined" filledColor="secondary">
+                <RemoveIcon className="mr-3" />
+                {t("Submissions.removeIssue")}
+              </Button>
+            </div>
+          )}
+        </StyledSubmissionDescription>
+      ))}
+
+      {/* Load more trigger */}
+      {visibleSubmissions < memoizedControlledDescriptions.length && (
+        <div ref={loadMoreRef} className="load-more-trigger">
+          <Loading size="small" />
+        </div>
+      )}
 
       <div className="buttons mt-3">
         {!allFormDisabled && (
           <Button
-            onClick={() => appendSubmissionDescription(SUBMISSION_INIT_DATA.submissionsDescriptions.descriptions[0])}
+            onClick={() => {
+              appendSubmissionDescription(SUBMISSION_INIT_DATA.submissionsDescriptions.descriptions[0]);
+              // Automatically show the new submission
+              setVisibleSubmissions(prev => prev + 1);
+            }}
             styleType="invisible"
           >
             <AddIcon className="mr-3" />
@@ -662,3 +764,16 @@ export function SubmissionDescriptions() {
     </StyledSubmissionDescriptionsList>
   );
 }
+
+// Add styles for the load more trigger
+const StyledSubmissionDescriptionsList = styled.div`
+  .load-more-trigger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    opacity: 0.7;
+  }
+`;
+
