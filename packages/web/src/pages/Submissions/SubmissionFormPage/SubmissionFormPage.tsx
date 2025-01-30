@@ -198,12 +198,12 @@ export const SubmissionFormPage = () => {
     async (data: ISubmissionData) => {
       if (!vault || !data || !data.submissionResult) return;
 
-      setSubmissionData({
-        ...data,
-        submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Pending, auditCompetitionRepo: undefined },
-      });
-
       try {
+        setSubmissionData({
+          ...data,
+          submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Pending, auditCompetitionRepo: undefined },
+        });
+
         const res = await submitVulnerabilitySubmission(data, vault, hackerProfile);
 
         if (res.success) {
@@ -215,71 +215,91 @@ export const SubmissionFormPage = () => {
               auditCompetitionRepo: res.auditCompetitionRepo,
             },
           });
-        } else throw new Error("Failed to submit vulnerability");
-      } catch {
+        } else {
+          throw new Error("Failed to submit vulnerability");
+        }
+      } catch (error) {
+        console.error("Error sending submission to server:", error);
         setSubmissionData({
           ...data,
           submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Fail, auditCompetitionRepo: undefined },
         });
+        confirm({
+          title: t("serverSubmissionError"),
+          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+          description: t("serverSubmissionErrorExplanation"),
+          confirmText: t("gotIt"),
+        });
       }
     },
-    [vault, hackerProfile]
+    [vault, hackerProfile, confirm, t]
   );
 
   const submitSubmission = useCallback(async () => {
     if (!vault) return;
     if (!submissionData?.submissionsDescriptions?.submission) return;
 
-    // Check if vault requires message signature to submit
-    if (requireMessageSignature && !userHasCollectedSignature) {
-      const wantsToBeRedirected = await confirm({
-        title: t("youNeedToSignMessageToSubmit"),
+    try {
+      // Check if vault requires message signature to submit
+      if (requireMessageSignature && !userHasCollectedSignature) {
+        const wantsToBeRedirected = await confirm({
+          title: t("youNeedToSignMessageToSubmit"),
+          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+          description: t("youNeedToSignMessageToSubmitExplanation"),
+          cancelText: t("close"),
+          confirmText: t("gotIt"),
+        });
+
+        if (!wantsToBeRedirected) return;
+
+        const isAudit = vault?.description?.["project-metadata"].type === "audit";
+        const name = vault?.description?.["project-metadata"].name ?? "";
+
+        const mainRoute = `/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+        const vaultSlug = slugify(name);
+
+        return navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
+      }
+
+      const submission = submissionData?.submissionsDescriptions?.submission;
+      const calculatedCid = await calcCid(submission);
+
+      if (submissionData.ref === "audit-wizard") {
+        if (!submissionData.auditWizardData) return;
+        // Verify if the submission was not changed and validate the signature
+        const auditwizardSubmission = getCurrentAuditwizardSubmission(submissionData.auditWizardData, submissionData);
+
+        if (JSON.stringify(submissionData.auditWizardData) !== JSON.stringify(auditwizardSubmission)) {
+          return confirm({
+            title: t("submissionChanged"),
+            titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+            description: t("submissionChangedExplanationAuditWizard"),
+            confirmText: t("gotIt"),
+          });
+        }
+
+        const res = await verifyAuditWizardSignature(auditwizardSubmission);
+        if (!res) {
+          return confirm({
+            title: t("submissionNotValid"),
+            titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+            description: t("submissionNotValidExplanationAuditWizard"),
+            confirmText: t("gotIt"),
+          });
+        }
+      }
+
+      await sendVulnerabilityOnChain(calculatedCid);
+    } catch (error) {
+      console.error("Error in submission:", error);
+      reset();
+      confirm({
+        title: t("submissionError"),
         titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
-        description: t("youNeedToSignMessageToSubmitExplanation"),
-        cancelText: t("close"),
+        description: t("submissionErrorExplanation"),
         confirmText: t("gotIt"),
       });
-
-      if (!wantsToBeRedirected) return;
-
-      const isAudit = vault?.description?.["project-metadata"].type === "audit";
-      const name = vault?.description?.["project-metadata"].name ?? "";
-
-      const mainRoute = `/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
-      const vaultSlug = slugify(name);
-
-      return navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
     }
-
-    const submission = submissionData?.submissionsDescriptions?.submission;
-    const calculatedCid = await calcCid(submission);
-
-    if (submissionData.ref === "audit-wizard") {
-      if (!submissionData.auditWizardData) return;
-      // Verify if the submission was not changed and validate the signature
-      const auditwizardSubmission = getCurrentAuditwizardSubmission(submissionData.auditWizardData, submissionData);
-
-      if (JSON.stringify(submissionData.auditWizardData) !== JSON.stringify(auditwizardSubmission)) {
-        return confirm({
-          title: t("submissionChanged"),
-          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
-          description: t("submissionChangedExplanationAuditWizard"),
-          confirmText: t("gotIt"),
-        });
-      }
-
-      const res = await verifyAuditWizardSignature(auditwizardSubmission);
-      if (!res) {
-        return confirm({
-          title: t("submissionNotValid"),
-          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
-          description: t("submissionNotValidExplanationAuditWizard"),
-          confirmText: t("gotIt"),
-        });
-      }
-    }
-
-    sendVulnerabilityOnChain(calculatedCid);
   }, [sendVulnerabilityOnChain, submissionData, confirm, requireMessageSignature, userHasCollectedSignature, navigate, vault, t]);
 
   const handleClearSubmission = async () => {
