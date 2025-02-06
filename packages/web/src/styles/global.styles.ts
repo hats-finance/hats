@@ -4,7 +4,7 @@ import { fonts } from "./fonts.styles";
 import { utilityClasses } from "./utilities.styles";
 import { variables } from "./variables.styles";
 
-export const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle<{ theme: any }>`
     ${variables}
     ${responsiveUtilityClasses}
     ${utilityClasses}

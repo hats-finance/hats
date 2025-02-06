@@ -40,7 +40,7 @@ function Root() {
                 <HttpsRedirect>
                   <RouterToUse>
                     <Seo isMainPage />
-                    <GlobalStyle />
+                    <GlobalStyle theme={theme} />
                     <ThemeProvider theme={theme}>
                       <NotificationProvider>
                         <ConfirmDialogProvider>
