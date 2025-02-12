@@ -752,6 +752,7 @@
     "linesOfCode": "Lines of code (LoC)",
     "issueAlreadyHaveValidSubmission": "This issue already have a valid submission. You can submit complementary submission in other issue.",
     "oneSubmissionIsBeingReviewed": "One submission is being reviewed. Please wait, if the submission is not complete, you can submit another one.",
+    "vaultIsNotLive": "This vault is not live",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",
