@@ -6,9 +6,11 @@ import { Button, HackerProfileImage, Loading, Pill, WithTooltip } from "componen
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import moment from "moment";
+import { RoutePaths } from "navigation";
 import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useAllTimeLeaderboard } from "pages/Leaderboard/LeaderboardPage/components/AllTimeLeaderboard/useAllTimeLeaderboard";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { IS_PROD, appChains } from "settings";
 import { useAccount, useNetwork } from "wagmi";
 import { useClaimIssue, useClaimedIssuesByVault } from "../hooks";
@@ -35,6 +37,9 @@ export const SplitPointsActions = ({ vault, submission, linkedPRs }: SplitPoints
   const { chain } = useNetwork();
   const { tryAuthentication } = useSiweAuth();
   const confirm = useConfirm();
+  const navigate = useNavigate();
+
+  const isVaultLive = vault.dateStatus === "on_time";
 
   const { leaderboard } = useAllTimeLeaderboard("all", "streak");
   const { data: profile } = useProfileByAddress(address);
@@ -69,6 +74,7 @@ export const SplitPointsActions = ({ vault, submission, linkedPRs }: SplitPoints
   const isOpenToSubmissions = linkedPRs.length === 0 ? true : linkedPRs?.every((pr) => pr.bonusSubmissionStatus === "INCOMPLETE");
 
   const canExecuteAction = () => {
+    if (!isVaultLive) return { can: false, reason: t("vaultIsNotLive") };
     if (isClaimedByCurrentUser) return { can: true };
     if (claimedByInfo) return { can: false, reason: t("issueAlreadyClaimed") };
 
@@ -136,6 +142,11 @@ export const SplitPointsActions = ({ vault, submission, linkedPRs }: SplitPoints
 
   const handleClaimIssue = async () => {
     if (!canExecuteAction().can) return;
+
+    if (isClaimedByCurrentUser) {
+      navigate(`${RoutePaths.vulnerability}?projectId=${vault.id}`);
+      return;
+    }
 
     const wantsToClaim = await confirm({
       title: t("claimIssue"),

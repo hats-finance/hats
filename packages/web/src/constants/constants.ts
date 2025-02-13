@@ -27,8 +27,8 @@ export enum ScreenSize {
 export const MAX_NFT_TIER = 3;
 
 // export const stagingServiceUrl = "https://rl848xdj4k.execute-api.us-east-1.amazonaws.com/staging";
-export const stagingServiceUrl = "https://hats-backend-dev.herokuapp.com/v1";
-export const prodServiceUrl = "https://hats-backend-prod.herokuapp.com/v1";
+export const stagingServiceUrl = "https://dev.hats.finance/v1";
+export const prodServiceUrl = "https://prod.hats.finance/v1";
 
 export const auditWizardVerifyService = "https://app.auditwizard.io:5000/submissions/finalizeHats";
 
