@@ -1526,7 +1526,7 @@
         "answer-3": "The token will be available only when the Token Generated Event occurs. Please remember that you can receive the token only if you are eligible and hold the NFT.",
         "question-4": "FOR HOW LONG CAN I REDEEM MY NFT? \n\n",
         "answer-4": "Being part of the embassy will give you different perks in the future, but it's not mandatory to receive the future token airdrop. Please remember that you can receive the token only if you are eligible and hold the NFT.",
-        "question-5": "IF I WON’T JOIN AN EMBASSY CAN I STILL RECEIVE MY FUTURE TOKEN AIRDROP? \n\n",
+        "question-5": "IF I WON'T JOIN AN EMBASSY CAN I STILL RECEIVE MY FUTURE TOKEN AIRDROP? \n\n",
         "answer-5": "Yes, you can deposit to more than one vault and be part of their embassies."
       },
       "CheckEligibility": {
@@ -1784,6 +1784,36 @@
       "withdrawal-available": "WITHDRAWAL AVAILABLE",
       "prize-division": "Prize Content Division",
       "submit-vulnerability": "SUBMIT VULNERABILITY"
+    },
+    "RepoAnalysis": {
+      "title": "Repository Analysis",
+      "estimations": "Cost Estimations",
+      "lowEstimate": "Low Estimate",
+      "mediumEstimate": "Medium Estimate",
+      "highEstimate": "High Estimate",
+      "summary": "Code Summary",
+      "total_lines": "Total Lines",
+      "source_lines": "Source Lines",
+      "comment_lines": "Comment Lines",
+      "comment_ratio": "Comment Ratio",
+      "complexity_score": "Complexity Score",
+      "num_contracts": "Contracts",
+      "num_interfaces": "Interfaces",
+      "num_libraries": "Libraries",
+      "num_abstract": "Abstract Contracts",
+      "num_public_functions": "Public Functions",
+      "num_payable_functions": "Payable Functions",
+      "capabilities": "Code Capabilities",
+      "can_receive_funds": "Can Receive Funds",
+      "has_destroy_function": "Has Self-Destruct",
+      "uses_assembly": "Uses Assembly",
+      "uses_hash_functions": "Uses Hash Functions",
+      "uses_unchecked_blocks": "Uses Unchecked Blocks",
+      "uses_try_catch": "Uses Try-Catch",
+      "deployableContracts": "Deployable Contracts",
+      "repoOwner": "Repository Owner",
+      "repoName": "Repository Name",
+      "analyze": "Analyze Repository"
     }
   }
 }
