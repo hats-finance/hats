@@ -219,7 +219,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
       if (isValidIpfsHash(vault.descriptionHash)) {
         try {
-          const response = await axios.get(ipfsTransformUri(vault.descriptionHash)!, { timeout: 4000 });
+          const response = await axios.get(ipfsTransformUri(vault.descriptionHash)!, { timeout: 10000 });
           if (response.status === 200) {
             const object = response.data;
             return overrideDescription(vault.id, fixObject(object));
