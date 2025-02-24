@@ -18,25 +18,7 @@ const BasicLayout = (): JSX.Element => {
   });
 
   const getBannersAndModals = () => (
-    <>
-      {acceptedCookies !== "1" && <CookiesBanner onAcceptedCookies={() => setAcceptedCookies("1")} />}
-      {isAirdropEnabled && airdropModalSeen !== "1" && (
-        <Modal
-          isShowing
-          onHide={() => {
-            setAirdropModalSeen("1");
-            localStorage.setItem(LocalStorage.AirdropModalSeen, "1");
-          }}
-        >
-          <AirdropModalAlert
-            onRedirect={() => {
-              setAirdropModalSeen("1");
-              localStorage.setItem(LocalStorage.AirdropModalSeen, "1");
-            }}
-          />
-        </Modal>
-      )}
-    </>
+    <>{acceptedCookies !== "1" && <CookiesBanner onAcceptedCookies={() => setAcceptedCookies("1")} />}</>
   );
 
   return (
