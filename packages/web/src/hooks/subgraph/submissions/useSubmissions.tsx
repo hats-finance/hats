@@ -15,6 +15,8 @@ interface ISubmissionsContext {
   submissionsReadyAllChains: boolean;
   allSubmissions?: ISubmittedSubmission[]; // Submissions without chains filtering
   allSubmissionsOnEnv?: ISubmittedSubmission[]; // Submissions filtered by chains
+  canLoadSubmissions: boolean;
+  setCanLoadSubmissions: (bool: boolean) => void;
 }
 
 export const SubmissionsContext = createContext<ISubmissionsContext>(undefined as any);
@@ -22,13 +24,18 @@ export const SubmissionsContext = createContext<ISubmissionsContext>(undefined a
 export function useSubmissions(): ISubmissionsContext {
   // Delete Old Submissions from Local Storage
   localStorage.removeItem(LocalStorage.Submissions);
-  return useContext(SubmissionsContext);
+
+  const ctx = useContext(SubmissionsContext);
+  ctx.setCanLoadSubmissions(true);
+
+  return ctx;
 }
 
 export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
   const { address: account } = useAccount();
   const { chain } = useNetwork();
 
+  const [canLoadSubmissions, setCanLoadSubmissions] = useState(false);
   const [submissionsReadyAllChains, setSubmissionsReadyAllChains] = useState(false);
   const [allSubmissions, setAllSubmissions] = useState<ISubmittedSubmission[]>([]);
   const [allSubmissionsOnEnv, setAllSubmissionsOnEnv] = useState<ISubmittedSubmission[]>([]);
@@ -41,13 +48,13 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
     throw new Error("This wallet address is on the OFAC Sanctioned Digital Currency Addresses list and cannot be used.");
   }
 
-  const { multiChainData, allChainsLoaded } = useMultiChainSubmissions();
+  const { multiChainData, allChainsLoaded } = useMultiChainSubmissions(canLoadSubmissions);
 
   const setSubmissionsWithDetails = async (submissionsData: ISubmittedSubmission[]) => {
     const loadSubmissionData = async (submission: ISubmittedSubmission): Promise<ISubmissionMessageObject | undefined> => {
       if (isValidIpfsHash(submission.submissionHash)) {
         try {
-          const dataResponse = await axios.get(ipfsTransformUri(submission.submissionHash), { timeout: 4000 });
+          const dataResponse = await axios.get(ipfsTransformUri(submission.submissionHash), { timeout: 10000 });
           const object = dataResponse.data;
           return object;
         } catch (error) {
@@ -98,6 +105,8 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
     submissionsReadyAllChains,
     allSubmissions,
     allSubmissionsOnEnv,
+    canLoadSubmissions,
+    setCanLoadSubmissions,
   };
 
   return <SubmissionsContext.Provider value={context}>{children}</SubmissionsContext.Provider>;

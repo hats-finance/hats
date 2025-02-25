@@ -46,7 +46,7 @@ export async function getSubmissionSubgraphData(
             variables: { batch: BATCH_SIZE, skip: initialSkip + fetchsCount * BATCH_SIZE },
           }),
           headers: { "Content-Type": "application/json" },
-          timeout: 4000,
+          timeout: 10000,
         });
         const dataJsonTest = await resTest.json();
 
