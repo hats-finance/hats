@@ -14,7 +14,7 @@ const INITIAL_SUBMISSIONS_DATA: IGraphSubmissionsData = {
   prod: { ...INITIAL_NETWORK_DATA },
 };
 
-export const useMultiChainSubmissions = () => {
+export const useMultiChainSubmissions = (enabled: boolean) => {
   const [multiChainData, setMultiChainData] = useState<IGraphSubmissionsData>(INITIAL_SUBMISSIONS_DATA);
   const [allChainsLoaded, setAllChainsLoaded] = useState(false);
 
@@ -32,6 +32,7 @@ export const useMultiChainSubmissions = () => {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
+      enabled,
     })),
   });
 

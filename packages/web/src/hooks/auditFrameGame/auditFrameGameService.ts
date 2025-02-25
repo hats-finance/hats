@@ -39,7 +39,7 @@ export async function getAllOptedInOnAuditCompetition(editSessionIdOrAddress?: s
 
   try {
     const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionIdOrAddress}/list-opted-in-users`);
-    return response.data.optedInUsers;
+    return response.data.optedInUsers ?? [];
   } catch (error) {
     console.log(error);
     return [];
