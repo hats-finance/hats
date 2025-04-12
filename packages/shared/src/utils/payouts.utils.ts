@@ -57,7 +57,8 @@ export const createNewSplitPayoutBeneficiary = (): ISplitPayoutBeneficiary => {
 export const getExecutePayoutSafeTransaction = async (
   providerUrl: string,
   committee: string,
-  payout: IPayoutResponse
+  payout: IPayoutResponse,
+  signOnly: boolean = false
 ): Promise<{ tx: SafeTransaction; txHash: string }> => {
   const vaultInfo = payout.vaultInfo;
 
@@ -111,6 +112,7 @@ export const getExecutePayoutSafeTransaction = async (
           value: "0",
         },
       ],
+      options: signOnly ? { safeTxGas: "200000" } : undefined,
     });
     const safeTransactionHash = await protocolKit.getTransactionHash(safeTransaction);
 
@@ -249,6 +251,7 @@ export const getExecutePayoutSafeTransaction = async (
           value: "0",
         },
       ],
+      options: signOnly ? { safeTxGas: "200000" } : undefined,
     });
     const safeTransactionHash = await protocolKit.getTransactionHash(safeTransaction);
 
