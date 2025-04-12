@@ -58,7 +58,7 @@ export const getExecutePayoutSafeTransaction = async (
   providerUrl: string,
   committee: string,
   payout: IPayoutResponse,
-  signOnly: boolean = false
+  skipGasEstimation: boolean = false
 ): Promise<{ tx: SafeTransaction; txHash: string }> => {
   const vaultInfo = payout.vaultInfo;
 
