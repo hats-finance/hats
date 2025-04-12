@@ -251,7 +251,7 @@ export const getExecutePayoutSafeTransaction = async (
           value: "0",
         },
       ],
-      options: signOnly ? { safeTxGas: "200000" } : undefined,
+      options: skipGasEstimation ? { safeTxGas: "200000" } : undefined,
     });
     const safeTransactionHash = await protocolKit.getTransactionHash(safeTransaction);
 
