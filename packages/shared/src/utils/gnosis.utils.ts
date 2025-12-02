@@ -4,6 +4,24 @@ import { utils } from "ethers";
 import { meter, oasis } from "../config";
 import { isServer } from "./general.utils";
 
+// Safe API Key configuration - must be set by consuming application
+let safeApiKey: string | undefined;
+
+export const setSafeApiKey = (apiKey: string) => {
+  safeApiKey = apiKey;
+};
+
+export const getSafeApiKey = (): string | undefined => safeApiKey;
+
+const getSafeAxiosConfig = () => {
+  if (!safeApiKey) return {};
+  return {
+    headers: {
+      Authorization: `Bearer ${safeApiKey}`,
+    },
+  };
+};
+
 export type IGnosisSafeInfoResponse = { isSafeAddress: boolean; owners: string[]; threshold: number };
 
 export const getGnosisChainNameByChainId = (chainId: number): string => {
@@ -140,7 +158,7 @@ export const isAGnosisSafeTx = async (tx: string, chainId: number | undefined): 
     const safeUrl = getGnosisTxsApiEndpoint(tx, chainId);
     if (!safeUrl) throw new Error("No url");
 
-    const res = await axios.get(safeUrl);
+    const res = await axios.get(safeUrl, getSafeAxiosConfig());
     return !!res.data?.safeTxHash;
   } catch (error) {
     return false;
@@ -159,7 +177,7 @@ export const getGnosisSafeInfo = async (
     const safeUrl = getGnosisSafeStatusApiEndpoint(address, chainId);
     if (!safeUrl) throw new Error("No url");
 
-    const data = safeInfoStorage ?? (await axios.get(safeUrl)).data;
+    const data = safeInfoStorage ?? (await axios.get(safeUrl, getSafeAxiosConfig())).data;
     !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(data));
 
     if (!data) throw new Error("No data");
@@ -205,7 +223,7 @@ export const getAddressSafes = async (walletAddress: string, chainId: number | u
     const safeUrl = getAddressSafesApiEndpoint(walletAddress, chainId);
     if (!safeUrl) throw new Error("No url");
 
-    const data = addressSafesStorage ?? (await axios.get(safeUrl)).data;
+    const data = addressSafesStorage ?? (await axios.get(safeUrl, getSafeAxiosConfig())).data;
     !isServer() && sessionStorage.setItem(`addressSafes-${chainId}-${walletAddress}`, JSON.stringify(data));
 
     if (!data) throw new Error("No data");

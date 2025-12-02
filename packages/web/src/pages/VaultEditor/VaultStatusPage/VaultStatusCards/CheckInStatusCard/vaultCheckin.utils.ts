@@ -3,6 +3,7 @@ import {
   HATSVaultV2_abi,
   HATSVaultV3ClaimsManager_abi,
   IVault,
+  getSafeApiKey,
   getGnosisSafeTxServiceBaseUrl,
 } from "@hats.finance/shared";
 import SafeApiKit from "@safe-global/api-kit";
@@ -29,7 +30,12 @@ export const createVaultCheckInProposalOnSafe = async (
     });
 
     const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
-    const safeService = new SafeApiKit({ txServiceUrl: `${txServiceUrl}/api`, chainId: BigInt(vault.chainId) });
+    const safeApiKey = getSafeApiKey();
+    const safeService = new SafeApiKit({
+      txServiceUrl: `${txServiceUrl}/api`,
+      chainId: BigInt(vault.chainId),
+      ...(safeApiKey && { apiKey: safeApiKey }),
+    });
 
     const vaultAbi =
       vault?.version === "v1" ? HATSVaultV1_abi : vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV3ClaimsManager_abi;
