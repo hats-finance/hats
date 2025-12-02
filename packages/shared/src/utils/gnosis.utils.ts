@@ -137,7 +137,8 @@ const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): s
   try {
     if (!chainId) return "";
     const checksummedSafeAddress = utils.getAddress(safeAddress);
-    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v2/safes/${checksummedSafeAddress}`;
+    // Note: /safes/{address}/ endpoint is only available in v1
+    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v1/safes/${checksummedSafeAddress}`;
   } catch (error) {
     return undefined;
   }
@@ -146,7 +147,8 @@ const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): s
 const getAddressSafesApiEndpoint = (walletAddress: string, chainId: number): string | undefined => {
   try {
     if (!chainId) return "";
-    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v2/owners/${walletAddress}/safes`;
+    // Note: /owners/{address}/safes/ endpoint is only available in v1
+    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v1/owners/${walletAddress}/safes`;
   } catch (error) {
     return undefined;
   }
