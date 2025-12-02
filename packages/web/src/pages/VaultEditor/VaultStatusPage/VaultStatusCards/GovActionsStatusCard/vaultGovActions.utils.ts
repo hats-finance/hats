@@ -1,4 +1,4 @@
-import { HATTimelockController_abi, IVault, getGnosisSafeTxServiceBaseUrl } from "@hats.finance/shared";
+import { HATTimelockController_abi, IVault, getSafeApiKey, getGnosisSafeTxServiceBaseUrl } from "@hats.finance/shared";
 import SafeApiKit from "@safe-global/api-kit";
 import Safe from "@safe-global/protocol-kit";
 import { MetaTransactionData } from "@safe-global/types-kit";
@@ -32,7 +32,12 @@ export const createVaultGovActionsProposalOnSafe = async (
     });
 
     const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
-    const safeService = new SafeApiKit({ txServiceUrl: `${txServiceUrl}/api`, chainId: BigInt(vault.chainId) });
+    const safeApiKey = getSafeApiKey();
+    const safeService = new SafeApiKit({
+      txServiceUrl,
+      chainId: BigInt(vault.chainId),
+      ...(safeApiKey && { apiKey: safeApiKey }),
+    });
 
     const timelockContractInterface = new ethers.utils.Interface(HATTimelockController_abi);
 

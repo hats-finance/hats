@@ -4,6 +4,110 @@ import { utils } from "ethers";
 import { meter, oasis } from "../config";
 import { isServer } from "./general.utils";
 
+// Safe API Key configuration - must be set by consuming application
+let safeApiKey: string | undefined;
+
+export const setSafeApiKey = (apiKey: string) => {
+  safeApiKey = apiKey;
+};
+
+export const getSafeApiKey = (): string | undefined => safeApiKey;
+
+const getSafeAxiosConfig = () => {
+  if (!safeApiKey) return {};
+  return {
+    headers: {
+      Authorization: `Bearer ${safeApiKey}`,
+    },
+  };
+};
+
+// ============ Rate Limiting & Caching ============
+
+// In-memory cache with TTL (5 minutes)
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const memoryCache = new Map<string, { data: unknown; timestamp: number }>();
+
+// In-flight request deduplication
+const pendingRequests = new Map<string, Promise<unknown>>();
+
+// Rate limiting: max 4 requests per second (staying under Safe's 5/sec limit)
+const REQUEST_INTERVAL_MS = 250;
+let lastRequestTime = 0;
+const requestQueue: Array<() => void> = [];
+let isProcessingQueue = false;
+
+const processQueue = () => {
+  if (isProcessingQueue || requestQueue.length === 0) return;
+  isProcessingQueue = true;
+
+  const processNext = () => {
+    if (requestQueue.length === 0) {
+      isProcessingQueue = false;
+      return;
+    }
+
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastRequestTime;
+    const delay = Math.max(0, REQUEST_INTERVAL_MS - timeSinceLastRequest);
+
+    setTimeout(() => {
+      const next = requestQueue.shift();
+      if (next) {
+        lastRequestTime = Date.now();
+        next();
+      }
+      processNext();
+    }, delay);
+  };
+
+  processNext();
+};
+
+const rateLimitedRequest = async <T>(url: string): Promise<T> => {
+  // Check memory cache first
+  const cached = memoryCache.get(url);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data as T;
+  }
+
+  // Check for in-flight request
+  const pending = pendingRequests.get(url);
+  if (pending) {
+    return pending as Promise<T>;
+  }
+
+  // Create new request with rate limiting
+  const requestPromise = new Promise<T>((resolve, reject) => {
+    requestQueue.push(async () => {
+      try {
+        const response = await axios.get(url, getSafeAxiosConfig());
+        memoryCache.set(url, { data: response.data, timestamp: Date.now() });
+        resolve(response.data);
+      } catch (error) {
+        reject(error);
+      } finally {
+        pendingRequests.delete(url);
+      }
+    });
+    processQueue();
+  });
+
+  pendingRequests.set(url, requestPromise);
+  return requestPromise;
+};
+
+// Clear cache for a specific key (useful when data changes)
+export const clearSafeCache = (key?: string) => {
+  if (key) {
+    memoryCache.delete(key);
+  } else {
+    memoryCache.clear();
+  }
+};
+
+// ============ End Rate Limiting & Caching ============
+
 export type IGnosisSafeInfoResponse = { isSafeAddress: boolean; owners: string[]; threshold: number };
 
 export const getGnosisChainNameByChainId = (chainId: number): string => {
@@ -64,7 +168,8 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
 
 export const getGnosisSafeTxServiceBaseUrl = (chainId: number): string => {
   if (chainId === oasis.id) return `https://transaction.safe.oasis.io`;
-  return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global`;
+  // New Safe API URL format using EIP3770 chain prefixes
+  return `https://api.safe.global/tx-service/${getGnosisChainPrefixByChainId(chainId)}`;
 };
 
 export const getBaseSafeAppUrl = (chainId: number): string => {
@@ -108,7 +213,7 @@ export const getSafeHomeLink = (address: string, chainId: number): string | unde
 const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string | undefined => {
   try {
     if (!chainId) return "";
-    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v1/multisig-transactions/${txHash}`;
+    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v2/multisig-transactions/${txHash}`;
   } catch (error) {
     return undefined;
   }
@@ -118,6 +223,7 @@ const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): s
   try {
     if (!chainId) return "";
     const checksummedSafeAddress = utils.getAddress(safeAddress);
+    // Note: /safes/{address}/ endpoint is only available in v1
     return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v1/safes/${checksummedSafeAddress}`;
   } catch (error) {
     return undefined;
@@ -127,6 +233,7 @@ const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): s
 const getAddressSafesApiEndpoint = (walletAddress: string, chainId: number): string | undefined => {
   try {
     if (!chainId) return "";
+    // Note: /owners/{address}/safes/ endpoint is only available in v1
     return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v1/owners/${walletAddress}/safes`;
   } catch (error) {
     return undefined;
@@ -140,8 +247,8 @@ export const isAGnosisSafeTx = async (tx: string, chainId: number | undefined): 
     const safeUrl = getGnosisTxsApiEndpoint(tx, chainId);
     if (!safeUrl) throw new Error("No url");
 
-    const res = await axios.get(safeUrl);
-    return !!res.data?.safeTxHash;
+    const data = await rateLimitedRequest<{ safeTxHash?: string }>(safeUrl);
+    return !!data?.safeTxHash;
   } catch (error) {
     return false;
   }
@@ -154,13 +261,11 @@ export const getGnosisSafeInfo = async (
   try {
     if (!chainId || !address) throw new Error("Please provide address and chainId");
 
-    const safeInfoStorage = isServer() ? null : JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${address}`) ?? "null");
-
     const safeUrl = getGnosisSafeStatusApiEndpoint(address, chainId);
     if (!safeUrl) throw new Error("No url");
 
-    const data = safeInfoStorage ?? (await axios.get(safeUrl)).data;
-    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(data));
+    // Use rate-limited request with in-memory caching
+    const data = await rateLimitedRequest<{ isSafeAddress?: boolean; owners: string[]; threshold: number }>(safeUrl);
 
     if (!data) throw new Error("No data");
 
@@ -170,14 +275,11 @@ export const getGnosisSafeInfo = async (
       threshold: data.threshold,
     };
   } catch (error) {
-    const defaultData = {
+    return {
       isSafeAddress: false,
       owners: [],
       threshold: 0,
     };
-
-    !isServer() && sessionStorage.removeItem(`safeInfo-${chainId}-${address}`);
-    return defaultData;
   }
 };
 
@@ -198,23 +300,16 @@ export const getAddressSafes = async (walletAddress: string, chainId: number | u
   try {
     if (!chainId) throw new Error("Please provide chainId");
 
-    const addressSafesStorage = isServer()
-      ? null
-      : JSON.parse(sessionStorage.getItem(`addressSafes-${chainId}-${walletAddress}`) ?? "null");
-
     const safeUrl = getAddressSafesApiEndpoint(walletAddress, chainId);
     if (!safeUrl) throw new Error("No url");
 
-    const data = addressSafesStorage ?? (await axios.get(safeUrl)).data;
-    !isServer() && sessionStorage.setItem(`addressSafes-${chainId}-${walletAddress}`, JSON.stringify(data));
+    // Use rate-limited request with in-memory caching
+    const data = await rateLimitedRequest<{ safes?: string[] }>(safeUrl);
 
     if (!data) throw new Error("No data");
 
     return data.safes ?? [];
   } catch (error) {
-    const defaultData: { safes: string[] } = { safes: [] };
-
-    !isServer() && sessionStorage.setItem(`addressSafes-${chainId}-${walletAddress}`, JSON.stringify(defaultData));
-    return defaultData.safes;
+    return [];
   }
 };

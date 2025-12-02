@@ -95,11 +95,62 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
       (a.description?.["project-metadata"].starttime ? +a.description?.["project-metadata"].starttime : 0)
   );
 
+  // Minimal UI helper: include destroyed audit vaults with approved claims in Finished
+  const destroyedAuditsWithApprovedClaims = useMemo(() => {
+    if (isLoadingExclusions) return [] as IPayoutGraph[];
+
+    const candidates =
+      allVaultsOnEnv
+        ?.filter((vault) => vault.registered && vault.destroyed)
+        .filter((vault) => vault.description?.["project-metadata"].type === "audit")
+        .filter((vault) => !excludedFinishedCompetitions?.includes(vault.id))
+        .filter((vault) => {
+          const isPrivateAudit = vault.description?.["project-metadata"].isPrivateAudit;
+          const isUserInvited = vault.description?.["project-metadata"].whitelist?.some(
+            (whiteAddress) => whiteAddress.address.toLowerCase() === profileData?.address?.toLowerCase()
+          );
+          return opts.private ? isPrivateAudit && (isUserInvited || isGovMember || isReviewer || isGrowthMember) : !isPrivateAudit;
+        })
+        .filter((vault) => Number(vault.numberOfApprovedClaims || 0) > 0) ?? [];
+
+    // Map to minimal payout-like objects (no amount calculations)
+    const asPayouts: IPayoutGraph[] = candidates.map((vault) => ({
+      id: `destroyed-${vault.id}`,
+      isApproved: true,
+      payoutData: { vault },
+    })) as IPayoutGraph[];
+
+    // Sort similar to paid payouts using starttime
+    asPayouts.sort(
+      (a, b) =>
+        (b.payoutData?.vault?.description?.["project-metadata"].starttime
+          ? +b.payoutData?.vault?.description?.["project-metadata"].starttime
+          : 0) -
+        (a.payoutData?.vault?.description?.["project-metadata"].starttime
+          ? +a.payoutData?.vault?.description?.["project-metadata"].starttime
+          : 0)
+    );
+
+    return asPayouts;
+  }, [
+    isLoadingExclusions,
+    excludedFinishedCompetitions,
+    allVaultsOnEnv,
+    opts.private,
+    profileData,
+    isGovMember,
+    isReviewer,
+    isGrowthMember,
+  ]);
+
   return {
     live: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "on_time") ?? [],
     upcoming: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "upcoming") ?? [],
     preparingPayout: preparingPayoutAudits,
-    finished: paidPayoutsFromAudits ?? [],
+    finished: [
+      ...((paidPayoutsFromAudits as IPayoutGraph[] | undefined) ?? []),
+      ...destroyedAuditsWithApprovedClaims,
+    ],
   };
 };
 
