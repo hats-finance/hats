@@ -1,4 +1,4 @@
-import { IPayoutResponse, IVault, getExecutePayoutSafeTransaction, getGnosisSafeTxServiceBaseUrl } from "@hats.finance/shared";
+import { IPayoutResponse, IVault, getSafeApiKey, getExecutePayoutSafeTransaction, getGnosisSafeTxServiceBaseUrl } from "@hats.finance/shared";
 import SafeApiKit from "@safe-global/api-kit";
 import Safe from "@safe-global/protocol-kit";
 import { utils } from "ethers";
@@ -37,7 +37,12 @@ export const useCreatePayoutProposal = (vault?: IVault, payout?: IPayoutResponse
       });
 
       const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
-      const safeService = new SafeApiKit({ txServiceUrl: `${txServiceUrl}/api`, chainId: BigInt(vault.chainId) });
+      const safeApiKey = getSafeApiKey();
+      const safeService = new SafeApiKit({
+        txServiceUrl: `${txServiceUrl}/api`,
+        chainId: BigInt(vault.chainId),
+        ...(safeApiKey && { apiKey: safeApiKey }),
+      });
 
       const providerUrl = provider.chains?.find((c) => c.id === vault.chainId)?.rpcUrls.default.http[0];
       if (!providerUrl) return;

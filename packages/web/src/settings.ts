@@ -14,6 +14,8 @@ export const ENCRYPTED_STORAGE_KEY = process.env.REACT_APP_ENCRYPTED_STORAGE_KEY
 
 export const LOGROCKET_APP_ID = process.env.REACT_APP_LOGROCKET_APP_ID ?? "";
 
+export const SAFE_API_KEY = process.env.REACT_APP_SAFE_API_KEY ?? "";
+
 export const defaultChain: IChainConfiguration = ChainsConfig[mainnet.id];
 
 export const appChains = ChainsConfig;
