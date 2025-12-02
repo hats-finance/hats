@@ -34,7 +34,7 @@ export const createVaultGovActionsProposalOnSafe = async (
     const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
     const safeApiKey = getSafeApiKey();
     const safeService = new SafeApiKit({
-      txServiceUrl: `${txServiceUrl}/api`,
+      txServiceUrl,
       chainId: BigInt(vault.chainId),
       ...(safeApiKey && { apiKey: safeApiKey }),
     });
