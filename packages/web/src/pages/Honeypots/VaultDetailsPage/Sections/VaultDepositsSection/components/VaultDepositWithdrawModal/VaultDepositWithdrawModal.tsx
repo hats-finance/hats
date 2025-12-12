@@ -1,5 +1,5 @@
 import { parseUnits } from "@ethersproject/units";
-import { IVault } from "@hats.finance/shared";
+import { HATSVaultV3_abi, IVault } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, Button, FormSliderInput, Loading, Modal } from "components";
 import { ApyPill } from "components/VaultCard/styles";
@@ -13,7 +13,7 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { numberWithThousandSeparator } from "utils/amounts.utils";
-import { useWaitForTransaction } from "wagmi";
+import { useAccount, useContractRead, useWaitForTransaction } from "wagmi";
 import { SuccessActionModal } from "..";
 import { useVaultDepositWithdrawInfo } from "../../useVaultDepositWithdrawInfo";
 import { VaultTokenIcon } from "../VaultTokenIcon/VaultTokenIcon";
@@ -29,6 +29,7 @@ type VaultDepositWithdrawModalProps = {
 
 export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromReleaseTokens }: VaultDepositWithdrawModalProps) => {
   const { t } = useTranslation();
+  const { address: account } = useAccount();
 
   const { isShowing: isShowingSuccessModal, show: showSuccessModal } = useModal();
 
@@ -37,6 +38,17 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
   const { availableBalanceToWithdraw, tokenBalance, isUserInTimeToWithdraw, isUserInQueueToWithdraw, tokenAllowance } =
     useVaultDepositWithdrawInfo(vault);
   const vaultApy = useVaultApy(vault);
+
+  // For v3 vaults, get the actual max withdrawable amount using maxWithdraw
+  const { data: maxWithdrawAmount } = useContractRead({
+    address: vault.version === "v3" && account ? (vault.id as `0x${string}`) : undefined,
+    abi: HATSVaultV3_abi as any,
+    functionName: "maxWithdraw",
+    chainId: vault.chainId as number,
+    args: [account as `0x${string}`],
+    scopeKey: "hats",
+    enabled: vault.version === "v3" && !!account && action === "WITHDRAW",
+  });
 
   const {
     register,
@@ -100,24 +112,53 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
     hash: withdrawCall.data?.hash as `0x${string}`,
     onSuccess: () => showSuccessModal(),
   });
-  const handleWithdraw = useCallback(() => {
-    if (withdrawalsDisabled) return;
-    if (!getValues().amount) return;
+  
+  const handleWithdraw = useCallback(async () => {
+    if (withdrawalsDisabled) {
+      return;
+    }
+    if (!getValues().amount) {
+      return;
+    }
     const amountToWithdraw = parseUnits(getValues().amount || "0", vault.stakingTokenDecimals);
-    withdrawCall.send(amountToWithdraw);
-  }, [withdrawCall, vault, getValues, withdrawalsDisabled]);
+    
+    // For v3 vaults, use maxWithdraw to get the actual maximum withdrawable amount
+    const maxWithdrawable = vault.version === "v3" && maxWithdrawAmount 
+      ? maxWithdrawAmount as any
+      : availableBalanceToWithdraw?.bigNumber;
+    
+    // Validate that the amount doesn't exceed available balance
+    if (maxWithdrawable && amountToWithdraw.gt(maxWithdrawable)) {
+      console.error("Withdrawal amount exceeds maximum withdrawable:", {
+        requested: amountToWithdraw.toString(),
+        maxWithdrawable: maxWithdrawable.toString(),
+        previewRedeem: availableBalanceToWithdraw?.bigNumber.toString()
+      });
+      const maxFormatted = vault.version === "v3" 
+        ? (Number(maxWithdrawable.toString()) / Math.pow(10, Number(vault.stakingTokenDecimals))).toFixed(6)
+        : availableBalanceToWithdraw?.formatted();
+      alert(`Withdrawal amount (${getValues().amount}) exceeds maximum withdrawable amount (${maxFormatted}). Please reduce the amount.`);
+      return;
+    }
+    
+    try {
+      await withdrawCall.send(amountToWithdraw);
+    } catch (error) {
+      console.error("Error calling withdraw:", error);
+    }
+  }, [withdrawCall, vault, getValues, withdrawalsDisabled, withdrawSafetyPeriod, availableBalanceToWithdraw, maxWithdrawAmount]);
 
   const handleActionExecution = () => {
     if (action === "DEPOSIT") {
       if (!hasAllowance) handleTokenAllowance();
       else handleDeposit();
     } else if (action === "WITHDRAW") {
-      if (!isUserInTimeToWithdraw) return;
+      if (!isUserInTimeToWithdraw) {
+        return;
+      }
       handleWithdraw();
     }
   };
-
-  console.log(vault);
 
   return (
     <>
@@ -218,6 +259,20 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
           <Alert className="mt-4" type="warning">
             {t("activeClaimCantWithdraw")}
           </Alert>
+        )}
+
+        {action === "WITHDRAW" && withdrawCall.error && !withdrawCall.data && !withdrawCall.isLoading && (
+          <Alert 
+            className="mt-4" 
+            type="error"
+            content={
+              withdrawCall.error?.message?.includes("transfer amount exceeds balance")
+                ? "The vault does not have enough tokens to fulfill this withdrawal. This may happen if the vault balance has changed. Please try withdrawing a smaller amount or check the vault balance."
+                : withdrawCall.error?.message 
+                  ? `Withdrawal error: ${withdrawCall.error.message}` 
+                  : "Withdrawal error occurred. Please check the console for details."
+            }
+          />
         )}
 
         <div className="buttons">

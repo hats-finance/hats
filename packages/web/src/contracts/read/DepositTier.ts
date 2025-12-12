@@ -5,19 +5,21 @@ import { IVault } from "types";
 
 export class DepositTierContract {
   static contractInfo = (vault?: IVault, account?: string) => {
-    // Only return contract info if we have a valid proxy address
-    const proxyAddress =
-      vault?.master.address && NFTContractDataProxy[vault.master.address]
-        ? NFTContractDataProxy[vault.master.address]
-        : undefined;
+    // Normalize vault.master.address before indexing NFTContractDataProxy
+    const masterAddress = vault?.master.address?.toLowerCase();
+    const proxyAddress = masterAddress ? NFTContractDataProxy[masterAddress] : undefined;
 
-    // If no valid proxy address, return undefined to skip this contract call
-    if (!proxyAddress || !vault?.chainId) {
+    // If no valid proxy address, chainId, pid, or account, return undefined to skip this contract call
+    if (!proxyAddress || !vault?.chainId || vault?.pid === undefined || !account) {
       return undefined;
     }
 
+    // Guard appChains[vault.chainId] to avoid runtime crash on unsupported chainIds
+    const chainCfg = appChains[vault.chainId];
+    if (!chainCfg?.vaultsNFTContract) return undefined;
+
     return {
-      address: appChains[vault.chainId].vaultsNFTContract as `0x${string}`,
+      address: chainCfg.vaultsNFTContract as `0x${string}`,
       abi: HATVaultsNFT_abi as any,
       functionName: "getTierFromShares",
       chainId: vault.chainId,
