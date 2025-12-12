@@ -146,7 +146,7 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
     } catch (error) {
       console.error("Error calling withdraw:", error);
     }
-  }, [withdrawCall, vault, getValues, withdrawalsDisabled, withdrawSafetyPeriod, availableBalanceToWithdraw, maxWithdrawAmount]);
+  }, [withdrawCall, vault, getValues, withdrawalsDisabled, availableBalanceToWithdraw, maxWithdrawAmount]);
 
   const handleActionExecution = () => {
     if (action === "DEPOSIT") {
