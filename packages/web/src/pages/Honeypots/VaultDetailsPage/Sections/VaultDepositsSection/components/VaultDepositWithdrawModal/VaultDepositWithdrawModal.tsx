@@ -1,5 +1,5 @@
 import { parseUnits } from "@ethersproject/units";
-import { HATSVaultV2_abi, HATSVaultV3_abi, IVault } from "@hats.finance/shared";
+import { HATSVaultV3_abi, IVault } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, Button, FormSliderInput, Loading, Modal } from "components";
 import { ApyPill } from "components/VaultCard/styles";
@@ -9,13 +9,11 @@ import useModal from "hooks/useModal";
 import { useVaultApy } from "hooks/vaults/useVaultApy";
 import millify from "millify";
 import moment from "moment";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { numberWithThousandSeparator } from "utils/amounts.utils";
-import { useAccount, useContractRead, useContractWrite, useNetwork, useWaitForTransaction } from "wagmi";
-import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { BigNumber } from "ethers";
+import { useAccount, useContractRead, useWaitForTransaction } from "wagmi";
 import { SuccessActionModal } from "..";
 import { useVaultDepositWithdrawInfo } from "../../useVaultDepositWithdrawInfo";
 import { VaultTokenIcon } from "../VaultTokenIcon/VaultTokenIcon";
@@ -110,103 +108,16 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
 
   // -------> WITHDRAW
   const withdrawCall = WithdrawAndClaimContract.hook(vault);
-  const { chain } = useNetwork();
-  
-  // Separate withdraw function for fallback (v2/v3 only)
-  const withdrawFallback = useContractWrite({
-    mode: "recklesslyUnprepared",
-    address: (vault.version === "v2" || vault.version === "v3") ? (vault.id as `0x${string}`) : undefined,
-    abi: (vault.version === "v2" ? HATSVaultV2_abi : vault.version === "v3" ? HATSVaultV3_abi : undefined) as any,
-    functionName: "withdraw",
-  });
-  
-  const pendingWithdrawAmountRef = useRef<BigNumber | null>(null);
-  const [shouldTryFallback, setShouldTryFallback] = useState(false);
-  const fallbackAttemptedRef = useRef(false);
-  
-  // Monitor withdrawAndClaim error and trigger fallback
-  useEffect(() => {
-    if (
-      (vault.version === "v2" || vault.version === "v3") &&
-      withdrawCall.error &&
-      shouldTryFallback &&
-      pendingWithdrawAmountRef.current &&
-      withdrawFallback.write &&
-      !withdrawFallback.isLoading &&
-      !withdrawFallback.data &&
-      !fallbackAttemptedRef.current
-    ) {
-      const errorMessage = withdrawCall.error?.message || "";
-      console.log("Checking error for fallback:", {
-        errorMessage,
-        includesBalance: errorMessage.includes("transfer amount exceeds balance"),
-        includesGas: errorMessage.includes("UNPREDICTABLE_GAS_LIMIT"),
-      });
-      
-      if (errorMessage.includes("transfer amount exceeds balance") || errorMessage.includes("UNPREDICTABLE_GAS_LIMIT")) {
-        console.warn("withdrawAndClaim error detected, trying withdraw as fallback:", withdrawCall.error);
-        console.log("Fallback conditions met, proceeding with fallback...");
-        fallbackAttemptedRef.current = true;
-        setShouldTryFallback(false);
-        const amount = pendingWithdrawAmountRef.current;
-        if (!amount) {
-          console.error("No amount stored for fallback!");
-          fallbackAttemptedRef.current = false;
-          return;
-        }
-        pendingWithdrawAmountRef.current = null;
-        
-        // Switch network and call withdraw
-        console.log("STEP 1: Calling fallback withdraw with amount:", amount.toString(), "account:", account, "chain:", chain?.id, "vaultChain:", vault.chainId);
-        switchNetworkAndValidate(chain!.id, vault.chainId as number)
-          .then(() => {
-            console.log("STEP 2: Network switched successfully, checking withdrawFallback.write:", !!withdrawFallback.write);
-            if (withdrawFallback.write) {
-              console.log("STEP 3: Calling withdrawFallback.write with args:", [amount.toString(), account, account]);
-              try {
-                const result = withdrawFallback.write({ recklesslySetUnpreparedArgs: [amount, account, account] });
-                console.log("STEP 4: withdrawFallback.write called successfully, result:", result);
-              } catch (error) {
-                console.error("STEP 4 ERROR: Error calling withdrawFallback.write:", error);
-                fallbackAttemptedRef.current = false; // Reset on error so we can try again
-              }
-            } else {
-              console.error("STEP 3 ERROR: withdrawFallback.write is not available");
-              fallbackAttemptedRef.current = false;
-            }
-          })
-          .catch((error) => {
-            console.error("STEP 2 ERROR: Error switching network for fallback:", error);
-            fallbackAttemptedRef.current = false;
-          });
-      } else {
-        console.log("Error message does not match fallback criteria:", errorMessage);
-      }
-    }
-    
-    // Reset fallback flag when transaction succeeds
-    if (withdrawCall.data || withdrawFallback.data) {
-      fallbackAttemptedRef.current = false;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [withdrawCall.error, withdrawCall.data, shouldTryFallback, withdrawFallback.write, withdrawFallback.isLoading, withdrawFallback.data, account, vault.version, vault.chainId, chain]);
-  
   const waitingWithdrawCall = useWaitForTransaction({
-    hash: (withdrawCall.data?.hash || withdrawFallback.data?.hash) as `0x${string}`,
-    onSuccess: () => {
-      setShouldTryFallback(false);
-      pendingWithdrawAmountRef.current = null;
-      showSuccessModal();
-    },
+    hash: withdrawCall.data?.hash as `0x${string}`,
+    onSuccess: () => showSuccessModal(),
   });
   
-  const handleWithdraw = useCallback(() => {
+  const handleWithdraw = useCallback(async () => {
     if (withdrawalsDisabled) {
-      console.log("Withdraw disabled:", { withdrawalsDisabled, isSafetyPeriod: withdrawSafetyPeriod?.isSafetyPeriod, activeClaim: vault.activeClaim });
       return;
     }
     if (!getValues().amount) {
-      console.log("No amount to withdraw");
       return;
     }
     const amountToWithdraw = parseUnits(getValues().amount || "0", vault.stakingTokenDecimals);
@@ -230,27 +141,10 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
       return;
     }
     
-    console.log("Attempting to withdraw:", { 
-      amount: getValues().amount, 
-      amountToWithdraw: amountToWithdraw.toString(),
-      maxWithdrawable: maxWithdrawable?.toString(),
-      previewRedeem: availableBalanceToWithdraw?.bigNumber.toString(),
-      vaultVersion: vault.version
-    });
-    
-    // Set up fallback tracking
-    if (vault.version === "v2" || vault.version === "v3") {
-      pendingWithdrawAmountRef.current = amountToWithdraw;
-      setShouldTryFallback(true);
-      fallbackAttemptedRef.current = false; // Reset fallback flag for new attempt
-    }
-    
     try {
-      withdrawCall.send(amountToWithdraw);
+      await withdrawCall.send(amountToWithdraw);
     } catch (error) {
       console.error("Error calling withdraw:", error);
-      setShouldTryFallback(false);
-      pendingWithdrawAmountRef.current = null;
     }
   }, [withdrawCall, vault, getValues, withdrawalsDisabled, withdrawSafetyPeriod, availableBalanceToWithdraw, maxWithdrawAmount]);
 
@@ -259,15 +153,7 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
       if (!hasAllowance) handleTokenAllowance();
       else handleDeposit();
     } else if (action === "WITHDRAW") {
-      console.log("Withdraw action execution:", { 
-        isUserInTimeToWithdraw, 
-        withdrawalsDisabled, 
-        amount: getValues().amount,
-        withdrawCallError: withdrawCall.error,
-        withdrawCallStatus: withdrawCall.status
-      });
       if (!isUserInTimeToWithdraw) {
-        console.warn("User is not in time to withdraw. isUserInTimeToWithdraw:", isUserInTimeToWithdraw);
         return;
       }
       handleWithdraw();
@@ -375,15 +261,15 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
           </Alert>
         )}
 
-        {action === "WITHDRAW" && (withdrawCall.error || withdrawFallback.error) && !withdrawFallback.data && !withdrawFallback.isLoading && (
+        {action === "WITHDRAW" && withdrawCall.error && !withdrawCall.data && !withdrawCall.isLoading && (
           <Alert 
             className="mt-4" 
             type="error"
             content={
-              (withdrawCall.error?.message?.includes("transfer amount exceeds balance") || withdrawFallback.error?.message?.includes("transfer amount exceeds balance"))
+              withdrawCall.error?.message?.includes("transfer amount exceeds balance")
                 ? "The vault does not have enough tokens to fulfill this withdrawal. This may happen if the vault balance has changed. Please try withdrawing a smaller amount or check the vault balance."
-                : (withdrawCall.error?.message || withdrawFallback.error?.message)
-                  ? `Withdrawal error: ${withdrawCall.error?.message || withdrawFallback.error?.message}` 
+                : withdrawCall.error?.message 
+                  ? `Withdrawal error: ${withdrawCall.error.message}` 
                   : "Withdrawal error occurred. Please check the console for details."
             }
           />
@@ -400,7 +286,7 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal, fromRelea
         </div>
       </StyledVaultDepositWithdrawModal>
 
-      {(tokenAllowanceCall.isLoading || depositCall.isLoading || withdrawCall.isLoading || withdrawFallback.isLoading) && (
+      {(tokenAllowanceCall.isLoading || depositCall.isLoading || withdrawCall.isLoading) && (
         <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />
       )}
       {waitingTokenAllowanceCall.isLoading && (

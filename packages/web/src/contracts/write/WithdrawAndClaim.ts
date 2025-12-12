@@ -51,97 +51,66 @@ export class WithdrawAndClaimContract {
 
     return {
       ...withdrawAndClaim,
+      // Merge data from both hooks - if fallback succeeds, use its data
+      data: withdrawAndClaim.data || withdraw.data,
+      // Only show error if primary failed AND fallback didn't succeed (no data from fallback)
+      // If fallback succeeded, withdraw.data will exist, so don't show error
+      error: (withdrawAndClaim.error && !withdraw.data) ? withdrawAndClaim.error : undefined,
+      // Merge loading state
+      isLoading: withdrawAndClaim.isLoading || withdraw.isLoading,
       /**
        * Call the withdrawAndClaim function, with fallback to withdraw if it fails.
        * @param amountInTokens - The amount in TOKENS (not shares) to withdraw
        */
       send: async (amountInTokens: BigNumber) => {
-        await switchNetworkAndValidate(chain!.id, vault.chainId as number);
+        if (!chain) {
+          throw new Error("Wallet not connected or chain not available");
+        }
+        if (!account) {
+          throw new Error("Wallet not connected");
+        }
+        
+        await switchNetworkAndValidate(chain.id, vault.chainId as number);
 
         if (vault?.version === "v3") {
           // Try withdrawAndClaim first, fallback to withdraw if it fails
           // [params]: assets (amount in tokens), receiver, owner
-          if (!withdrawAndClaim.write) {
-            throw new Error("withdrawAndClaim.write is not available");
+          if (!withdrawAndClaim.writeAsync) {
+            throw new Error("withdrawAndClaim.writeAsync is not available");
+          }
+          if (!withdraw.writeAsync) {
+            throw new Error("withdraw.writeAsync is not available");
           }
           
-          // Try withdrawAndClaim first
           try {
-            const result = withdrawAndClaim.write({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] }) as any;
-            
-            // Set up a timeout to check for errors and fallback if needed
-            // This handles cases where the error is set in the hook state rather than promise rejection
-            const fallbackTimeout = setTimeout(() => {
-              if (withdrawAndClaim.error && withdraw.write && !withdraw.isLoading && !withdraw.data) {
-                console.warn("withdrawAndClaim error detected after timeout, trying withdraw as fallback:", withdrawAndClaim.error);
-                withdraw.write({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] });
-              }
-            }, 3000); // Wait 3 seconds for gas estimation to complete
-            
-            // Wrap in Promise.resolve to ensure we can catch rejections
-            const promise = Promise.resolve(result).catch(async (error: any) => {
-              clearTimeout(fallbackTimeout);
-              console.warn("withdrawAndClaim promise rejected, trying withdraw as fallback:", error);
-              // Fallback to withdraw function
-              if (!withdraw.write) {
-                throw error;
-              }
-              return withdraw.write({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] }) as any;
+            return await withdrawAndClaim.writeAsync({
+              recklesslySetUnpreparedArgs: [amountInTokens, account, account],
             });
-            
-            // Clear timeout if promise resolves successfully
-            promise.then(() => clearTimeout(fallbackTimeout)).catch(() => clearTimeout(fallbackTimeout));
-            
-            return promise;
           } catch (error: any) {
-            console.warn("withdrawAndClaim failed synchronously, trying withdraw as fallback:", error);
             // Fallback to withdraw function
-            if (!withdraw.write) {
-              throw error;
-            }
-            return withdraw.write({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] }) as any;
+            return await withdraw.writeAsync({
+              recklesslySetUnpreparedArgs: [amountInTokens, account, account],
+            });
           }
         } else if (vault?.version === "v2") {
           // Try withdrawAndClaim first, fallback to withdraw if it fails
           // [params]: assets (amount in tokens), receiver, owner
-          if (!withdrawAndClaim.write) {
-            throw new Error("withdrawAndClaim.write is not available");
+          if (!withdrawAndClaim.writeAsync) {
+            throw new Error("withdrawAndClaim.writeAsync is not available");
+          }
+          if (!withdraw.writeAsync) {
+            throw new Error("withdraw.writeAsync is not available");
           }
           
-          // Try withdrawAndClaim first
           try {
-            const result = withdrawAndClaim.write({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] }) as any;
-            
-            // Set up a timeout to check for errors and fallback if needed
-            const fallbackTimeout = setTimeout(() => {
-              if (withdrawAndClaim.error && withdraw.write && !withdraw.isLoading && !withdraw.data) {
-                console.warn("withdrawAndClaim error detected after timeout, trying withdraw as fallback:", withdrawAndClaim.error);
-                withdraw.write({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] });
-              }
-            }, 3000); // Wait 3 seconds for gas estimation to complete
-            
-            // Wrap in Promise.resolve to ensure we can catch rejections
-            const promise = Promise.resolve(result).catch(async (error: any) => {
-              clearTimeout(fallbackTimeout);
-              console.warn("withdrawAndClaim promise rejected, trying withdraw as fallback:", error);
-              // Fallback to withdraw function
-              if (!withdraw.write) {
-                throw error;
-              }
-              return withdraw.write({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] }) as any;
+            return await withdrawAndClaim.writeAsync({
+              recklesslySetUnpreparedArgs: [amountInTokens, account, account],
             });
-            
-            // Clear timeout if promise resolves successfully
-            promise.then(() => clearTimeout(fallbackTimeout)).catch(() => clearTimeout(fallbackTimeout));
-            
-            return promise;
           } catch (error: any) {
-            console.warn("withdrawAndClaim failed synchronously, trying withdraw as fallback:", error);
             // Fallback to withdraw function
-            if (!withdraw.write) {
-              throw error;
-            }
-            return withdraw.write({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] }) as any;
+            return await withdraw.writeAsync({
+              recklesslySetUnpreparedArgs: [amountInTokens, account, account],
+            });
           }
         } else {
           const totalShares: BigNumber | undefined = poolInfoData?.totalUsersAmount;
