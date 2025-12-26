@@ -6,6 +6,7 @@ import { PayoutStatusPage } from "./PayoutsTool/PayoutStatusPage/PayoutStatusPag
 import { PayoutsListPage } from "./PayoutsTool/PayoutsListPage/PayoutsListPage";
 import { SubmissionDetailsPage } from "./SubmissionsTool/SubmissionDetailsPage/SubmissionDetailsPage";
 import { SubmissionsListPage } from "./SubmissionsTool/SubmissionsListPage/SubmissionsListPage";
+import { RepoAnalysisPage } from "./RepoAnalysisTool/RepoAnalysisPage";
 
 export const committeeToolsRouter = (): RouteObject => ({
   path: `${RoutePaths.committee_tools}`,
@@ -43,6 +44,10 @@ export const committeeToolsRouter = (): RouteObject => ({
           element: <PayoutStatusPage />,
         },
       ],
+    },
+    {
+      path: "repo-analysis",
+      element: <RepoAnalysisPage />,
     },
   ],
 });
