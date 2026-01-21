@@ -78,7 +78,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     uniswapSubgraph: undefined,
     paymentSplitterFactory: "0x8343D06cDFDe42cA0864029D5fE6138433A68a24",
     infuraKey: "sepolia",
-    provider: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
+    provider: "",
   },
   [wagmiChains.optimism.id]: {
     // vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48", v2

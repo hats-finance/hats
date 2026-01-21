@@ -11,7 +11,8 @@ export async function optInToAuditCompetition(editSessionIdOrAddress: string): P
     });
     return response.data.ok;
   } catch (error) {
-    console.log(error);
+    console.error("Error opting in to audit competition:", error);
+    // Don't throw, just return false to indicate failure
     return false;
   }
 }
@@ -26,7 +27,8 @@ export async function optOutToAuditCompetition(editSessionIdOrAddress: string): 
     });
     return response.data.ok;
   } catch (error) {
-    console.log(error);
+    console.error("Error opting out from audit competition:", error);
+    // Don't throw, just return false to indicate failure
     return false;
   }
 }
@@ -41,7 +43,8 @@ export async function getAllOptedInOnAuditCompetition(editSessionIdOrAddress?: s
     const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionIdOrAddress}/list-opted-in-users`);
     return response.data.optedInUsers ?? [];
   } catch (error) {
-    console.log(error);
+    console.error("Error getting opted in users:", error);
+    // Don't throw, just return empty array to indicate no users
     return [];
   }
 }

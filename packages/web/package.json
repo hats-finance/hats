@@ -120,6 +120,7 @@
     "react-identicons": "^1.2.5",
     "react-image-file-resizer": "^0.4.8",
     "react-indexed-db-hook": "^1.0.14",
+    "react-intersection-observer": "^9.15.1",
     "sanitize-markdown": "^2.6.7",
     "siwe": "^1.1.6",
     "uuid-by-string": "^4.0.0"
